@@ -6,7 +6,7 @@ import Upload from "@/components/upload";
 import Overview from "@/components/overview";
 import Report, { type QuoteRequest } from "@/components/report";
 import Comparison from "@/components/comparison";
-import type { InsurancePolicy, ComparisonResult } from "@/lib/insurance/types";
+import type { InsurancePolicy, InsuranceType, ComparisonResult } from "@/lib/insurance/types";
 import { mergePoliciesByType } from "@/lib/insurance/merge";
 
 type Step = "upload" | "processing" | "overview" | "generating" | "report" | "compare-upload" | "compare-processing" | "comparing" | "comparison";
@@ -57,7 +57,7 @@ export default function AnalysisPage() {
           continue;
         }
 
-        results.push(data.policy as InsurancePolicy);
+        results.push(...(data.policies as InsurancePolicy[]));
       } catch {
         setStatuses((prev) =>
           prev.map((s, idx) =>
@@ -74,6 +74,12 @@ export default function AnalysisPage() {
 
     setPolicies(mergePoliciesByType(results));
     setStep("overview");
+  };
+
+  const handlePolicyUpdate = (type: InsuranceType, field: "annualPremium" | "deductible", value: number | null) => {
+    setPolicies((prev) =>
+      prev.map((p) => (p.type === type ? { ...p, [field]: value } : p))
+    );
   };
 
   const handleGenerateQuoteRequest = async () => {
@@ -131,7 +137,7 @@ export default function AnalysisPage() {
           continue;
         }
 
-        results.push(data.policy as InsurancePolicy);
+        results.push(...(data.policies as InsurancePolicy[]));
       } catch {
         setOfferStatuses((prev) =>
           prev.map((s, idx) =>
@@ -258,7 +264,7 @@ export default function AnalysisPage() {
 
           {policies.length > 0 ? (
             <>
-              <Overview policies={policies} />
+              <Overview policies={policies} onUpdate={handlePolicyUpdate} />
               <div className="mt-8 flex gap-3">
                 <button
                   onClick={() => { setPolicies([]); setStatuses([]); setStep("upload"); }}

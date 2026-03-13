@@ -3,9 +3,10 @@
 import type { InsuranceType } from "./types";
 import { EXTRACTION_SCHEMAS } from "./schema";
 
-// Prompt for identifisering av forsikringstype fra PDF-tekst
+// Prompt for identifisering av forsikringstype(r) fra PDF-tekst
+// Dokumentet kan inneholde flere forsikringstyper (f.eks. hus + innbo i ett dokument)
 export const buildTypeIdentificationPrompt = (documentText: string): string => `
-Du er en norsk forsikringsekspert. Analyser følgende forsikringsdokument og identifiser hvilken forsikringstype det gjelder.
+Du er en norsk forsikringsekspert. Analyser følgende forsikringsdokument og identifiser hvilke forsikringstyper det inneholder.
 
 Mulige typer:
 - house (husforsikring)
@@ -30,9 +31,11 @@ Mulige typer:
 - animal (dyreforsikring)
 - travel (reiseforsikring)
 
+Noen forsikringsselskaper samler flere forsikringstyper i ett dokument (f.eks. hus og innbo, eller bil og reise). List opp alle typer du finner klart beskrevet i dokumentet.
+
 Returner KUN et rent JSON-objekt – ingen forklaring, ingen markdown, ingen kodeblokker:
 {
-  "type": "<forsikringstype>",
+  "types": ["<forsikringstype1>", "<forsikringstype2>"],
   "confidence": "high" | "medium" | "low",
   "reason": "<kort forklaring på norsk>"
 }
@@ -42,20 +45,26 @@ ${documentText}
 `.trim();
 
 // Prompt for strukturert ekstraksjon av forsikringsdata
+// otherTypesInDocument: andre forsikringstyper som finnes i samme dokument (brukes ved kombinerte poliser)
 export const buildExtractionPrompt = (
   documentText: string,
-  insuranceType: InsuranceType
+  insuranceType: InsuranceType,
+  otherTypesInDocument: InsuranceType[] = []
 ): string => {
   const schema = EXTRACTION_SCHEMAS[insuranceType];
   const fieldsDescription = schema.fields
     .map((f) => `- ${f.key} (${f.label}): ${f.description}`)
     .join("\n");
 
+  const multiTypeNote = otherTypesInDocument.length > 0
+    ? `\nMerk: Dette dokumentet inneholder også følgende forsikringstyper: ${otherTypesInDocument.join(", ")}. Ekstraher KUN informasjon om ${insuranceType}. Hvis dokumentet viser én samlet premie for alle typene, bruk null for annualPremium – ikke forsøk å fordele den.\n`
+    : "";
+
   return `
 Du er en norsk forsikringsekspert. Ekstraher strukturert informasjon fra følgende forsikringsdokument.
 
 Forsikringstype: ${insuranceType}
-
+${multiTypeNote}
 Felter som skal ekstraheres:
 ${fieldsDescription}
 
@@ -68,6 +77,7 @@ Instruksjoner:
 - Inkluder et "exclusions"-felt (array) med spesifikke unntak eller begrensninger
 - Inkluder et "notes"-felt (array) med andre relevante merknader
 - Alle tekstverdier skal være på norsk
+- KRITISK for annualPremium: Forsikringssum/dekningsbeløp er IKKE det samme som premie. Premie er hva kunden betaler. Forsikringssum er hva som dekkes ved skade. Disse kan ligne i størrelse – vær nøye
 
 Dokumenttekst:
 ${documentText}

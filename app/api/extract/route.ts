@@ -13,6 +13,7 @@ function extractJson(text: string): string {
 }
 
 // Ekstraherer strukturert forsikringsdata fra en PDF-fil
+// Ett dokument kan inneholde flere forsikringstyper (f.eks. hus + innbo)
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
@@ -39,7 +40,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Steg 1: Identifiser forsikringstype (trenger bare begynnelsen av dokumentet)
+    // Steg 1: Identifiser alle forsikringstyper i dokumentet
     const typeResponse = await client.messages.create({
       model: "claude-haiku-4-5",
       max_tokens: 512,
@@ -49,38 +50,58 @@ export async function POST(request: NextRequest) {
     const typeText =
       typeResponse.content.find((b) => b.type === "text")?.text ?? "";
     const typeResult = JSON.parse(extractJson(typeText)) as {
-      type: InsuranceType;
+      types: InsuranceType[];
       confidence: InsurancePolicy["extractionConfidence"];
       reason: string;
     };
 
-    // Steg 2: Ekstraher strukturert data med type-spesifikt skjema
-    const extractResponse = await client.messages.create({
-      model: "claude-haiku-4-5",
-      max_tokens: 2048,
-      messages: [
-        { role: "user", content: buildExtractionPrompt(documentText, typeResult.type) },
-      ],
-    });
+    const detectedTypes = typeResult.types?.length ? typeResult.types : [];
 
-    const extractText =
-      extractResponse.content.find((b) => b.type === "text")?.text ?? "";
-    const extracted = JSON.parse(extractJson(extractText)) as Record<string, unknown>;
+    if (detectedTypes.length === 0) {
+      return NextResponse.json(
+        { error: "Kunne ikke identifisere forsikringstype i dokumentet" },
+        { status: 422 }
+      );
+    }
 
-    const policy: InsurancePolicy = {
-      type: typeResult.type,
-      company: (extracted.company as string) ?? "Ukjent selskap",
-      coverageLevel: (extracted.coverageLevel as string) ?? "Ukjent",
-      deductible: (extracted.deductible as number | null) ?? null,
-      maxCoverage: (extracted.maxCoverage as number | null) ?? null,
-      annualPremium: (extracted.annualPremium as number | null) ?? null,
-      inclusions: (extracted.inclusions as string[]) ?? [],
-      exclusions: (extracted.exclusions as string[]) ?? [],
-      notes: (extracted.notes as string[]) ?? [],
-      extractionConfidence: typeResult.confidence ?? "low",
-    };
+    // Steg 2: Ekstraher strukturert data for hver type som ble identifisert
+    // Kjøres parallelt for å spare tid
+    const extractionResults = await Promise.all(
+      detectedTypes.map(async (insuranceType) => {
+        const otherTypes = detectedTypes.filter((t) => t !== insuranceType);
+        const extractResponse = await client.messages.create({
+          model: "claude-haiku-4-5",
+          max_tokens: 2048,
+          messages: [
+            {
+              role: "user",
+              content: buildExtractionPrompt(documentText, insuranceType, otherTypes),
+            },
+          ],
+        });
 
-    return NextResponse.json({ policy, fileName: file.name });
+        const extractText =
+          extractResponse.content.find((b) => b.type === "text")?.text ?? "";
+        const extracted = JSON.parse(extractJson(extractText)) as Record<string, unknown>;
+
+        const policy: InsurancePolicy = {
+          type: insuranceType,
+          company: (extracted.company as string) ?? "Ukjent selskap",
+          coverageLevel: (extracted.coverageLevel as string) ?? "Ukjent",
+          deductible: (extracted.deductible as number | null) ?? null,
+          maxCoverage: (extracted.maxCoverage as number | null) ?? null,
+          annualPremium: (extracted.annualPremium as number | null) ?? null,
+          inclusions: (extracted.inclusions as string[]) ?? [],
+          exclusions: (extracted.exclusions as string[]) ?? [],
+          notes: (extracted.notes as string[]) ?? [],
+          extractionConfidence: (extracted.extractionConfidence as InsurancePolicy["extractionConfidence"]) ?? typeResult.confidence ?? "low",
+        };
+
+        return policy;
+      })
+    );
+
+    return NextResponse.json({ policies: extractionResults, fileName: file.name });
   } catch (error) {
     if (error instanceof Anthropic.APIError) {
       console.error("Claude API-feil:", error.status, error.message);
