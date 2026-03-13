@@ -9,7 +9,7 @@ import Comparison from "@/components/comparison";
 import type { InsurancePolicy, InsuranceType, ComparisonResult } from "@/lib/insurance/types";
 import { mergePoliciesByType } from "@/lib/insurance/merge";
 
-type Step = "upload" | "processing" | "overview" | "generating" | "report" | "compare-upload" | "compare-processing" | "comparing" | "comparison";
+type Step = "upload" | "processing" | "overview" | "generating" | "report" | "compare-upload" | "compare-processing" | "offer-review" | "comparing" | "comparison";
 
 type ProcessingStatus = {
   fileName: string;
@@ -152,35 +152,43 @@ export default function AnalysisPage() {
       );
     }
 
-    setOfferPolicies(results);
-
-    // Kjør sammenligning automatisk når alle tilbud er ekstrahert
     if (results.length > 0) {
-      setStep("comparing");
-      setCompareError(null);
-      try {
-        const response = await fetch("/api/compare", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ currentPolicies: policies, offerPolicies: results }),
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          setCompareError(data.error ?? "Ukjent feil");
-          setStep("compare-upload");
-          return;
-        }
-
-        setComparison(data.comparison as ComparisonResult);
-        setStep("comparison");
-      } catch {
-        setCompareError("Nettverksfeil – prøv igjen");
-        setStep("compare-upload");
-      }
+      setOfferPolicies(mergePoliciesByType(results));
+      setStep("offer-review");
     } else {
       setStep("compare-upload");
+    }
+  };
+
+  const handleOfferPolicyUpdate = (type: InsuranceType, field: "annualPremium" | "deductible", value: number | null) => {
+    setOfferPolicies((prev) =>
+      prev.map((p) => (p.type === type ? { ...p, [field]: value } : p))
+    );
+  };
+
+  const handleRunComparison = async () => {
+    setStep("comparing");
+    setCompareError(null);
+    try {
+      const response = await fetch("/api/compare", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ currentPolicies: policies, offerPolicies }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setCompareError(data.error ?? "Ukjent feil");
+        setStep("offer-review");
+        return;
+      }
+
+      setComparison(data.comparison as ComparisonResult);
+      setStep("comparison");
+    } catch {
+      setCompareError("Nettverksfeil – prøv igjen");
+      setStep("offer-review");
     }
   };
 
@@ -350,6 +358,45 @@ export default function AnalysisPage() {
         </>
       )}
 
+      {/* Steg 4: Gjennomgang av mottatte tilbud */}
+      {step === "offer-review" && (
+        <>
+          <h1 className="text-2xl font-bold mb-1">Se gjennom mottatte tilbud</h1>
+          <p className="text-gray-500 text-sm mb-8">
+            Steg 4 av 5 – Kontroller at prisene er riktig ekstrahert før sammenligning
+          </p>
+
+          {compareError && (
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+              {compareError}
+            </div>
+          )}
+
+          {offerPolicies.some((p) => p.isBundledPremium) && (
+            <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
+              Ett eller flere tilbud er pakketilbud der én pris dekker flere forsikringstyper. Prisen vises på alle poliser i pakken, men telles kun én gang i totalen.
+            </div>
+          )}
+
+          <Overview policies={offerPolicies} onUpdate={handleOfferPolicyUpdate} />
+
+          <div className="mt-8 flex gap-3">
+            <button
+              onClick={() => { setOfferPolicies([]); setOfferStatuses([]); setCompareError(null); setStep("compare-upload"); }}
+              className="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              Last opp på nytt
+            </button>
+            <button
+              onClick={handleRunComparison}
+              className="px-6 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Bekreft og sammenlign →
+            </button>
+          </div>
+        </>
+      )}
+
       {/* Steg 4: Kjører sammenligning */}
       {step === "comparing" && (
         <>
@@ -405,7 +452,7 @@ export default function AnalysisPage() {
           </p>
           <Comparison
             comparison={comparison}
-            onBack={() => setStep("report")}
+            onBack={() => setStep("offer-review")}
           />
         </>
       )}

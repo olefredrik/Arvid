@@ -91,6 +91,7 @@ export async function POST(request: NextRequest) {
           deductible: (extracted.deductible as number | null) ?? null,
           maxCoverage: (extracted.maxCoverage as number | null) ?? null,
           annualPremium: (extracted.annualPremium as number | null) ?? null,
+          isBundledPremium: (extracted.isBundledPremium as boolean) ?? false,
           inclusions: (extracted.inclusions as string[]) ?? [],
           exclusions: (extracted.exclusions as string[]) ?? [],
           notes: (extracted.notes as string[]) ?? [],

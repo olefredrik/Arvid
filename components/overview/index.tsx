@@ -75,10 +75,19 @@ export default function Oversikt({ policies, onUpdate }: Props) {
     return <p className="text-gray-500">Ingen forsikringer analysert ennå.</p>;
   }
 
-  const totalPremium = policies.reduce(
-    (sum, p) => (p.annualPremium != null ? sum + p.annualPremium : sum),
-    0
-  );
+  // Bundlede priser telles kun én gang per unik selskap+pris-kombinasjon
+  const totalPremium = (() => {
+    const seenBundles = new Set<string>();
+    return policies.reduce((sum, p) => {
+      if (p.annualPremium == null) return sum;
+      if (p.isBundledPremium) {
+        const key = `${p.company}:${p.annualPremium}`;
+        if (seenBundles.has(key)) return sum;
+        seenBundles.add(key);
+      }
+      return sum + p.annualPremium;
+    }, 0);
+  })();
   const hasPremiumData = policies.some((p) => p.annualPremium != null);
 
   const commit = (type: InsuranceType, field: "annualPremium" | "deductible", value: number | null) => {
@@ -134,7 +143,12 @@ export default function Oversikt({ policies, onUpdate }: Props) {
                   {policy.maxCoverage != null ? `${policy.maxCoverage.toLocaleString("nb-NO")} kr` : "–"}
                 </td>
                 <td className="p-3 border border-gray-200">
-                  {renderAmount(policy, "annualPremium", policy.extractionConfidence === "low")}
+                  <div>
+                    {renderAmount(policy, "annualPremium", policy.extractionConfidence === "low")}
+                    {policy.isBundledPremium && (
+                      <p className="text-xs text-gray-400 mt-0.5">pakketilbud</p>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}
@@ -184,9 +198,14 @@ export default function Oversikt({ policies, onUpdate }: Props) {
               )}
               <div className="flex justify-between gap-4 pt-1 border-t border-gray-100 font-medium">
                 <span className="text-gray-700">Årspremie</span>
-                <span className="text-gray-900">
-                  {renderAmount(policy, "annualPremium", policy.extractionConfidence === "low")}
-                </span>
+                <div className="text-right">
+                  <span className="text-gray-900">
+                    {renderAmount(policy, "annualPremium", policy.extractionConfidence === "low")}
+                  </span>
+                  {policy.isBundledPremium && (
+                    <p className="text-xs text-gray-400 font-normal">pakketilbud</p>
+                  )}
+                </div>
               </div>
             </div>
           </div>

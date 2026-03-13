@@ -43,10 +43,16 @@ const commonFields: FieldDefinition[] = [
     key: "annualPremium",
     label: "Årspremie",
     description: `Hva kunden betaler for forsikringen per år, i norske kroner (kun tallet, uten symbol).
-Lei etter: "årspremie", "totalpremie", "årsbeløp", "total per år", "sum per år".
+Lei etter: "årspremie", "totalpremie", "årsbeløp", "total per år", "sum per år", "pris etter rabatter", "din pris", "totalt", "samlet pris", "din totalpremie".
 IKKE forsikringssum, dekningsbeløp, erstatningsbeløp eller maksimumsbeløp – disse beskriver hva som dekkes, ikke hva kunden betaler.
 Hvis kun terminpremie (månedlig/kvartalsvis) oppgis: bruk terminbeløp × antall terminer per år KUN hvis antall terminer er eksplisitt oppgitt. Ellers bruk null.
 Bruk null hvis du ikke med rimelig sikkerhet kan fastslå hva kunden betaler per år.`,
+    required: false,
+  },
+  {
+    key: "isBundledPremium",
+    label: "Pakketilbud",
+    description: "Sett til true hvis annualPremium er en samlet pris som dekker flere forsikringstyper i samme dokument. Ellers false.",
     required: false,
   },
 ];

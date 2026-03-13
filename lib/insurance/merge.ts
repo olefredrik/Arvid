@@ -30,6 +30,7 @@ export function mergePolicies(policies: InsurancePolicy[]): InsurancePolicy {
     deductible: (first("deductible") as number | null) ?? null,
     maxCoverage: (first("maxCoverage") as number | null) ?? null,
     annualPremium: (first("annualPremium") as number | null) ?? null,
+    isBundledPremium: policies.some((p) => p.isBundledPremium),
     inclusions: [...new Set(policies.flatMap((p) => p.inclusions))],
     exclusions: [...new Set(policies.flatMap((p) => p.exclusions))],
     notes: [...new Set(policies.flatMap((p) => p.notes))],

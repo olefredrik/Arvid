@@ -57,7 +57,7 @@ export const buildExtractionPrompt = (
     .join("\n");
 
   const multiTypeNote = otherTypesInDocument.length > 0
-    ? `\nMerk: Dette dokumentet inneholder også følgende forsikringstyper: ${otherTypesInDocument.join(", ")}. Ekstraher KUN informasjon om ${insuranceType}. Hvis dokumentet viser én samlet premie for alle typene, bruk null for annualPremium – ikke forsøk å fordele den.\n`
+    ? `\nMerk: Dette dokumentet inneholder også følgende forsikringstyper: ${otherTypesInDocument.join(", ")}. Ekstraher KUN informasjon om ${insuranceType}. Hvis dokumentet viser én samlet premie for alle typene: sett annualPremium til den samlede prisen og sett isBundledPremium til true. Ikke forsøk å fordele prisen mellom typene.\n`
     : "";
 
   return `

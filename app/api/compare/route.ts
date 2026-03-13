@@ -86,15 +86,22 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Totalberegning (basert på sammenslåtte tilbud)
-    const currentTotal = currentPolicies.reduce(
-      (sum, p) => (p.annualPremium != null ? sum + p.annualPremium : sum),
-      0
-    );
-    const offerTotal = matchedPairs.reduce(
-      (sum, p) => (p.offer.annualPremium != null ? sum + p.offer.annualPremium : sum),
-      0
-    );
+    // Totalberegning – bundlede priser telles kun én gang per unik selskap+pris-kombinasjon
+    function sumPolicies(policies: InsurancePolicy[]): number {
+      const seenBundles = new Set<string>();
+      return policies.reduce((sum, p) => {
+        if (p.annualPremium == null) return sum;
+        if (p.isBundledPremium) {
+          const key = `${p.company}:${p.annualPremium}`;
+          if (seenBundles.has(key)) return sum;
+          seenBundles.add(key);
+        }
+        return sum + p.annualPremium;
+      }, 0);
+    }
+
+    const currentTotal = sumPolicies(currentPolicies);
+    const offerTotal = sumPolicies(matchedPairs.map((p) => p.offer));
 
     // AI-analyse av kvalitative forskjeller
     const response = await client.messages.create({

@@ -39,6 +39,7 @@ export type InsurancePolicy = {
   deductible: number | null;
   maxCoverage: number | null;
   annualPremium: number | null;
+  isBundledPremium: boolean; // true = annualPremium dekker flere forsikringstyper i samme dokument
   inclusions: string[];
   exclusions: string[];
   notes: string[];
