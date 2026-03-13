@@ -1,12 +1,14 @@
 "use client";
 
 // Sammenligning av nåværende forsikringer med mottatte tilbud
+import { useState } from "react";
 import type { ComparisonResult } from "@/lib/insurance/types";
 import { INSURANCE_TYPE_LABELS } from "@/lib/insurance/types";
 
 type Props = {
   comparison: ComparisonResult;
   onBack: () => void;
+  onRestart: () => void;
 };
 
 // Fargekoding per vurdering
@@ -23,10 +25,19 @@ function VerdictBadge({ verdict }: { verdict: "Bytt" | "Behold" | "Vurder" }) {
   );
 }
 
-export default function Comparison({ comparison, onBack }: Props) {
+export default function Comparison({ comparison, onBack, onRestart }: Props) {
   const hasPriceDiff = comparison.currentTotal != null && comparison.offerTotal != null;
   const totalDiff = hasPriceDiff ? comparison.offerTotal! - comparison.currentTotal! : null;
+  const [expanded, setExpanded] = useState<Set<number>>(new Set());
 
+  const toggleExpanded = (i: number) => {
+    setExpanded((prev) => {
+      const next = new Set(prev);
+      if (next.has(i)) next.delete(i);
+      else next.add(i);
+      return next;
+    });
+  };
 
   return (
     <div className="space-y-8">
@@ -107,23 +118,34 @@ export default function Comparison({ comparison, onBack }: Props) {
               </div>
             </div>
 
-            {/* Vurdering og avvik */}
+            {/* Vurdering og avvik – kan ekspanderes */}
             {(c.assessment || c.coverageDifferences.length > 0) && (
-              <div className="px-4 py-3 border-t border-gray-100 bg-gray-50">
-                {c.assessment && (
-                  <p className="text-sm text-gray-600 mb-2 leading-relaxed">{c.assessment}</p>
+              <>
+                <button
+                  onClick={() => toggleExpanded(i)}
+                  className="w-full flex items-center justify-between px-4 py-2 border-t border-gray-100 bg-gray-50 text-xs text-gray-500 hover:bg-gray-100 transition-colors"
+                >
+                  <span>{expanded.has(i) ? "Skjul detaljer" : "Vis detaljer"}</span>
+                  <span className="text-gray-400">{expanded.has(i) ? "▲" : "▼"}</span>
+                </button>
+                {expanded.has(i) && (
+                  <div className="px-4 py-3 border-t border-gray-100 bg-gray-50">
+                    {c.assessment && (
+                      <p className="text-sm text-gray-600 mb-2 leading-relaxed">{c.assessment}</p>
+                    )}
+                    {c.coverageDifferences.length > 0 && (
+                      <ul className="space-y-1">
+                        {c.coverageDifferences.map((diff, j) => (
+                          <li key={j} className="text-xs text-gray-500 flex gap-2">
+                            <span className="shrink-0">•</span>
+                            <span>{diff}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
                 )}
-                {c.coverageDifferences.length > 0 && (
-                  <ul className="space-y-1">
-                    {c.coverageDifferences.map((diff, j) => (
-                      <li key={j} className="text-xs text-gray-500 flex gap-2">
-                        <span className="shrink-0">•</span>
-                        <span>{diff}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
+              </>
             )}
           </div>
         ))}
@@ -150,7 +172,13 @@ export default function Comparison({ comparison, onBack }: Props) {
           onClick={onBack}
           className="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
         >
-          ← Tilbake til tilbudsforespørsel
+          ← Tilbake til tilbudsgjennomgang
+        </button>
+        <button
+          onClick={onRestart}
+          className="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+        >
+          Start på nytt
         </button>
       </div>
     </div>

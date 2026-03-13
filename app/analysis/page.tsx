@@ -453,6 +453,17 @@ export default function AnalysisPage() {
           <Comparison
             comparison={comparison}
             onBack={() => setStep("offer-review")}
+            onRestart={() => {
+              setPolicies([]);
+              setStatuses([]);
+              setQuoteRequest(null);
+              setQuoteError(null);
+              setOfferPolicies([]);
+              setOfferStatuses([]);
+              setComparison(null);
+              setCompareError(null);
+              setStep("upload");
+            }}
           />
         </>
       )}
