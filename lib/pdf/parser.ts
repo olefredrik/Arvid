@@ -1,12 +1,13 @@
 // Bruker pdfjs-dist legacy-bygg som fungerer i Node.js uten nettleserspesifikke API-er
 import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
 import type { TextItem } from "pdfjs-dist/types/src/display/api";
+import path from "path";
 
-// Pek til worker-filen slik at pdfjs kan kjøre i Node.js-kontekst
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  "pdfjs-dist/legacy/build/pdf.worker.mjs",
-  import.meta.url
-).href;
+// Absolutt path til worker-filen – nødvendig i pdfjs v5 selv i Node.js-kontekst
+pdfjs.GlobalWorkerOptions.workerSrc = path.join(
+  process.cwd(),
+  "node_modules/pdfjs-dist/legacy/build/pdf.worker.mjs"
+);
 
 // Maks tegn for ekstraksjon (~3K tokens) og type-identifikasjon (~750 tokens)
 // Holder begge kallene godt under 10K tokens/min-grensen på gratisplanen

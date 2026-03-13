@@ -90,6 +90,12 @@ Regler:
 - Beskriv hva kunden trenger, IKKE hva de betaler i dag
 - Én seksjon per forsikringstype (heading = forsikringstype, f.eks. "Reiseforsikring")
 - Legg til en innledende seksjon ("Om meg") med relevante personlige detaljer som påvirker prisen (f.eks. antall reiser, kjørelengde, boligtype), dersom slike finnes i dataene
+- KRITISK: Feltene "inclusions" og "exclusions" i dataene beskriver hva den eksisterende forsikringsavtalen dekker eller ekskluderer – de beskriver IKKE hva kunden eier eller har. Ikke nevn enkeltgjenstander fra "inclusions" som om kunden eier dem (f.eks. solcelleanlegg, smykker, spesifikt utstyr), med mindre det fremgår eksplisitt av andre felt at kunden faktisk eier dem
+- Trekk kun slutninger om kundens situasjon fra eksplisitte felt som boligtype, kjøretøytype, reisedestinasjon osv.
+- Ikke oppfinn eller estimer verdier som ikke finnes i dataene. Hvis et felt er null eller mangler, utelat det helt – ikke gjett
+- "Om meg"-seksjonen skal kun inneholde opplysninger som er eksplisitt til stede i dataene. Ikke inferer alder, familiesituasjon, yrke eller andre personlige detaljer
+- Feltene med lav datakvalitet (extractionConfidence: "low") skal ikke presenteres som sikre fakta i forespørselen
+- Ikke nevn nåværende forsikringsselskap med navn – forespørselen sendes til konkurrenter
 
 Eksisterende forsikringsdata:
 ${JSON.stringify(policies, null, 2)}
