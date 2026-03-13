@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
-import { extractTextFromPdf, normalizeText } from "@/lib/pdf/parser";
+import { extractTextFromPdf, normalizeText, TYPE_ID_TEXT_LENGTH } from "@/lib/pdf/parser";
 import { buildTypeIdentificationPrompt, buildExtractionPrompt } from "@/lib/insurance/prompts";
 import type { InsuranceType, InsurancePolicy } from "@/lib/insurance/types";
 
@@ -29,7 +29,8 @@ export async function POST(request: NextRequest) {
     // Trekk ut og normaliser tekst fra PDF
     const buffer = Buffer.from(await file.arrayBuffer());
     const rawText = await extractTextFromPdf(buffer);
-    const documentText = normalizeText(rawText);
+    const documentText = normalizeText(rawText);          // brukes til ekstraksjon
+    const shortText = normalizeText(rawText, TYPE_ID_TEXT_LENGTH); // brukes til typeidentifikasjon
 
     if (!documentText) {
       return NextResponse.json(
@@ -38,11 +39,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Steg 1: Identifiser forsikringstype
+    // Steg 1: Identifiser forsikringstype (trenger bare begynnelsen av dokumentet)
     const typeResponse = await client.messages.create({
-      model: "claude-opus-4-6",
+      model: "claude-haiku-4-5",
       max_tokens: 512,
-      messages: [{ role: "user", content: buildTypeIdentificationPrompt(documentText) }],
+      messages: [{ role: "user", content: buildTypeIdentificationPrompt(shortText) }],
     });
 
     const typeText =
@@ -55,9 +56,8 @@ export async function POST(request: NextRequest) {
 
     // Steg 2: Ekstraher strukturert data med type-spesifikt skjema
     const extractResponse = await client.messages.create({
-      model: "claude-opus-4-6",
-      max_tokens: 4096,
-      thinking: { type: "adaptive" },
+      model: "claude-haiku-4-5",
+      max_tokens: 2048,
       messages: [
         { role: "user", content: buildExtractionPrompt(documentText, typeResult.type) },
       ],
@@ -73,6 +73,7 @@ export async function POST(request: NextRequest) {
       coverageLevel: (extracted.coverageLevel as string) ?? "Ukjent",
       deductible: (extracted.deductible as number | null) ?? null,
       maxCoverage: (extracted.maxCoverage as number | null) ?? null,
+      annualPremium: (extracted.annualPremium as number | null) ?? null,
       inclusions: (extracted.inclusions as string[]) ?? [],
       exclusions: (extracted.exclusions as string[]) ?? [],
       notes: (extracted.notes as string[]) ?? [],

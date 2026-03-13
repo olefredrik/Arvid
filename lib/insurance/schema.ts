@@ -39,6 +39,12 @@ const commonFields: FieldDefinition[] = [
     description: "Maksimal utbetaling i norske kroner (kun tallet)",
     required: false,
   },
+  {
+    key: "annualPremium",
+    label: "Årspremie",
+    description: "Årlig forsikringspremie i norske kroner (kun tallet). Finn totalsum betalt per år – ikke månedspris. Bruk null hvis du ikke finner prisen.",
+    required: false,
+  },
 ];
 
 // Eiendom: hus og hytte

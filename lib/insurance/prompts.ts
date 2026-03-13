@@ -81,11 +81,15 @@ export const buildQuoteRequestPrompt = (
 ): string => `
 Du er en norsk forsikringsekspert som hjelper en forbruker med å innhente konkurrensetilbud.
 
-Basert på følgende forsikringsdata skal du generere et strukturert dokument formulert som en kravspesifikasjon. Dokumentet skal:
-- Beskrive hva kunden trenger, IKKE hva de betaler i dag
-- Være formulert nøytralt og profesjonelt
-- Inneholde alle relevante detaljer et forsikringsselskap trenger for å gi et presist tilbud
-- Være på norsk
+Basert på følgende forsikringsdata skal du skrive en kort, praktisk forespørsel som kunden kan sende til forsikringsselskaper.
+
+Regler:
+- Maks 200–300 ord per forsikringstype
+- Fokuser på det som differensierer – dekningsnivå, egenandel, spesielle krav. Ikke list opp standard bransjekrav som alle selskaper oppfyller uansett
+- Skriv som om kunden henvender seg direkte til selskapet, i første person ("Jeg ønsker tilbud på...")
+- Beskriv hva kunden trenger, IKKE hva de betaler i dag
+- Én seksjon per forsikringstype (heading = forsikringstype, f.eks. "Reiseforsikring")
+- Legg til en innledende seksjon ("Om meg") med relevante personlige detaljer som påvirker prisen (f.eks. antall reiser, kjørelengde, boligtype), dersom slike finnes i dataene
 
 Eksisterende forsikringsdata:
 ${JSON.stringify(policies, null, 2)}

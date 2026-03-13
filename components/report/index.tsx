@@ -27,7 +27,9 @@ export default function Report({ quoteRequest, onBack }: Props) {
       ]),
     ].join("\n");
 
-    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+    // BOM (U+FEFF) sikrer at tekstprogrammer tolker filen som UTF-8
+    const bom = "\uFEFF";
+    const blob = new Blob([bom + content], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;

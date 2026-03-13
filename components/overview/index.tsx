@@ -11,6 +11,12 @@ export default function Oversikt({ policies }: Props) {
     return <p className="text-gray-500">Ingen forsikringer analysert ennå.</p>;
   }
 
+  const totalPremium = policies.reduce(
+    (sum, p) => (p.annualPremium != null ? sum + p.annualPremium : sum),
+    0
+  );
+  const hasPremiumData = policies.some((p) => p.annualPremium != null);
+
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm border-collapse">
@@ -21,6 +27,7 @@ export default function Oversikt({ policies }: Props) {
             <th className="p-3 border border-gray-200 font-medium">Dekningsnivå</th>
             <th className="p-3 border border-gray-200 font-medium">Egenandel</th>
             <th className="p-3 border border-gray-200 font-medium">Maks dekning</th>
+            <th className="p-3 border border-gray-200 font-medium">Årspremie</th>
           </tr>
         </thead>
         <tbody>
@@ -41,9 +48,26 @@ export default function Oversikt({ policies }: Props) {
                   ? `${policy.maxCoverage.toLocaleString("nb-NO")} kr`
                   : "–"}
               </td>
+              <td className="p-3 border border-gray-200">
+                {policy.annualPremium != null
+                  ? `${policy.annualPremium.toLocaleString("nb-NO")} kr`
+                  : "–"}
+              </td>
             </tr>
           ))}
         </tbody>
+        {hasPremiumData && (
+          <tfoot>
+            <tr className="bg-gray-50 font-medium">
+              <td colSpan={5} className="p-3 border border-gray-200 text-right text-gray-600">
+                Totalt per år
+              </td>
+              <td className="p-3 border border-gray-200">
+                {totalPremium.toLocaleString("nb-NO")} kr
+              </td>
+            </tr>
+          </tfoot>
+        )}
       </table>
     </div>
   );

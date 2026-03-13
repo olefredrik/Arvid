@@ -38,6 +38,7 @@ export type InsurancePolicy = {
   coverageLevel: string;
   deductible: number | null;
   maxCoverage: number | null;
+  annualPremium: number | null;
   inclusions: string[];
   exclusions: string[];
   notes: string[];
