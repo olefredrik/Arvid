@@ -60,6 +60,29 @@ export type Session = {
   createdAt: Date; // Brukes kun for sesjonsutløp (30 min inaktivitet)
 };
 
+// Sammenligning mellom én nåværende polise og ett mottatt tilbud
+export type PolicyComparison = {
+  type: InsuranceType;
+  current: InsurancePolicy;
+  offer: InsurancePolicy;
+  offerDocumentCount: number;   // antall dokumenter som ble slått sammen
+  premiumDiff: number | null;   // negativ = tilbudet er billigere
+  assessment: string;
+  coverageDifferences: string[];
+  verdict: "Bytt" | "Behold" | "Vurder";
+};
+
+// Samlet sammenligningsresultat
+export type ComparisonResult = {
+  comparisons: PolicyComparison[];
+  unmatchedCurrent: InsurancePolicy[];  // typer i nåværende, ikke i tilbud
+  unmatchedOffers: InsurancePolicy[];   // typer i tilbud, ikke i nåværende
+  currentTotal: number | null;
+  offerTotal: number | null;
+  recommendation: string;
+  generatedAt: string;
+};
+
 // Kategorier for norsk display
 export const INSURANCE_CATEGORIES: Record<string, InsuranceType[]> = {
   Eiendom: ["house", "cabin", "contents"],

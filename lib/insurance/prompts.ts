@@ -74,6 +74,38 @@ ${documentText}
 `.trim();
 };
 
+// Prompt for sammenligning av nåværende forsikringer med mottatte tilbud
+export const buildComparisonPrompt = (
+  matchedPairs: { current: object; offer: object; premiumDiff: number | null }[]
+): string => `
+Du er en nøytral norsk forsikringsekspert som sammenligner eksisterende forsikringer med mottatte tilbud.
+
+Hvert par inneholder nåværende polise ("current") og nytt tilbud ("offer"), pluss eventuell prisforskjell per år i kroner ("premiumDiff" – negativt tall betyr at tilbudet er billigere).
+
+Instruksjoner:
+- Sammenlign hvert par og beskriv konkrete avvik i dekningsnivå, egenandel, inklusjoner og eksklusjoner
+- Vær nøytral – ikke fremhev noen av partene
+- Ta hensyn til pris i den samlede anbefalingen, men presenter ikke prisen på nytt i "assessment"
+- verdict: "Bytt" hvis tilbudet er klart bedre totalt sett, "Behold" hvis nåværende er bedre eller likeverdig, "Vurder" hvis situasjonen er tvetydig
+- Ikke oppfinn avvik som ikke fremgår av dataene – si heller "ingen vesentlige avvik funnet" hvis så er tilfelle
+
+Forsikringspar:
+${JSON.stringify(matchedPairs, null, 2)}
+
+Returner KUN et rent JSON-objekt – ingen forklaring, ingen markdown, ingen kodeblokker:
+{
+  "comparisons": [
+    {
+      "insuranceType": "<type fra dataene, f.eks. house>",
+      "assessment": "<2-3 setninger om hva som skiller tilbudene>",
+      "coverageDifferences": ["<konkret avvik 1>", "<konkret avvik 2>"],
+      "verdict": "Bytt" | "Behold" | "Vurder"
+    }
+  ],
+  "recommendation": "<samlet anbefaling på 2-3 setninger basert på pris og vilkår>"
+}
+`.trim();
+
 // Prompt for generering av tilbudsforespørsel
 export const buildQuoteRequestPrompt = (
   policies: object[],
