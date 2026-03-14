@@ -2,7 +2,7 @@
 
 [![Test](https://github.com/olefredrik/Arvid/actions/workflows/test.yml/badge.svg)](https://github.com/olefredrik/Arvid/actions/workflows/test.yml)
 [![Latest release](https://img.shields.io/github/v/release/olefredrik/Arvid)](https://github.com/olefredrik/Arvid/releases)
-[![License: MIT](https://img.shields.io/badge/license-MIT-orange.svg)](https://github.com/olefredrik/Arvid/blob/main/LICENSE)
+[![License: AGPL v3](https://img.shields.io/badge/license-AGPL%20v3-orange.svg)](https://github.com/olefredrik/Arvid/blob/main/LICENSE)
 
 Arvid er et open-source verktøy som hjelper norske forbrukere å forstå forsikringsavtalene sine, sammenstille dem i et nyttig format, og evaluere konkurransetilbud.
 
@@ -86,4 +86,12 @@ Bidrag er velkomne! Se [CONTRIBUTING.md](CONTRIBUTING.md) for hvordan du kommer 
 
 ## Lisens
 
-MIT
+Arvid er tilgjengelig under to lisensbetingelser:
+
+**Åpen kildekode (AGPL v3)**
+For privat bruk, forskning og ikke-kommersiell bruk er Arvid lisensiert under [GNU Affero General Public License v3.0](LICENSE). Det betyr at du fritt kan lese, bruke og modifisere koden – men eventuelle endringer som distribueres eller kjøres som en nettjeneste må også gjøres tilgjengelig under AGPL v3.
+
+**Kommersiell lisens**
+Hvis du ønsker å bruke Arvid i en kommersiell sammenheng uten å oppfylle AGPL v3-kravene, ta kontakt for en separat avtale: [olefredrik.com](https://olefredrik.com)
+
+Se [CLA.md](CLA.md) for informasjon om bidragsrettigheter.
