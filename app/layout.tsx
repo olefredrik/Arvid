@@ -3,6 +3,7 @@ import { DM_Serif_Display, DM_Sans } from "next/font/google";
 import "./globals.css";
 import ThemeToggle from "@/components/theme-toggle";
 import Analytics from "@/components/analytics";
+import StructuredData from "@/components/structured-data";
 
 // Overskriftsfont: DM Serif Display – klassisk, høy kontrast, redaksjonell
 const dmSerifDisplay = DM_Serif_Display({
@@ -60,6 +61,7 @@ export default function RootLayout({
       <head>
         {/* Forhindrer glimt av feil tema ved sideinnlasting */}
         <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='dark')document.documentElement.classList.add('dark');}catch(e){}})();` }} />
+        <StructuredData />
       </head>
       <body className={`${dmSerifDisplay.variable} ${dmSans.variable} bg-amber-50 dark:bg-stone-950 transition-colors`}>
         {children}
