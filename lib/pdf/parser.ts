@@ -1,4 +1,6 @@
-import pdfParse from "pdf-parse";
+// Importerer direkte fra lib for å unngå at pdf-parse laster testfiler ved oppstart
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const pdfParse = require("pdf-parse/lib/pdf-parse.js") as (buffer: Buffer) => Promise<{ text: string }>;
 
 // Maks tegn for ekstraksjon (~3K tokens) og type-identifikasjon (~750 tokens)
 // Holder begge kallene godt under 10K tokens/min-grensen på gratisplanen
