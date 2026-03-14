@@ -1,7 +1,7 @@
 "use client";
 
 // Hovedflyt: opplasting → analyse → oversikt → tilbudsforespørsel
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Upload from "@/components/upload";
 import Overview from "@/components/overview";
 import Report, { type QuoteRequest } from "@/components/report";
@@ -19,6 +19,7 @@ type ProcessingStatus = {
 
 export default function AnalysisPage() {
   const [step, setStep] = useState<Step>("upload");
+  const [compareMode, setCompareMode] = useState(false);
   const [policies, setPolicies] = useState<InsurancePolicy[]>([]);
   const [statuses, setStatuses] = useState<ProcessingStatus[]>([]);
   const [quoteRequest, setQuoteRequest] = useState<QuoteRequest | null>(null);
@@ -27,6 +28,11 @@ export default function AnalysisPage() {
   const [offerStatuses, setOfferStatuses] = useState<ProcessingStatus[]>([]);
   const [comparison, setComparison] = useState<ComparisonResult | null>(null);
   const [compareError, setCompareError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("mode") === "compare") setCompareMode(true);
+  }, []);
 
   const handleFiles = async (files: File[]) => {
     setStep("processing");
@@ -203,9 +209,13 @@ export default function AnalysisPage() {
       {/* Steg 1: Opplasting */}
       {step === "upload" && (
         <>
-          <h1 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">Last opp forsikringsdokumenter</h1>
+          <h1 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">
+            {compareMode ? "Last opp dine nåværende forsikringer" : "Last opp forsikringsdokumenter"}
+          </h1>
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
-            Steg 1 av 3 – Last opp PDF-filene du har mottatt fra forsikringsselskapet
+            {compareMode
+              ? "Last opp dine nåværende forsikringer – vi bruker dem som grunnlag for sammenligningen"
+              : "Steg 1 av 3 – Last opp PDF-filene du har mottatt fra forsikringsselskapet"}
           </p>
           <Upload onFiles={handleFiles} />
         </>
@@ -231,7 +241,7 @@ export default function AnalysisPage() {
                     <span className="text-green-500 dark:text-green-400 text-sm">✓</span>
                   )
                 ) : (
-                  <span className="inline-block w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+                  <span className="inline-block w-4 h-4 border-2 border-amber-700 border-t-transparent rounded-full animate-spin" />
                 )}
                 <span className="text-sm text-gray-700 dark:text-gray-200 truncate">{s.fileName}</span>
                 {s.error && (
@@ -248,7 +258,7 @@ export default function AnalysisPage() {
         <>
           <h1 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">Forsikringsoversikt</h1>
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
-            Steg 2 av 3 – Se gjennom og bekreft at oversikten er riktig
+            {compareMode ? "Se gjennom og bekreft at oversikten er riktig" : "Steg 2 av 3 – Se gjennom og bekreft at oversikten er riktig"}
           </p>
 
           {errors.length > 0 && (
@@ -280,12 +290,21 @@ export default function AnalysisPage() {
                 >
                   Last opp flere dokumenter
                 </button>
-                <button
-                  onClick={handleGenerateQuoteRequest}
-                  className="px-6 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  Generer tilbudsforespørsel →
-                </button>
+                {compareMode ? (
+                  <button
+                    onClick={() => { setOfferPolicies([]); setOfferStatuses([]); setCompareError(null); setStep("compare-upload"); }}
+                    className="px-6 py-2 bg-amber-700 text-white text-sm font-medium rounded-lg hover:bg-amber-800 transition-colors"
+                  >
+                    Last opp mottatt tilbud →
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleGenerateQuoteRequest}
+                    className="px-6 py-2 bg-amber-700 text-white text-sm font-medium rounded-lg hover:bg-amber-800 transition-colors"
+                  >
+                    Generer tilbudsforespørsel →
+                  </button>
+                )}
               </div>
             </>
           ) : (
@@ -293,7 +312,7 @@ export default function AnalysisPage() {
               <p className="text-gray-500 dark:text-gray-400 mb-4">Ingen forsikringer ble ekstrahert.</p>
               <button
                 onClick={() => { setStatuses([]); setStep("upload"); }}
-                className="text-blue-600 hover:underline text-sm"
+                className="text-amber-700 hover:underline text-sm"
               >
                 Prøv igjen
               </button>
@@ -310,7 +329,7 @@ export default function AnalysisPage() {
             Rolf formulerer en kravspesifikasjon du kan sende til forsikringsselskaper
           </p>
           <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-            <span className="inline-block w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+            <span className="inline-block w-4 h-4 border-2 border-amber-700 border-t-transparent rounded-full animate-spin" />
             <span className="text-sm text-gray-700 dark:text-gray-200">Formulerer forespørsel...</span>
           </div>
         </>
@@ -334,7 +353,7 @@ export default function AnalysisPage() {
             </p>
             <button
               onClick={() => { setOfferPolicies([]); setOfferStatuses([]); setCompareError(null); setStep("compare-upload"); }}
-              className="px-6 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+              className="px-6 py-2 bg-amber-700 text-white text-sm font-medium rounded-lg hover:bg-amber-800 transition-colors"
             >
               Sammenlign mottatte tilbud →
             </button>
@@ -347,7 +366,7 @@ export default function AnalysisPage() {
         <>
           <h1 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">Last opp mottatte tilbud</h1>
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
-            Steg 4 av 4 – Last opp tilbudene du har mottatt fra forsikringsselskaper
+            {compareMode ? "Last opp tilbudene du har mottatt fra forsikringsselskaper" : "Steg 4 av 4 – Last opp tilbudene du har mottatt fra forsikringsselskaper"}
           </p>
           {compareError && (
             <div className="mb-6 p-4 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-700 dark:text-red-300">
@@ -389,7 +408,7 @@ export default function AnalysisPage() {
             </button>
             <button
               onClick={handleRunComparison}
-              className="px-6 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+              className="px-6 py-2 bg-amber-700 text-white text-sm font-medium rounded-lg hover:bg-amber-800 transition-colors"
             >
               Bekreft og sammenlign →
             </button>
@@ -405,7 +424,7 @@ export default function AnalysisPage() {
             Rolf analyserer forskjeller i pris og vilkår
           </p>
           <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-            <span className="inline-block w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+            <span className="inline-block w-4 h-4 border-2 border-amber-700 border-t-transparent rounded-full animate-spin" />
             <span className="text-sm text-gray-700 dark:text-gray-200">Kjører sammenligning...</span>
           </div>
         </>
@@ -431,7 +450,7 @@ export default function AnalysisPage() {
                     <span className="text-green-500 dark:text-green-400 text-sm">✓</span>
                   )
                 ) : (
-                  <span className="inline-block w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+                  <span className="inline-block w-4 h-4 border-2 border-amber-700 border-t-transparent rounded-full animate-spin" />
                 )}
                 <span className="text-sm text-gray-700 dark:text-gray-200 truncate">{s.fileName}</span>
                 {s.error && (

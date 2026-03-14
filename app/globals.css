@@ -2,3 +2,13 @@
 
 /* Klasse-basert dark mode – aktiveres ved å sette .dark på <html> */
 @variant dark (&:where(.dark, .dark *));
+
+/* Overskriftsfont – DM Serif Display */
+h1, h2, h3, h4 {
+  font-family: var(--font-heading), Georgia, serif;
+}
+
+/* Brødtekstfont – DM Sans */
+body {
+  font-family: var(--font-body), system-ui, sans-serif;
+}
