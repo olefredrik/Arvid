@@ -21,15 +21,15 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Arvid – Forsikringsrådgiver",
-  description: "Forstå forsikringsavtalene dine og finn bedre tilbud",
+  title: "Arvid – Forstå og forbedre forsikringene dine",
+  description: "Last opp forsikringsavtalene dine som PDF og få strukturert oversikt over dekning og egenandel. Generer en tilbudsforespørsel og finn bedre priser.",
   metadataBase: new URL("https://arvid.cloud"),
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "Arvid – Forsikringsrådgiver",
-    description: "Forstå forsikringsavtalene dine og finn bedre tilbud",
+    title: "Arvid – Forstå og forbedre forsikringene dine",
+    description: "Last opp forsikringsavtalene dine som PDF og få strukturert oversikt over dekning og egenandel. Generer en tilbudsforespørsel og finn bedre priser.",
     url: "https://arvid.cloud",
     siteName: "Arvid",
     images: [
@@ -45,8 +45,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Arvid – Forsikringsrådgiver",
-    description: "Forstå forsikringsavtalene dine og finn bedre tilbud",
+    title: "Arvid – Forstå og forbedre forsikringene dine",
+    description: "Last opp forsikringsavtalene dine som PDF og få strukturert oversikt over dekning og egenandel. Generer en tilbudsforespørsel og finn bedre priser.",
     images: ["/arvid-og-image.jpg"],
   },
 };
