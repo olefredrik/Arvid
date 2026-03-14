@@ -25,13 +25,22 @@ describe("EXTRACTION_SCHEMAS", () => {
   });
 
   it("hvert skjema inneholder de obligatoriske felles-feltene", () => {
-    const requiredKeys = ["company", "coverageLevel"];
+    const requiredKeys = ["company", "coverageLevel", "policyNumber", "renewalDate", "annualPremium"];
     for (const type of ALL_TYPES) {
       const keys = EXTRACTION_SCHEMAS[type].fields.map((f) => f.key);
       for (const key of requiredKeys) {
         expect(keys, `${type} mangler påkrevd felt: ${key}`).toContain(key);
       }
     }
+  });
+
+  it("bicycle-skjemaet har tyveridekning og mangler kjøretøy-spesifikke felt", () => {
+    const keys = EXTRACTION_SCHEMAS["bicycle"].fields.map((f) => f.key);
+    expect(keys).toContain("theftCoverage");
+    expect(keys).toContain("isElectric");
+    expect(keys).not.toContain("rentalCar");
+    expect(keys).not.toContain("roadside");
+    expect(keys).not.toContain("parkingDamage");
   });
 
   it("alle felt-definisjoner har key, label og description", () => {

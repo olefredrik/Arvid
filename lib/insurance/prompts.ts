@@ -31,7 +31,12 @@ Mulige typer:
 - animal (dyreforsikring)
 - travel (reiseforsikring)
 
-Noen forsikringsselskaper samler flere forsikringstyper i ett dokument (f.eks. hus og innbo, eller bil og reise). List opp alle typer du finner klart beskrevet i dokumentet.
+Viktige avklaringer:
+- Et dokument kan inneholde flere forsikringstyper. List opp alle som er klart beskrevet.
+- "Hjem"-forsikring dekker typisk både hus og innbo – identifiser begge hvis det fremgår av dokumentet.
+- "Bilforsikring" og "ansvarsforsikring" er begge car, ikke separate typer.
+- Forsikringsvilkår (generelle vilkår) alene er ikke nok – det må fremgå at det er en aktiv polise for denne kunden.
+- Bruk confidence "low" hvis dokumentet er uklart eller kun inneholder generelle vilkår uten spesifikke kundeopplysninger.
 
 Returner KUN et rent JSON-objekt – ingen forklaring, ingen markdown, ingen kodeblokker:
 {
@@ -65,6 +70,11 @@ Du er en norsk forsikringsekspert. Ekstraher strukturert informasjon fra følgen
 
 Forsikringstype: ${insuranceType}
 ${multiTypeNote}
+Om dokumenttyper:
+- Forsikringsbevis (også kalt "bevis om forsikring" eller "avtaledokument") inneholder de spesifikke verdiene for denne kunden: premie, egenandel, polisenummer og dekningsnivå. Prioriter alltid verdier herfra.
+- Forsikringsvilkår er generelle vilkår som gjelder alle kunder – bruk disse kun for inklusjoner og eksklusjoner, ikke for kundespesifikke verdier.
+- Betalingsoversikt eller faktura kan bekrefte premiebeløp.
+
 Felter som skal ekstraheres:
 ${fieldsDescription}
 
