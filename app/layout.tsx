@@ -26,6 +26,28 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
+  openGraph: {
+    title: "Arvid – Forsikringsrådgiver",
+    description: "Forstå forsikringsavtalene dine og finn bedre tilbud",
+    url: "https://arvid.cloud",
+    siteName: "Arvid",
+    images: [
+      {
+        url: "/arvid-og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Arvid – Din nøytrale forsikringsrådgiver",
+      },
+    ],
+    locale: "nb_NO",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Arvid – Forsikringsrådgiver",
+    description: "Forstå forsikringsavtalene dine og finn bedre tilbud",
+    images: ["/arvid-og-image.jpg"],
+  },
 };
 
 export default function RootLayout({
