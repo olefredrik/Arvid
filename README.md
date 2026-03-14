@@ -1,8 +1,8 @@
 # Arvid
 
-[![Test](https://github.com/olefredrik/Rolf/actions/workflows/test.yml/badge.svg)](https://github.com/olefredrik/Rolf/actions/workflows/test.yml)
-[![Latest release](https://img.shields.io/github/v/release/olefredrik/Rolf)](https://github.com/olefredrik/Rolf/releases)
-[![License: MIT](https://img.shields.io/badge/license-MIT-orange.svg)](https://github.com/olefredrik/Rolf/blob/main/LICENSE)
+[![Test](https://github.com/olefredrik/Arvid/actions/workflows/test.yml/badge.svg)](https://github.com/olefredrik/Arvid/actions/workflows/test.yml)
+[![Latest release](https://img.shields.io/github/v/release/olefredrik/Arvid)](https://github.com/olefredrik/Arvid/releases)
+[![License: MIT](https://img.shields.io/badge/license-MIT-orange.svg)](https://github.com/olefredrik/Arvid/blob/main/LICENSE)
 
 Arvid er et open-source verktøy som hjelper norske forbrukere å forstå forsikringsavtalene sine, sammenstille dem i et nyttig format, og evaluere konkurransetilbud.
 
@@ -17,7 +17,7 @@ Arvid er nøytral, jobber alltid for brukeren, og har ingen kommersielle binding
 
 ## Demo
 
-[rolf-navy.vercel.app](https://rolf-navy.vercel.app)
+[arvid.cloud](https://arvid.cloud)
 
 ## Teknisk stack
 
@@ -36,7 +36,7 @@ Arvid er nøytral, jobber alltid for brukeren, og har ingen kommersielle binding
 ### Installasjon
 
 ```bash
-git clone https://github.com/olefredrik/rolf.git
+git clone https://github.com/olefredrik/Arvid.git
 cd arvid
 npm install
 ```
