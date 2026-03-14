@@ -68,6 +68,7 @@ export default function Upload({ onFiles }: Props) {
           accept=".pdf"
           multiple
           className="hidden"
+          aria-label="Velg PDF-filer for opplasting"
           onChange={(e) => addFiles(e.target.files)}
         />
       </div>

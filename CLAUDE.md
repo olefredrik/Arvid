@@ -25,6 +25,14 @@ Alle tekster, analyser og anbefalinger er på norsk. Domenekunnskap om norsk for
 **Enkelt fremfor fullstendig.**
 En analyse brukeren forstår og handler på er bedre enn en analyse som er teknisk korrekt men uleselig.
 
+**Tilgjengelighet er en prioritet.**
+Arvid skal fungere for alle – uavhengig av funksjonsevne, hjelpemiddel eller brukerpreferanse. All ny funksjonalitet skal hensynta a11y og prinsipper for universell utforming (WCAG 2.1 AA):
+- Interaktive elementer skal ha beskrivende navn (`aria-label`, `aria-expanded` o.l.)
+- Dekorative elementer merkes med `aria-hidden="true"`
+- Dynamisk innhold (lastestatus, feilmeldinger) skal varsles via `aria-live` eller `role="alert"`
+- Tastaturnavigasjon og fokushåndtering skal ivaretas
+- Fargebruk alene skal ikke være eneste formidling av informasjon
+
 ---
 
 ## Brukerflyt (MVP)
