@@ -22,6 +22,10 @@ const dmSans = DM_Sans({
 export const metadata: Metadata = {
   title: "Arvid – Forsikringsrådgiver",
   description: "Forstå forsikringsavtalene dine og finn bedre tilbud",
+  metadataBase: new URL("https://arvid.cloud"),
+  alternates: {
+    canonical: "/",
+  },
 };
 
 export default function RootLayout({
