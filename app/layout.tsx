@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { DM_Serif_Display, DM_Sans } from "next/font/google";
 import "./globals.css";
 import ThemeToggle from "@/components/theme-toggle";
+import Analytics from "@/components/analytics";
 
 // Overskriftsfont: DM Serif Display – klassisk, høy kontrast, redaksjonell
 const dmSerifDisplay = DM_Serif_Display({
@@ -37,6 +38,7 @@ export default function RootLayout({
       <body className={`${dmSerifDisplay.variable} ${dmSans.variable} bg-amber-50 dark:bg-stone-950 transition-colors`}>
         {children}
         <ThemeToggle />
+        <Analytics />
       </body>
     </html>
   );
