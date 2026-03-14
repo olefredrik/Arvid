@@ -2,7 +2,7 @@
 
 [![Test](https://github.com/olefredrik/Arvid/actions/workflows/test.yml/badge.svg)](https://github.com/olefredrik/Arvid/actions/workflows/test.yml)
 [![Latest release](https://img.shields.io/github/v/release/olefredrik/Arvid)](https://github.com/olefredrik/Arvid/releases)
-[![License: MIT](https://img.shields.io/badge/license-MIT-orange.svg)](https://github.com/olefredrik/Arvid/blob/main/LICENSE)
+[![License: AGPL v3](https://img.shields.io/badge/license-AGPL%20v3-orange.svg)](https://github.com/olefredrik/Arvid/blob/main/LICENSE)
 
 Arvid er et open-source verktøy som hjelper norske forbrukere å forstå forsikringsavtalene sine, sammenstille dem i et nyttig format, og evaluere konkurransetilbud.
 
