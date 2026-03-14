@@ -89,7 +89,7 @@ export default function Upload({ onFiles }: Props) {
               </div>
               <button
                 onClick={(e) => { e.stopPropagation(); handleRemove(i); }}
-                className="text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 ml-3 shrink-0 transition-colors"
+                className="text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 ml-3 shrink-0 transition-colors cursor-pointer"
                 aria-label="Fjern fil"
               >
                 ✕
@@ -99,7 +99,7 @@ export default function Upload({ onFiles }: Props) {
 
           <button
             onClick={handleSubmit}
-            className="w-full bg-orange-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-orange-700 transition-colors mt-2"
+            className="w-full bg-orange-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-orange-700 transition-colors mt-2 cursor-pointer"
           >
             Analyser {pending.length === 1 ? "1 dokument" : `${pending.length} dokumenter`}
           </button>

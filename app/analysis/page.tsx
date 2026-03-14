@@ -201,7 +201,8 @@ export default function AnalysisPage() {
   const errors = statuses.filter((s) => s.error);
 
   return (
-    <main className="min-h-screen bg-white dark:bg-stone-950 p-8 max-w-4xl mx-auto">
+    <main className="min-h-screen bg-white dark:bg-stone-950">
+      <div className="max-w-4xl mx-auto p-8">
       <a href="/" className="text-sm text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 mb-8 inline-block">
         ← Tilbake
       </a>
@@ -286,21 +287,21 @@ export default function AnalysisPage() {
               <div className="mt-8 flex gap-3">
                 <button
                   onClick={() => { setPolicies([]); setStatuses([]); setStep("upload"); }}
-                  className="px-4 py-2 text-sm text-stone-600 dark:text-stone-300 border border-stone-300 dark:border-stone-600 rounded-lg hover:bg-white dark:hover:bg-stone-800 transition-colors"
+                  className="px-4 py-2 text-sm text-stone-600 dark:text-stone-300 border border-stone-300 dark:border-stone-600 rounded-lg hover:bg-white dark:hover:bg-stone-800 transition-colors cursor-pointer"
                 >
                   Last opp flere dokumenter
                 </button>
                 {compareMode ? (
                   <button
                     onClick={() => { setOfferPolicies([]); setOfferStatuses([]); setCompareError(null); setStep("compare-upload"); }}
-                    className="px-6 py-2 bg-orange-600 text-white text-sm font-medium rounded-lg hover:bg-orange-700 transition-colors"
+                    className="px-6 py-2 bg-orange-600 text-white text-sm font-medium rounded-lg hover:bg-orange-700 transition-colors cursor-pointer"
                   >
                     Last opp mottatt tilbud →
                   </button>
                 ) : (
                   <button
                     onClick={handleGenerateQuoteRequest}
-                    className="px-6 py-2 bg-orange-600 text-white text-sm font-medium rounded-lg hover:bg-orange-700 transition-colors"
+                    className="px-6 py-2 bg-orange-600 text-white text-sm font-medium rounded-lg hover:bg-orange-700 transition-colors cursor-pointer"
                   >
                     Generer tilbudsforespørsel →
                   </button>
@@ -312,7 +313,7 @@ export default function AnalysisPage() {
               <p className="text-gray-500 dark:text-gray-400 mb-4">Ingen forsikringer ble ekstrahert.</p>
               <button
                 onClick={() => { setStatuses([]); setStep("upload"); }}
-                className="text-amber-700 hover:underline text-sm"
+                className="text-amber-700 hover:underline text-sm cursor-pointer"
               >
                 Prøv igjen
               </button>
@@ -353,7 +354,7 @@ export default function AnalysisPage() {
             </p>
             <button
               onClick={() => { setOfferPolicies([]); setOfferStatuses([]); setCompareError(null); setStep("compare-upload"); }}
-              className="px-6 py-2 bg-orange-600 text-white text-sm font-medium rounded-lg hover:bg-orange-700 transition-colors"
+              className="px-6 py-2 bg-orange-600 text-white text-sm font-medium rounded-lg hover:bg-orange-700 transition-colors cursor-pointer"
             >
               Sammenlign mottatte tilbud →
             </button>
@@ -402,13 +403,13 @@ export default function AnalysisPage() {
           <div className="mt-8 flex gap-3">
             <button
               onClick={() => { setOfferPolicies([]); setOfferStatuses([]); setCompareError(null); setStep("compare-upload"); }}
-              className="px-4 py-2 text-sm text-stone-600 dark:text-stone-300 border border-stone-300 dark:border-stone-600 rounded-lg hover:bg-white dark:hover:bg-stone-800 transition-colors"
+              className="px-4 py-2 text-sm text-stone-600 dark:text-stone-300 border border-stone-300 dark:border-stone-600 rounded-lg hover:bg-white dark:hover:bg-stone-800 transition-colors cursor-pointer"
             >
               Last opp på nytt
             </button>
             <button
               onClick={handleRunComparison}
-              className="px-6 py-2 bg-orange-600 text-white text-sm font-medium rounded-lg hover:bg-orange-700 transition-colors"
+              className="px-6 py-2 bg-orange-600 text-white text-sm font-medium rounded-lg hover:bg-orange-700 transition-colors cursor-pointer"
             >
               Bekreft og sammenlign →
             </button>
@@ -486,6 +487,7 @@ export default function AnalysisPage() {
           />
         </>
       )}
+      </div>
     </main>
   );
 }

@@ -55,7 +55,7 @@ function EditableAmount({
     <button
       onClick={onStartEdit}
       title="Klikk for å redigere"
-      className="flex items-center gap-1.5 text-left group"
+      className="flex items-center gap-1.5 text-left group cursor-pointer"
     >
       <span className={isLowConfidence ? "text-amber-700 dark:text-amber-300" : ""}>
         {value != null ? `${value.toLocaleString("nb-NO")} kr` : "–"}

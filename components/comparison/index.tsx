@@ -123,7 +123,7 @@ export default function Comparison({ comparison, onBack, onRestart }: Props) {
               <>
                 <button
                   onClick={() => toggleExpanded(i)}
-                  className="w-full flex items-center justify-between px-4 py-2 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-xs text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                  className="w-full flex items-center justify-between px-4 py-2 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-xs text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
                 >
                   <span>{expanded.has(i) ? "Skjul detaljer" : "Vis detaljer"}</span>
                   <span className="text-gray-400 dark:text-gray-500">{expanded.has(i) ? "▲" : "▼"}</span>
@@ -170,13 +170,13 @@ export default function Comparison({ comparison, onBack, onRestart }: Props) {
       <div className="flex gap-3">
         <button
           onClick={onBack}
-          className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+          className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer"
         >
           ← Tilbake til tilbudsgjennomgang
         </button>
         <button
           onClick={onRestart}
-          className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+          className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer"
         >
           Start på nytt
         </button>
