@@ -1,8 +1,8 @@
-# Rolf – AI-assistert forsikringsrådgiver
+# Arvid – AI-assistert forsikringsrådgiver
 
-## Hva er Rolf?
+## Hva er Arvid?
 
-Rolf er et open-source verktøy som hjelper norske forbrukere å forstå forsikringsavtalene sine, sammenstille dem i et nyttig format, og evaluere konkurrenretilbud. Rolf er nøytral, jobber alltid for brukeren, og har ingen kommersielle bindinger til forsikringsbransjen.
+Arvid er et open-source verktøy som hjelper norske forbrukere å forstå forsikringsavtalene sine, sammenstille dem i et nyttig format, og evaluere konkurrenretilbud. Arvid er nøytral, jobber alltid for brukeren, og har ingen kommersielle bindinger til forsikringsbransjen.
 
 Navnet er bevisst: en pålitelig, litt gammeldags norsk forsikringsagent som faktisk er på din side.
 
@@ -14,7 +14,7 @@ Navnet er bevisst: en pålitelig, litt gammeldags norsk forsikringsagent som fak
 Forsikringsdokumenter inneholder personopplysninger. De prosesseres i sesjonen og kastes. Aldri lagret i database.
 
 **Brukeren eier prosessen.**
-Rolf analyserer og anbefaler. Brukeren bestemmer og handler. Rolf sender aldri noe på vegne av brukeren.
+Arvid analyserer og anbefaler. Brukeren bestemmer og handler. Arvid sender aldri noe på vegne av brukeren.
 
 **Pris er privat.**
 I steg 1–3 av flyten eksponeres aldri brukerens nåværende pris. Dette er en funksjon, ikke en begrensning.
@@ -215,15 +215,15 @@ type Session = {
 
 ## Open-source
 
-Rolf er open-source. Lisens: MIT.
+Arvid er open-source. Lisens: MIT.
 Mål: Tillit gjennom transparens. Brukere skal kunne verifisere at dokumentene deres ikke lagres.
-Hostet versjon på rolf.no (eller tilsvarende) er gratis å bruke.
+Hostet versjon på arvid.cloud (eller tilsvarende) er gratis å bruke.
 
 ---
 
 ## Navn og tone
 
-Tjenesten heter **Rolf**. Ikke "Rolf AI" eller "Rolf Forsikring". Bare Rolf.
+Tjenesten heter **Arvid**. Ikke "Arvid AI" eller "Arvid Forsikring". Bare Arvid.
 
 Tone i alle tekster:
 - Direkte og vennlig, ikke formell
