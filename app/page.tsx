@@ -4,7 +4,7 @@ export default function Home() {
     <main className="min-h-screen bg-white dark:bg-gray-950">
       {/* Hero */}
       <section className="max-w-3xl mx-auto px-6 pt-24 pb-24 text-center">
-        <img src="/rolf.png" alt="Rolf" className="mx-auto mb-6 h-36 w-36 rounded-full object-cover" />
+        <img src="/rolf.png" alt="Rolf" className="mx-auto mb-6 h-52 w-52 object-contain drop-shadow-lg" />
         <h1 className="text-5xl font-bold tracking-tight text-gray-900 dark:text-gray-50 mb-4">Rolf</h1>
         <p className="text-2xl font-medium text-gray-700 dark:text-gray-200 mb-4">
           Din nøytrale forsikringsrådgiver.
