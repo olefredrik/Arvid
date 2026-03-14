@@ -52,7 +52,7 @@ export default function Upload({ onFiles }: Props) {
         onClick={() => inputRef.current?.click()}
         className={`border-2 border-dashed rounded-lg p-12 text-center cursor-pointer transition-colors ${
           isDragging
-            ? "border-amber-600 bg-amber-50 dark:bg-amber-950"
+            ? "border-amber-600 dark:border-amber-700 bg-amber-50 dark:bg-amber-950"
             : "border-stone-300 dark:border-stone-600 hover:border-stone-400 dark:hover:border-stone-500 hover:bg-white dark:hover:bg-stone-800"
         }`}
       >
@@ -99,7 +99,7 @@ export default function Upload({ onFiles }: Props) {
 
           <button
             onClick={handleSubmit}
-            className="w-full bg-orange-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-orange-700 transition-colors mt-2 cursor-pointer"
+            className="w-full bg-orange-600 dark:bg-orange-700 text-white px-6 py-3 rounded-lg font-medium hover:bg-orange-700 dark:hover:bg-orange-800 transition-colors mt-2 cursor-pointer"
           >
             Analyser {pending.length === 1 ? "1 dokument" : `${pending.length} dokumenter`}
           </button>
