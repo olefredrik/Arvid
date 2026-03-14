@@ -202,7 +202,7 @@ export default function AnalysisPage() {
 
   return (
     <main className="min-h-screen bg-white dark:bg-stone-950">
-      <div className="max-w-4xl mx-auto p-8">
+      <div className="max-w-4xl mx-auto px-4 py-6 sm:p-8">
       <a href="/" className="text-sm text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 mb-8 inline-block">
         ← Tilbake
       </a>

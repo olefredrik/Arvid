@@ -5,10 +5,10 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-orange-50 dark:bg-stone-950">
       {/* Hero */}
-      <section className="max-w-3xl mx-auto px-6 pt-24 pb-24 text-center">
-        <Image src="/arvid.png" alt="Arvid – Din nøytrale forsikringsrådgiver" width={208} height={208} className="mx-auto mb-6 object-contain drop-shadow-lg" priority />
-        <h1 className="text-5xl font-bold tracking-tight text-stone-900 dark:text-stone-50 mb-4">Arvid</h1>
-        <p className="text-2xl font-medium text-stone-700 dark:text-stone-200 mb-4">
+      <section className="max-w-3xl mx-auto px-6 pt-16 pb-16 sm:pt-24 sm:pb-24 text-center">
+        <Image src="/arvid.png" alt="Arvid – Din nøytrale forsikringsrådgiver" width={208} height={208} className="mx-auto mb-6 object-contain drop-shadow-lg w-36 h-36 sm:w-52 sm:h-52" priority />
+        <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-stone-900 dark:text-stone-50 mb-4">Arvid</h1>
+        <p className="text-xl sm:text-2xl font-medium text-stone-700 dark:text-stone-200 mb-4">
           Din nøytrale forsikringsrådgiver.
         </p>
         <p className="text-base text-stone-500 dark:text-stone-400 max-w-xl mx-auto mb-10">
@@ -27,7 +27,7 @@ export default function Home() {
             Sammenlign tilbud her
           </a>
         </p>
-        <div className="flex justify-center gap-6 mt-6 text-sm text-stone-400 dark:text-stone-500">
+        <div className="flex flex-wrap justify-center gap-4 sm:gap-6 mt-6 text-sm text-stone-400 dark:text-stone-500">
           <span className="flex items-center gap-1.5">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4">
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 11.25v8.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 1 0 9.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1 1 14.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
@@ -115,9 +115,9 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="border-t border-stone-200 dark:border-stone-800">
-        <div className="max-w-3xl mx-auto px-6 py-6 flex justify-between items-center gap-4 text-xs text-stone-400 dark:text-stone-500">
+        <div className="max-w-3xl mx-auto px-6 py-6 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-stone-400 dark:text-stone-500">
           <span>
-            Arvid er et sideprosjekt utviklet av{" "}
+            Laget av{" "}
             <a
               href="https://olefredrik.com"
               className="hover:text-stone-600 dark:hover:text-stone-300 transition-colors"
@@ -127,23 +127,25 @@ export default function Home() {
               Ole Fredrik Lie
             </a>
           </span>
-          <a
-            href="/personvern"
-            className="hover:text-stone-600 dark:hover:text-stone-300 transition-colors"
-          >
-            Personvern
-          </a>
-          <a
-            href="https://github.com/olefredrik/Arvid"
-            className="flex items-center gap-1.5 hover:text-stone-600 dark:hover:text-stone-300 transition-colors"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <svg viewBox="0 0 16 16" className="h-3.5 w-3.5 fill-current" aria-hidden="true">
-              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
-            </svg>
-            Åpen kildekode på GitHub
-          </a>
+          <div className="flex items-center gap-4">
+            <a
+              href="/personvern"
+              className="hover:text-stone-600 dark:hover:text-stone-300 transition-colors"
+            >
+              Personvern
+            </a>
+            <a
+              href="https://github.com/olefredrik/Arvid"
+              className="flex items-center gap-1.5 hover:text-stone-600 dark:hover:text-stone-300 transition-colors"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <svg viewBox="0 0 16 16" className="h-3.5 w-3.5 fill-current" aria-hidden="true">
+                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
+              </svg>
+              GitHub
+            </a>
+          </div>
         </div>
       </footer>
     </main>

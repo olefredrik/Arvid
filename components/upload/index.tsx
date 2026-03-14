@@ -50,7 +50,7 @@ export default function Upload({ onFiles }: Props) {
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
         onClick={() => inputRef.current?.click()}
-        className={`border-2 border-dashed rounded-lg p-12 text-center cursor-pointer transition-colors ${
+        className={`border-2 border-dashed rounded-lg p-8 sm:p-12 text-center cursor-pointer transition-colors ${
           isDragging
             ? "border-amber-600 dark:border-amber-700 bg-amber-50 dark:bg-amber-950"
             : "border-stone-300 dark:border-stone-600 hover:border-stone-400 dark:hover:border-stone-500 hover:bg-white dark:hover:bg-stone-800"
