@@ -242,7 +242,7 @@ export default function AnalysisPage() {
                     <span className="text-green-500 dark:text-green-400 text-sm">✓</span>
                   )
                 ) : (
-                  <span className="inline-block w-4 h-4 border-2 border-amber-700 border-t-transparent rounded-full animate-spin" />
+                  <span className="inline-block w-4 h-4 border-2 border-amber-700 dark:border-amber-600 border-t-transparent rounded-full animate-spin" />
                 )}
                 <span className="text-sm text-gray-700 dark:text-gray-200 truncate">{s.fileName}</span>
                 {s.error && (
@@ -294,14 +294,14 @@ export default function AnalysisPage() {
                 {compareMode ? (
                   <button
                     onClick={() => { setOfferPolicies([]); setOfferStatuses([]); setCompareError(null); setStep("compare-upload"); }}
-                    className="px-6 py-2 bg-orange-600 text-white text-sm font-medium rounded-lg hover:bg-orange-700 transition-colors cursor-pointer"
+                    className="px-6 py-2 bg-orange-600 dark:bg-orange-700 text-white text-sm font-medium rounded-lg hover:bg-orange-700 dark:hover:bg-orange-800 transition-colors cursor-pointer"
                   >
                     Last opp mottatt tilbud →
                   </button>
                 ) : (
                   <button
                     onClick={handleGenerateQuoteRequest}
-                    className="px-6 py-2 bg-orange-600 text-white text-sm font-medium rounded-lg hover:bg-orange-700 transition-colors cursor-pointer"
+                    className="px-6 py-2 bg-orange-600 dark:bg-orange-700 text-white text-sm font-medium rounded-lg hover:bg-orange-700 dark:hover:bg-orange-800 transition-colors cursor-pointer"
                   >
                     Generer tilbudsforespørsel →
                   </button>
@@ -313,7 +313,7 @@ export default function AnalysisPage() {
               <p className="text-gray-500 dark:text-gray-400 mb-4">Ingen forsikringer ble ekstrahert.</p>
               <button
                 onClick={() => { setStatuses([]); setStep("upload"); }}
-                className="text-amber-700 hover:underline text-sm cursor-pointer"
+                className="text-amber-700 dark:text-amber-500 hover:underline text-sm cursor-pointer"
               >
                 Prøv igjen
               </button>
@@ -330,7 +330,7 @@ export default function AnalysisPage() {
             Arvid formulerer en kravspesifikasjon du kan sende til forsikringsselskaper
           </p>
           <div className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-stone-800 rounded-lg border border-stone-200 dark:border-stone-700">
-            <span className="inline-block w-4 h-4 border-2 border-amber-700 border-t-transparent rounded-full animate-spin" />
+            <span className="inline-block w-4 h-4 border-2 border-amber-700 dark:border-amber-600 border-t-transparent rounded-full animate-spin" />
             <span className="text-sm text-gray-700 dark:text-gray-200">Formulerer forespørsel...</span>
           </div>
         </>
@@ -354,7 +354,7 @@ export default function AnalysisPage() {
             </p>
             <button
               onClick={() => { setOfferPolicies([]); setOfferStatuses([]); setCompareError(null); setStep("compare-upload"); }}
-              className="px-6 py-2 bg-orange-600 text-white text-sm font-medium rounded-lg hover:bg-orange-700 transition-colors cursor-pointer"
+              className="px-6 py-2 bg-orange-600 dark:bg-orange-700 text-white text-sm font-medium rounded-lg hover:bg-orange-700 dark:hover:bg-orange-800 transition-colors cursor-pointer"
             >
               Sammenlign mottatte tilbud →
             </button>
@@ -409,7 +409,7 @@ export default function AnalysisPage() {
             </button>
             <button
               onClick={handleRunComparison}
-              className="px-6 py-2 bg-orange-600 text-white text-sm font-medium rounded-lg hover:bg-orange-700 transition-colors cursor-pointer"
+              className="px-6 py-2 bg-orange-600 dark:bg-orange-700 text-white text-sm font-medium rounded-lg hover:bg-orange-700 dark:hover:bg-orange-800 transition-colors cursor-pointer"
             >
               Bekreft og sammenlign →
             </button>
@@ -425,7 +425,7 @@ export default function AnalysisPage() {
             Arvid analyserer forskjeller i pris og vilkår
           </p>
           <div className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-stone-800 rounded-lg border border-stone-200 dark:border-stone-700">
-            <span className="inline-block w-4 h-4 border-2 border-amber-700 border-t-transparent rounded-full animate-spin" />
+            <span className="inline-block w-4 h-4 border-2 border-amber-700 dark:border-amber-600 border-t-transparent rounded-full animate-spin" />
             <span className="text-sm text-gray-700 dark:text-gray-200">Kjører sammenligning...</span>
           </div>
         </>
@@ -451,7 +451,7 @@ export default function AnalysisPage() {
                     <span className="text-green-500 dark:text-green-400 text-sm">✓</span>
                   )
                 ) : (
-                  <span className="inline-block w-4 h-4 border-2 border-amber-700 border-t-transparent rounded-full animate-spin" />
+                  <span className="inline-block w-4 h-4 border-2 border-amber-700 dark:border-amber-600 border-t-transparent rounded-full animate-spin" />
                 )}
                 <span className="text-sm text-gray-700 dark:text-gray-200 truncate">{s.fileName}</span>
                 {s.error && (

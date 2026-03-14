@@ -15,7 +15,7 @@ export default function Home() {
         </p>
         <a
           href="/analysis"
-          className="inline-block bg-orange-600 text-white px-8 py-3.5 rounded-lg font-medium text-base hover:bg-orange-700 transition-colors"
+          className="inline-block bg-orange-600 dark:bg-orange-700 text-white px-8 py-3.5 rounded-lg font-medium text-base hover:bg-orange-700 dark:hover:bg-orange-800 transition-colors"
         >
           Last opp forsikringene dine
         </a>
@@ -54,28 +54,28 @@ export default function Home() {
         </h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="bg-white dark:bg-stone-800 rounded-xl p-6 shadow-sm border border-stone-100 dark:border-stone-700">
-            <div className="text-2xl font-bold text-amber-600 mb-3">1</div>
+            <div className="text-2xl font-bold text-amber-600 dark:text-amber-500 mb-3">1</div>
             <h3 className="font-semibold text-stone-800 dark:text-stone-100 mb-2">Last opp avtalene dine</h3>
             <p className="text-sm text-stone-500 dark:text-stone-400">
               Last opp én eller flere forsikrings&shy;avtaler som PDF. Arvid identifiserer forsikringstype automatisk.
             </p>
           </div>
           <div className="bg-white dark:bg-stone-800 rounded-xl p-6 shadow-sm border border-stone-100 dark:border-stone-700">
-            <div className="text-2xl font-bold text-amber-600 mb-3">2</div>
+            <div className="text-2xl font-bold text-amber-600 dark:text-amber-500 mb-3">2</div>
             <h3 className="font-semibold text-stone-800 dark:text-stone-100 mb-2">Få oversikt</h3>
             <p className="text-sm text-stone-500 dark:text-stone-400">
               Se dekningsnivå, egenandel og premie samlet på ett sted – uten å lese vilkårene selv.
             </p>
           </div>
           <div className="bg-white dark:bg-stone-800 rounded-xl p-6 shadow-sm border border-stone-100 dark:border-stone-700">
-            <div className="text-2xl font-bold text-amber-600 mb-3">3</div>
+            <div className="text-2xl font-bold text-amber-600 dark:text-amber-500 mb-3">3</div>
             <h3 className="font-semibold text-stone-800 dark:text-stone-100 mb-2">Send tilbudsforespørsel</h3>
             <p className="text-sm text-stone-500 dark:text-stone-400">
               Arvid lager en ferdig kravspesifikasjon du sender til konkurrerende selskaper og ber om tilbud.
             </p>
           </div>
           <div className="bg-white dark:bg-stone-800 rounded-xl p-6 shadow-sm border border-stone-100 dark:border-stone-700">
-            <div className="text-2xl font-bold text-amber-600 mb-3">4</div>
+            <div className="text-2xl font-bold text-amber-600 dark:text-amber-500 mb-3">4</div>
             <h3 className="font-semibold text-stone-800 dark:text-stone-100 mb-2">Sammenlign og ta stilling</h3>
             <p className="text-sm text-stone-500 dark:text-stone-400">
               Last opp tilbudene du har mottatt. Arvid sammenligner pris og vilkår og gir deg en tydelig anbefaling.

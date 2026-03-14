@@ -71,7 +71,7 @@ export default function Report({ quoteRequest, onBack }: Props) {
         </button>
         <button
           onClick={handleDownload}
-          className="px-6 py-2 bg-orange-600 text-white text-sm font-medium rounded-lg hover:bg-orange-700 transition-colors cursor-pointer"
+          className="px-6 py-2 bg-orange-600 dark:bg-orange-700 text-white text-sm font-medium rounded-lg hover:bg-orange-700 dark:hover:bg-orange-800 transition-colors cursor-pointer"
         >
           Last ned som tekstfil
         </button>
