@@ -65,13 +65,13 @@ export default function Report({ quoteRequest, onBack }: Props) {
       <div className="flex gap-3">
         <button
           onClick={onBack}
-          className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+          className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer"
         >
           ← Tilbake til oversikt
         </button>
         <button
           onClick={handleDownload}
-          className="px-6 py-2 bg-amber-700 text-white text-sm font-medium rounded-lg hover:bg-amber-800 transition-colors"
+          className="px-6 py-2 bg-orange-600 text-white text-sm font-medium rounded-lg hover:bg-orange-700 transition-colors cursor-pointer"
         >
           Last ned som tekstfil
         </button>

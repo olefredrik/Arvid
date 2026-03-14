@@ -78,7 +78,7 @@ export default function Upload({ onFiles }: Props) {
           {pending.map((file, i) => (
             <div
               key={`${file.name}-${file.size}`}
-              className="flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
+              className="flex items-center justify-between px-4 py-3 bg-white dark:bg-stone-800 rounded-lg border border-stone-200 dark:border-stone-700"
             >
               <div className="flex items-center gap-3 min-w-0">
                 <span className="text-gray-400 dark:text-gray-500 text-sm shrink-0">PDF</span>
@@ -89,7 +89,7 @@ export default function Upload({ onFiles }: Props) {
               </div>
               <button
                 onClick={(e) => { e.stopPropagation(); handleRemove(i); }}
-                className="text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 ml-3 shrink-0 transition-colors"
+                className="text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 ml-3 shrink-0 transition-colors cursor-pointer"
                 aria-label="Fjern fil"
               >
                 ✕
@@ -99,7 +99,7 @@ export default function Upload({ onFiles }: Props) {
 
           <button
             onClick={handleSubmit}
-            className="w-full bg-amber-700 text-white px-6 py-3 rounded-lg font-medium hover:bg-amber-800 transition-colors mt-2"
+            className="w-full bg-orange-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-orange-700 transition-colors mt-2 cursor-pointer"
           >
             Analyser {pending.length === 1 ? "1 dokument" : `${pending.length} dokumenter`}
           </button>

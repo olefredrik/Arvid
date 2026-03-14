@@ -201,7 +201,8 @@ export default function AnalysisPage() {
   const errors = statuses.filter((s) => s.error);
 
   return (
-    <main className="min-h-screen p-8 max-w-4xl mx-auto">
+    <main className="min-h-screen bg-white dark:bg-stone-950">
+      <div className="max-w-4xl mx-auto p-8">
       <a href="/" className="text-sm text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 mb-8 inline-block">
         ← Tilbake
       </a>
@@ -232,7 +233,7 @@ export default function AnalysisPage() {
             {statuses.map((s) => (
               <div
                 key={s.fileName}
-                className="flex items-center gap-3 px-4 py-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
+                className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-stone-800 rounded-lg border border-stone-200 dark:border-stone-700"
               >
                 {s.done ? (
                   s.error ? (
@@ -286,21 +287,21 @@ export default function AnalysisPage() {
               <div className="mt-8 flex gap-3">
                 <button
                   onClick={() => { setPolicies([]); setStatuses([]); setStep("upload"); }}
-                  className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                  className="px-4 py-2 text-sm text-stone-600 dark:text-stone-300 border border-stone-300 dark:border-stone-600 rounded-lg hover:bg-white dark:hover:bg-stone-800 transition-colors cursor-pointer"
                 >
                   Last opp flere dokumenter
                 </button>
                 {compareMode ? (
                   <button
                     onClick={() => { setOfferPolicies([]); setOfferStatuses([]); setCompareError(null); setStep("compare-upload"); }}
-                    className="px-6 py-2 bg-amber-700 text-white text-sm font-medium rounded-lg hover:bg-amber-800 transition-colors"
+                    className="px-6 py-2 bg-orange-600 text-white text-sm font-medium rounded-lg hover:bg-orange-700 transition-colors cursor-pointer"
                   >
                     Last opp mottatt tilbud →
                   </button>
                 ) : (
                   <button
                     onClick={handleGenerateQuoteRequest}
-                    className="px-6 py-2 bg-amber-700 text-white text-sm font-medium rounded-lg hover:bg-amber-800 transition-colors"
+                    className="px-6 py-2 bg-orange-600 text-white text-sm font-medium rounded-lg hover:bg-orange-700 transition-colors cursor-pointer"
                   >
                     Generer tilbudsforespørsel →
                   </button>
@@ -312,7 +313,7 @@ export default function AnalysisPage() {
               <p className="text-gray-500 dark:text-gray-400 mb-4">Ingen forsikringer ble ekstrahert.</p>
               <button
                 onClick={() => { setStatuses([]); setStep("upload"); }}
-                className="text-amber-700 hover:underline text-sm"
+                className="text-amber-700 hover:underline text-sm cursor-pointer"
               >
                 Prøv igjen
               </button>
@@ -328,7 +329,7 @@ export default function AnalysisPage() {
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
             Rolf formulerer en kravspesifikasjon du kan sende til forsikringsselskaper
           </p>
-          <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+          <div className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-stone-800 rounded-lg border border-stone-200 dark:border-stone-700">
             <span className="inline-block w-4 h-4 border-2 border-amber-700 border-t-transparent rounded-full animate-spin" />
             <span className="text-sm text-gray-700 dark:text-gray-200">Formulerer forespørsel...</span>
           </div>
@@ -353,7 +354,7 @@ export default function AnalysisPage() {
             </p>
             <button
               onClick={() => { setOfferPolicies([]); setOfferStatuses([]); setCompareError(null); setStep("compare-upload"); }}
-              className="px-6 py-2 bg-amber-700 text-white text-sm font-medium rounded-lg hover:bg-amber-800 transition-colors"
+              className="px-6 py-2 bg-orange-600 text-white text-sm font-medium rounded-lg hover:bg-orange-700 transition-colors cursor-pointer"
             >
               Sammenlign mottatte tilbud →
             </button>
@@ -402,13 +403,13 @@ export default function AnalysisPage() {
           <div className="mt-8 flex gap-3">
             <button
               onClick={() => { setOfferPolicies([]); setOfferStatuses([]); setCompareError(null); setStep("compare-upload"); }}
-              className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+              className="px-4 py-2 text-sm text-stone-600 dark:text-stone-300 border border-stone-300 dark:border-stone-600 rounded-lg hover:bg-white dark:hover:bg-stone-800 transition-colors cursor-pointer"
             >
               Last opp på nytt
             </button>
             <button
               onClick={handleRunComparison}
-              className="px-6 py-2 bg-amber-700 text-white text-sm font-medium rounded-lg hover:bg-amber-800 transition-colors"
+              className="px-6 py-2 bg-orange-600 text-white text-sm font-medium rounded-lg hover:bg-orange-700 transition-colors cursor-pointer"
             >
               Bekreft og sammenlign →
             </button>
@@ -423,7 +424,7 @@ export default function AnalysisPage() {
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
             Rolf analyserer forskjeller i pris og vilkår
           </p>
-          <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+          <div className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-stone-800 rounded-lg border border-stone-200 dark:border-stone-700">
             <span className="inline-block w-4 h-4 border-2 border-amber-700 border-t-transparent rounded-full animate-spin" />
             <span className="text-sm text-gray-700 dark:text-gray-200">Kjører sammenligning...</span>
           </div>
@@ -441,7 +442,7 @@ export default function AnalysisPage() {
             {offerStatuses.map((s) => (
               <div
                 key={s.fileName}
-                className="flex items-center gap-3 px-4 py-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
+                className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-stone-800 rounded-lg border border-stone-200 dark:border-stone-700"
               >
                 {s.done ? (
                   s.error ? (
@@ -486,6 +487,7 @@ export default function AnalysisPage() {
           />
         </>
       )}
+      </div>
     </main>
   );
 }

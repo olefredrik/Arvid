@@ -1,7 +1,7 @@
 // Landingsside
 export default function Home() {
   return (
-    <main className="min-h-screen bg-amber-50 dark:bg-stone-950">
+    <main className="min-h-screen bg-orange-50 dark:bg-stone-950">
       {/* Hero */}
       <section className="max-w-3xl mx-auto px-6 pt-24 pb-24 text-center">
         <img src="/rolf.png" alt="Rolf" className="mx-auto mb-6 h-52 w-52 object-contain drop-shadow-lg" />
