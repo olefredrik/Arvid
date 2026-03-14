@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import ThemeToggle from "@/components/theme-toggle";
 
 export const metadata: Metadata = {
   title: "Rolf – Forsikringsrådgiver",
@@ -13,7 +14,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="no">
-      <body>{children}</body>
+      <head>
+        {/* Forhindrer glimt av feil tema ved sideinnlasting */}
+        <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='dark')document.documentElement.classList.add('dark');}catch(e){}})();` }} />
+      </head>
+      <body className="bg-white dark:bg-gray-950 transition-colors">
+        {children}
+        <ThemeToggle />
+      </body>
     </html>
   );
 }

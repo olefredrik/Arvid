@@ -41,7 +41,7 @@ export default function Report({ quoteRequest, onBack }: Props) {
   return (
     <div className="space-y-8">
       {/* Instruksjonsmelding */}
-      <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
+      <div className="p-4 bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg text-sm text-blue-800 dark:text-blue-200">
         <p className="font-medium mb-1">Slik bruker du dette dokumentet</p>
         <p>
           Last ned og send til forsikringsselskaper du vil innhente tilbud fra.
@@ -50,11 +50,11 @@ export default function Report({ quoteRequest, onBack }: Props) {
       </div>
 
       {/* Forespørselen */}
-      <div className="border border-gray-200 rounded-lg divide-y divide-gray-100">
+      <div className="border border-gray-200 dark:border-gray-700 rounded-lg divide-y divide-gray-100 dark:divide-gray-800">
         {quoteRequest.sections.map((section, i) => (
           <div key={i} className="px-6 py-5">
-            <h3 className="font-semibold text-gray-900 mb-2">{section.heading}</h3>
-            <p className="text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">
+            <h3 className="font-semibold text-gray-900 dark:text-gray-50 mb-2">{section.heading}</h3>
+            <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap leading-relaxed">
               {section.content}
             </p>
           </div>
@@ -65,7 +65,7 @@ export default function Report({ quoteRequest, onBack }: Props) {
       <div className="flex gap-3">
         <button
           onClick={onBack}
-          className="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+          className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
         >
           ← Tilbake til oversikt
         </button>

@@ -52,14 +52,14 @@ export default function Upload({ onFiles }: Props) {
         onClick={() => inputRef.current?.click()}
         className={`border-2 border-dashed rounded-lg p-12 text-center cursor-pointer transition-colors ${
           isDragging
-            ? "border-blue-500 bg-blue-50"
-            : "border-gray-300 hover:border-gray-400 hover:bg-gray-50"
+            ? "border-blue-500 bg-blue-50 dark:bg-blue-950"
+            : "border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800"
         }`}
       >
-        <p className="text-gray-600 font-medium">
+        <p className="text-gray-600 dark:text-gray-300 font-medium">
           Slipp PDF-filer her, eller klikk for å velge
         </p>
-        <p className="text-sm text-gray-400 mt-1">
+        <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
           Du kan laste opp flere filer samtidig
         </p>
         <input
@@ -78,18 +78,18 @@ export default function Upload({ onFiles }: Props) {
           {pending.map((file, i) => (
             <div
               key={`${file.name}-${file.size}`}
-              className="flex items-center justify-between px-4 py-3 bg-gray-50 rounded-lg border border-gray-200"
+              className="flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
             >
               <div className="flex items-center gap-3 min-w-0">
-                <span className="text-gray-400 text-sm shrink-0">PDF</span>
-                <span className="text-sm text-gray-700 truncate">{file.name}</span>
-                <span className="text-xs text-gray-400 shrink-0">
+                <span className="text-gray-400 dark:text-gray-500 text-sm shrink-0">PDF</span>
+                <span className="text-sm text-gray-700 dark:text-gray-200 truncate">{file.name}</span>
+                <span className="text-xs text-gray-400 dark:text-gray-500 shrink-0">
                   {(file.size / 1024).toFixed(0)} KB
                 </span>
               </div>
               <button
                 onClick={(e) => { e.stopPropagation(); handleRemove(i); }}
-                className="text-gray-400 hover:text-red-500 ml-3 shrink-0 transition-colors"
+                className="text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 ml-3 shrink-0 transition-colors"
                 aria-label="Fjern fil"
               >
                 ✕

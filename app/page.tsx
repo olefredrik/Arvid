@@ -1,15 +1,15 @@
 // Landingsside
 export default function Home() {
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen bg-white dark:bg-gray-950">
       {/* Hero */}
       <section className="max-w-3xl mx-auto px-6 pt-24 pb-24 text-center">
         <img src="/rolf.png" alt="Rolf" className="mx-auto mb-6 h-36 w-36 rounded-full object-cover" />
-        <h1 className="text-5xl font-bold tracking-tight text-gray-900 mb-4">Rolf</h1>
-        <p className="text-2xl font-medium text-gray-700 mb-4">
+        <h1 className="text-5xl font-bold tracking-tight text-gray-900 dark:text-gray-50 mb-4">Rolf</h1>
+        <p className="text-2xl font-medium text-gray-700 dark:text-gray-200 mb-4">
           Din nøytrale forsikringsrådgiver.
         </p>
-        <p className="text-base text-gray-400 max-w-xl mx-auto mb-10">
+        <p className="text-base text-gray-400 dark:text-gray-500 max-w-xl mx-auto mb-10">
           Last opp forsikringsavtalene dine som PDF. Rolf leser dem, lager en oversikt,
           og genererer en ferdig tilbudsforespørsel du kan sende til andre selskaper.
         </p>
@@ -19,7 +19,7 @@ export default function Home() {
         >
           Last opp forsikringene dine
         </a>
-        <div className="flex justify-center gap-6 mt-5 text-sm text-gray-500">
+        <div className="flex justify-center gap-6 mt-5 text-sm text-gray-500 dark:text-gray-400">
           <span>✓ Gratis</span>
           <span>✓ Ingen innlogging</span>
           <span>✓ Ingen lagring av dokumenter</span>
@@ -27,32 +27,32 @@ export default function Home() {
       </section>
 
       {/* Slik fungerer det */}
-      <section className="border-t border-gray-100 bg-gray-50">
+      <section className="border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900">
         <div className="max-w-3xl mx-auto px-6 py-16">
-          <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-10 text-center">
+          <h2 className="text-sm font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-10 text-center">
             Slik fungerer det
           </h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-0">
-            <div className="relative bg-white rounded-xl p-6 sm:rounded-r-none sm:border-r border-gray-100">
+            <div className="relative bg-white dark:bg-gray-800 rounded-xl p-6 sm:rounded-r-none sm:border-r border-gray-100 dark:border-gray-700">
               <div className="text-2xl font-bold text-blue-600 mb-3">1</div>
-              <h3 className="font-semibold text-gray-800 mb-2">Last opp avtaler</h3>
-              <p className="text-sm text-gray-500">
+              <h3 className="font-semibold text-gray-800 dark:text-gray-100 mb-2">Last opp avtaler</h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
                 Last opp én eller flere forsikrings&shy;avtaler som PDF. Rolf identifiserer
                 forsikringstype automatisk.
               </p>
             </div>
-            <div className="relative bg-white rounded-xl p-6 sm:rounded-none sm:border-r border-gray-100">
+            <div className="relative bg-white dark:bg-gray-800 rounded-xl p-6 sm:rounded-none sm:border-r border-gray-100 dark:border-gray-700">
               <div className="text-2xl font-bold text-blue-600 mb-3">2</div>
-              <h3 className="font-semibold text-gray-800 mb-2">Få oversikt</h3>
-              <p className="text-sm text-gray-500">
+              <h3 className="font-semibold text-gray-800 dark:text-gray-100 mb-2">Få oversikt</h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
                 Se dekningsnivå, egenandel og premie per forsikring samlet på ett sted –
                 uten å lese vilkårene selv.
               </p>
             </div>
-            <div className="bg-white rounded-xl p-6 sm:rounded-l-none">
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 sm:rounded-l-none">
               <div className="text-2xl font-bold text-blue-600 mb-3">3</div>
-              <h3 className="font-semibold text-gray-800 mb-2">Send tilbudsforespørsel</h3>
-              <p className="text-sm text-gray-500">
+              <h3 className="font-semibold text-gray-800 dark:text-gray-100 mb-2">Send tilbudsforespørsel</h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
                 Rolf lager en ferdig kravspesifikasjon du kan sende til konkurrerende
                 selskaper og be om tilbud.
               </p>
@@ -63,25 +63,25 @@ export default function Home() {
 
       {/* Tillit */}
       <section className="max-w-3xl mx-auto px-6 py-16">
-        <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-10 text-center">
+        <h2 className="text-sm font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-10 text-center">
           Bygget på tillit
         </h2>
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-3 text-center">
           <div>
-            <p className="font-semibold text-gray-900 mb-2">Nøytral</p>
-            <p className="text-sm text-gray-500 leading-relaxed">
+            <p className="font-semibold text-gray-900 dark:text-gray-50 mb-2">Nøytral</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
               Ingen kommersielle bindinger til forsikringsbransjen. Rolf er alltid på din side.
             </p>
           </div>
           <div>
-            <p className="font-semibold text-gray-900 mb-2">Ingen lagring</p>
-            <p className="text-sm text-gray-500 leading-relaxed">
+            <p className="font-semibold text-gray-900 dark:text-gray-50 mb-2">Ingen lagring</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
               Dokumentene dine prosesseres i sesjonen og kastes. Ingenting lagres i en database.
             </p>
           </div>
           <div>
-            <p className="font-semibold text-gray-900 mb-2">Åpen kildekode</p>
-            <p className="text-sm text-gray-500 leading-relaxed">
+            <p className="font-semibold text-gray-900 dark:text-gray-50 mb-2">Åpen kildekode</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
               Koden er åpent tilgjengelig. Du kan verifisere selv at dokumentene ikke lagres.
             </p>
           </div>
@@ -89,13 +89,13 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-gray-100">
-        <div className="max-w-3xl mx-auto px-6 py-6 flex justify-between items-center text-xs text-gray-400">
+      <footer className="border-t border-gray-100 dark:border-gray-800">
+        <div className="max-w-3xl mx-auto px-6 py-6 flex justify-between items-center text-xs text-gray-400 dark:text-gray-500">
           <span>
             Rolf er et sideprosjekt utviklet av{" "}
             <a
               href="https://olefredrik.com"
-              className="hover:text-gray-600 transition-colors"
+              className="hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -104,7 +104,7 @@ export default function Home() {
           </span>
           <a
             href="https://github.com/olefredrik/Rolf"
-            className="flex items-center gap-1.5 hover:text-gray-600 transition-colors"
+            className="flex items-center gap-1.5 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
             target="_blank"
             rel="noopener noreferrer"
           >
