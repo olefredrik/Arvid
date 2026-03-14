@@ -32,7 +32,7 @@ function EditableAmount({
       <input
         type="text"
         inputMode="numeric"
-        className="w-full border border-amber-500 rounded px-2 py-0.5 text-sm focus:outline-none focus:ring-1 focus:ring-amber-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+        className="w-full border border-amber-500 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-amber-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
         defaultValue={value ?? ""}
         autoFocus
         onChange={(e) => setDraft(e.target.value)}

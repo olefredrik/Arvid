@@ -86,7 +86,7 @@ export default function Comparison({ comparison, onBack, onRestart }: Props) {
             </div>
 
             {/* Side-by-side tabell */}
-            <div className="grid grid-cols-2 divide-x divide-gray-100 dark:divide-gray-700">
+            <div className="grid grid-cols-1 sm:grid-cols-2 sm:divide-x divide-gray-100 dark:divide-gray-700">
               <div className="px-4 py-3">
                 <p className="text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-2">Nåværende</p>
                 <p className="text-sm text-gray-700 dark:text-gray-200">{c.current.company}</p>
@@ -98,7 +98,7 @@ export default function Comparison({ comparison, onBack, onRestart }: Props) {
                   <p className="text-sm font-medium text-gray-700 dark:text-gray-200 mt-1">{c.current.annualPremium.toLocaleString("nb-NO")} kr/år</p>
                 )}
               </div>
-              <div className="px-4 py-3">
+              <div className="px-4 py-3 border-t sm:border-t-0 border-gray-100 dark:border-gray-700">
                 <p className="text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-2">Tilbud</p>
                 <p className="text-sm text-gray-700 dark:text-gray-200">{c.offer.company}</p>
                 <p className="text-sm text-gray-600 dark:text-gray-300">{c.offer.coverageLevel}</p>
@@ -167,7 +167,7 @@ export default function Comparison({ comparison, onBack, onRestart }: Props) {
       )}
 
       {/* Handlinger */}
-      <div className="flex gap-3">
+      <div className="flex flex-wrap gap-3">
         <button
           onClick={onBack}
           className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer"

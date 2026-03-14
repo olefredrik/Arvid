@@ -5,10 +5,10 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-orange-50 dark:bg-stone-950">
       {/* Hero */}
-      <section className="max-w-3xl mx-auto px-6 pt-24 pb-24 text-center">
-        <Image src="/arvid.png" alt="Arvid – Din nøytrale forsikringsrådgiver" width={208} height={208} className="mx-auto mb-6 object-contain drop-shadow-lg" priority />
-        <h1 className="text-5xl font-bold tracking-tight text-stone-900 dark:text-stone-50 mb-4">Arvid</h1>
-        <p className="text-2xl font-medium text-stone-700 dark:text-stone-200 mb-4">
+      <section className="max-w-3xl mx-auto px-6 pt-16 pb-16 sm:pt-24 sm:pb-24 text-center">
+        <Image src="/arvid.png" alt="Arvid – Din nøytrale forsikringsrådgiver" width={208} height={208} className="mx-auto mb-6 object-contain drop-shadow-lg w-36 h-36 sm:w-52 sm:h-52" priority />
+        <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-stone-900 dark:text-stone-50 mb-4">Arvid</h1>
+        <p className="text-xl sm:text-2xl font-medium text-stone-700 dark:text-stone-200 mb-4">
           Din nøytrale forsikringsrådgiver.
         </p>
         <p className="text-base text-stone-500 dark:text-stone-400 max-w-xl mx-auto mb-10">
@@ -27,7 +27,7 @@ export default function Home() {
             Sammenlign tilbud her
           </a>
         </p>
-        <div className="flex justify-center gap-6 mt-6 text-sm text-stone-400 dark:text-stone-500">
+        <div className="flex flex-wrap justify-center gap-4 sm:gap-6 mt-6 text-sm text-stone-400 dark:text-stone-500">
           <span className="flex items-center gap-1.5">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4">
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 11.25v8.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 1 0 9.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1 1 14.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
@@ -115,7 +115,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="border-t border-stone-200 dark:border-stone-800">
-        <div className="max-w-3xl mx-auto px-6 py-6 flex justify-between items-center gap-4 text-xs text-stone-400 dark:text-stone-500">
+        <div className="max-w-3xl mx-auto px-6 py-6 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-stone-400 dark:text-stone-500">
           <span>
             Arvid er et sideprosjekt utviklet av{" "}
             <a
