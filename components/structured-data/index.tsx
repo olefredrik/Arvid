@@ -14,7 +14,7 @@ export default function StructuredData() {
       {
         "@type": "WebApplication",
         "@id": "https://arvid.cloud/#app",
-        "name": "Arvid – Forsikringsrådgiver",
+        "name": "Arvid – Din nøytrale forsikringsassistent",
         "url": "https://arvid.cloud",
         "description": "Arvid hjelper norske forbrukere å forstå forsikringsavtalene sine, sammenstille dem i et nyttig format, og evaluere konkurransetilbud.",
         "applicationCategory": "FinanceApplication",

@@ -37,7 +37,7 @@ export const metadata: Metadata = {
         url: "/arvid-og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Arvid – Din nøytrale forsikringsrådgiver",
+        alt: "Arvid – Din nøytrale forsikringsassistent",
       },
     ],
     locale: "nb_NO",
