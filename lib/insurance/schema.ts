@@ -22,6 +22,18 @@ const commonFields: FieldDefinition[] = [
     required: true,
   },
   {
+    key: "policyNumber",
+    label: "Polisenummer",
+    description: "Polisenummer eller avtalenummer. Lei etter: 'polisenummer', 'avtalenummer', 'forsikringsnummer'. Ikke forveksle med kundenummer.",
+    required: false,
+  },
+  {
+    key: "renewalDate",
+    label: "Fornyelsesdato",
+    description: "Dato polisen fornyes eller utløper. Lei etter: 'fornyelsesdato', 'utløpsdato', 'gyldig til', 'forsikringstiden utløper', 'neste forfall'. Format: DD.MM.ÅÅÅÅ",
+    required: false,
+  },
+  {
     key: "coverageLevel",
     label: "Dekningsnivå",
     description: "Navn på dekningspakken, f.eks. 'Kasko', 'Super', 'Basis', 'Ansvar'",
@@ -30,7 +42,7 @@ const commonFields: FieldDefinition[] = [
   {
     key: "deductible",
     label: "Egenandel",
-    description: "Egenandel i norske kroner (kun tallet, uten valutasymbol)",
+    description: "Egenandel i norske kroner (kun tallet, uten valutasymbol). Hvis dokumentet oppgir flere egenandeler for ulike skadetyper, bruk den generelle/standard egenandelen.",
     required: false,
   },
   {
@@ -152,6 +164,35 @@ const vehicleFields: FieldDefinition[] = [
     key: "parkingDamage",
     label: "Parkeringsskade",
     description: "Om skader ved parkering (uten kjent skadevolder) er dekket",
+    required: false,
+  },
+];
+
+// Sykkel – egne felt siden kjøretøyfelter som veihjelp og leiebil ikke er relevante
+const bicycleFields: FieldDefinition[] = [
+  ...commonFields,
+  {
+    key: "bicycleValue",
+    label: "Forsikringssum",
+    description: "Forsikringssum for sykkelen i norske kroner",
+    required: false,
+  },
+  {
+    key: "isElectric",
+    label: "Elsykkel",
+    description: "Om forsikringen gjelder en elsykkel (true/false)",
+    required: false,
+  },
+  {
+    key: "theftCoverage",
+    label: "Tyveridekning",
+    description: "Om tyveri er dekket, og eventuelle krav til låsing eller sikring",
+    required: false,
+  },
+  {
+    key: "ageLimit",
+    label: "Aldersgrense (sykkel)",
+    description: "Eventuell øvre aldersgrense på sykkelen (i år) for at den er forsikret",
     required: false,
   },
 ];
@@ -318,7 +359,7 @@ export const EXTRACTION_SCHEMAS: Record<InsuranceType, ExtractionSchema> = {
   "e-scooter": { type: "e-scooter", fields: vehicleFields },
   snowmobile: { type: "snowmobile", fields: vehicleFields },
   trailer: { type: "trailer", fields: vehicleFields },
-  bicycle: { type: "bicycle", fields: vehicleFields },
+  bicycle: { type: "bicycle", fields: bicycleFields },
   boat: { type: "boat", fields: boatFields },
   drone: { type: "drone", fields: droneFields },
   bunad: { type: "bunad", fields: bunadFields },
