@@ -4,13 +4,13 @@ export default function Home() {
     <main className="min-h-screen bg-orange-50 dark:bg-stone-950">
       {/* Hero */}
       <section className="max-w-3xl mx-auto px-6 pt-24 pb-24 text-center">
-        <img src="/rolf.png" alt="Rolf" className="mx-auto mb-6 h-52 w-52 object-contain drop-shadow-lg" />
-        <h1 className="text-5xl font-bold tracking-tight text-stone-900 dark:text-stone-50 mb-4">Rolf</h1>
+        <img src="/arvid.png" alt="Arvid" className="mx-auto mb-6 h-52 w-52 object-contain drop-shadow-lg" />
+        <h1 className="text-5xl font-bold tracking-tight text-stone-900 dark:text-stone-50 mb-4">Arvid</h1>
         <p className="text-2xl font-medium text-stone-700 dark:text-stone-200 mb-4">
           Din nøytrale forsikringsrådgiver.
         </p>
         <p className="text-base text-stone-500 dark:text-stone-400 max-w-xl mx-auto mb-10">
-          Last opp forsikringsavtalene dine som PDF. Rolf leser dem, lager en oversikt,
+          Last opp forsikringsavtalene dine som PDF. Arvid leser dem, lager en oversikt,
           og genererer en ferdig tilbudsforespørsel du kan sende til andre selskaper.
         </p>
         <a
@@ -57,7 +57,7 @@ export default function Home() {
             <div className="text-2xl font-bold text-amber-600 mb-3">1</div>
             <h3 className="font-semibold text-stone-800 dark:text-stone-100 mb-2">Last opp avtalene dine</h3>
             <p className="text-sm text-stone-500 dark:text-stone-400">
-              Last opp én eller flere forsikrings&shy;avtaler som PDF. Rolf identifiserer forsikringstype automatisk.
+              Last opp én eller flere forsikrings&shy;avtaler som PDF. Arvid identifiserer forsikringstype automatisk.
             </p>
           </div>
           <div className="bg-white dark:bg-stone-800 rounded-xl p-6 shadow-sm border border-stone-100 dark:border-stone-700">
@@ -71,14 +71,14 @@ export default function Home() {
             <div className="text-2xl font-bold text-amber-600 mb-3">3</div>
             <h3 className="font-semibold text-stone-800 dark:text-stone-100 mb-2">Send tilbudsforespørsel</h3>
             <p className="text-sm text-stone-500 dark:text-stone-400">
-              Rolf lager en ferdig kravspesifikasjon du sender til konkurrerende selskaper og ber om tilbud.
+              Arvid lager en ferdig kravspesifikasjon du sender til konkurrerende selskaper og ber om tilbud.
             </p>
           </div>
           <div className="bg-white dark:bg-stone-800 rounded-xl p-6 shadow-sm border border-stone-100 dark:border-stone-700">
             <div className="text-2xl font-bold text-amber-600 mb-3">4</div>
             <h3 className="font-semibold text-stone-800 dark:text-stone-100 mb-2">Sammenlign og ta stilling</h3>
             <p className="text-sm text-stone-500 dark:text-stone-400">
-              Last opp tilbudene du har mottatt. Rolf sammenligner pris og vilkår og gir deg en tydelig anbefaling.
+              Last opp tilbudene du har mottatt. Arvid sammenligner pris og vilkår og gir deg en tydelig anbefaling.
             </p>
           </div>
         </div>
@@ -93,7 +93,7 @@ export default function Home() {
           <div>
             <h3 className="font-semibold text-stone-900 dark:text-stone-50 mb-2">Nøytral</h3>
             <p className="text-sm text-stone-500 dark:text-stone-400 leading-relaxed">
-              Ingen kommersielle bindinger til forsikringsbransjen. Rolf er alltid på din side.
+              Ingen kommersielle bindinger til forsikringsbransjen. Arvid er alltid på din side.
             </p>
           </div>
           <div>
@@ -115,7 +115,7 @@ export default function Home() {
       <footer className="border-t border-stone-200 dark:border-stone-800">
         <div className="max-w-3xl mx-auto px-6 py-6 flex justify-between items-center text-xs text-stone-400 dark:text-stone-500">
           <span>
-            Rolf er et sideprosjekt utviklet av{" "}
+            Arvid er et sideprosjekt utviklet av{" "}
             <a
               href="https://olefredrik.com"
               className="hover:text-stone-600 dark:hover:text-stone-300 transition-colors"

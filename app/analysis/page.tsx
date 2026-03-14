@@ -227,7 +227,7 @@ export default function AnalysisPage() {
         <>
           <h1 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">Analyserer dokumenter</h1>
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
-            Rolf leser og strukturerer innholdet i forsikringsavtalene dine
+            Arvid leser og strukturerer innholdet i forsikringsavtalene dine
           </p>
           <div className="space-y-3">
             {statuses.map((s) => (
@@ -327,7 +327,7 @@ export default function AnalysisPage() {
         <>
           <h1 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">Genererer tilbudsforespørsel</h1>
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
-            Rolf formulerer en kravspesifikasjon du kan sende til forsikringsselskaper
+            Arvid formulerer en kravspesifikasjon du kan sende til forsikringsselskaper
           </p>
           <div className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-stone-800 rounded-lg border border-stone-200 dark:border-stone-700">
             <span className="inline-block w-4 h-4 border-2 border-amber-700 border-t-transparent rounded-full animate-spin" />
@@ -350,7 +350,7 @@ export default function AnalysisPage() {
           <div className="mt-8 pt-8 border-t border-gray-100 dark:border-gray-800">
             <h2 className="text-base font-semibold text-gray-900 dark:text-gray-50 mb-1">Har du mottatt tilbud?</h2>
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-              Last opp tilbudene du har fått, så sammenligner Rolf dem med avtalene du har i dag.
+              Last opp tilbudene du har fått, så sammenligner Arvid dem med avtalene du har i dag.
             </p>
             <button
               onClick={() => { setOfferPolicies([]); setOfferStatuses([]); setCompareError(null); setStep("compare-upload"); }}
@@ -422,7 +422,7 @@ export default function AnalysisPage() {
         <>
           <h1 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">Sammenligner tilbud</h1>
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
-            Rolf analyserer forskjeller i pris og vilkår
+            Arvid analyserer forskjeller i pris og vilkår
           </p>
           <div className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-stone-800 rounded-lg border border-stone-200 dark:border-stone-700">
             <span className="inline-block w-4 h-4 border-2 border-amber-700 border-t-transparent rounded-full animate-spin" />
@@ -436,7 +436,7 @@ export default function AnalysisPage() {
         <>
           <h1 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">Analyserer og sammenligner tilbud</h1>
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
-            Rolf leser tilbudene og sammenligner dem med avtalene du har i dag
+            Arvid leser tilbudene og sammenligner dem med avtalene du har i dag
           </p>
           <div className="space-y-3">
             {offerStatuses.map((s) => (

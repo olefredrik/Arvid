@@ -65,7 +65,7 @@ export default function Comparison({ comparison, onBack, onRestart }: Props) {
 
       {/* AI-anbefaling */}
       <div className="p-4 bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg text-sm text-blue-800 dark:text-blue-200">
-        <p className="font-medium mb-1">Rolfs vurdering</p>
+        <p className="font-medium mb-1">Arvids vurdering</p>
         <p className="leading-relaxed">{comparison.recommendation}</p>
       </div>
 

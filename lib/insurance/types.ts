@@ -1,4 +1,4 @@
-// Alle TypeScript-typer for forsikringsdata i Rolf
+// Alle TypeScript-typer for forsikringsdata i Arvid
 
 // Støttede forsikringstyper
 export type InsuranceType =

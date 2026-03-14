@@ -1,12 +1,12 @@
-# Rolf
+# Arvid
 
 [![Test](https://github.com/olefredrik/Rolf/actions/workflows/test.yml/badge.svg)](https://github.com/olefredrik/Rolf/actions/workflows/test.yml)
 [![Latest release](https://img.shields.io/github/v/release/olefredrik/Rolf)](https://github.com/olefredrik/Rolf/releases)
 [![License: MIT](https://img.shields.io/badge/license-MIT-orange.svg)](https://github.com/olefredrik/Rolf/blob/main/LICENSE)
 
-Rolf er et open-source verktøy som hjelper norske forbrukere å forstå forsikringsavtalene sine, sammenstille dem i et nyttig format, og evaluere konkurransetilbud.
+Arvid er et open-source verktøy som hjelper norske forbrukere å forstå forsikringsavtalene sine, sammenstille dem i et nyttig format, og evaluere konkurransetilbud.
 
-Rolf er nøytral, jobber alltid for brukeren, og har ingen kommersielle bindinger til forsikringsbransjen.
+Arvid er nøytral, jobber alltid for brukeren, og har ingen kommersielle bindinger til forsikringsbransjen.
 
 ## Funksjonalitet
 
@@ -37,7 +37,7 @@ Rolf er nøytral, jobber alltid for brukeren, og har ingen kommersielle bindinge
 
 ```bash
 git clone https://github.com/olefredrik/rolf.git
-cd rolf
+cd arvid
 npm install
 ```
 
@@ -65,7 +65,7 @@ npm run dev
 
 ## Personvern
 
-Forsikringsdokumenter inneholder personopplysninger. Rolf er designet med personvern som førsteklasses prioritet:
+Forsikringsdokumenter inneholder personopplysninger. Arvid er designet med personvern som førsteklasses prioritet:
 
 - Ingen dokumentinnhold lagres i database
 - Dokumenter prosesseres kun i sesjonen og kastes etterpå

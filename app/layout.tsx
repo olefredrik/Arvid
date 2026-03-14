@@ -19,7 +19,7 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Rolf – Forsikringsrådgiver",
+  title: "Arvid – Forsikringsrådgiver",
   description: "Forstå forsikringsavtalene dine og finn bedre tilbud",
 };
 
