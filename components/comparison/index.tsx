@@ -123,10 +123,11 @@ export default function Comparison({ comparison, onBack, onRestart }: Props) {
               <>
                 <button
                   onClick={() => toggleExpanded(i)}
+                  aria-expanded={expanded.has(i)}
                   className="w-full flex items-center justify-between px-4 py-2 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-xs text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
                 >
                   <span>{expanded.has(i) ? "Skjul detaljer" : "Vis detaljer"}</span>
-                  <span className="text-gray-400 dark:text-gray-500">{expanded.has(i) ? "▲" : "▼"}</span>
+                  <span className="text-gray-400 dark:text-gray-500" aria-hidden="true">{expanded.has(i) ? "▲" : "▼"}</span>
                 </button>
                 {expanded.has(i) && (
                   <div className="px-4 py-3 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">

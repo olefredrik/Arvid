@@ -32,6 +32,7 @@ function EditableAmount({
       <input
         type="text"
         inputMode="numeric"
+        aria-label="Rediger beløp"
         className="w-full border border-amber-500 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-amber-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
         defaultValue={value ?? ""}
         autoFocus
@@ -55,15 +56,16 @@ function EditableAmount({
     <button
       onClick={onStartEdit}
       title="Klikk for å redigere"
+      aria-label="Rediger beløp"
       className="flex items-center gap-1.5 text-left group cursor-pointer"
     >
       <span className={isLowConfidence ? "text-amber-700 dark:text-amber-300" : ""}>
         {value != null ? `${value.toLocaleString("nb-NO")} kr` : "–"}
       </span>
       {isLowConfidence && value != null && (
-        <span title="Prisen er usikker – klikk for å korrigere" className="text-amber-500 dark:text-amber-400 cursor-help">⚠</span>
+        <span aria-label="Prisen er usikker – klikk for å korrigere" title="Prisen er usikker – klikk for å korrigere" className="text-amber-500 dark:text-amber-400 cursor-help">⚠</span>
       )}
-      <span className="opacity-0 group-hover:opacity-100 text-gray-300 dark:text-gray-600 text-xs ml-1">✎</span>
+      <span className="opacity-0 group-hover:opacity-100 text-gray-300 dark:text-gray-600 text-xs ml-1" aria-hidden="true">✎</span>
     </button>
   );
 }

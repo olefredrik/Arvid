@@ -229,7 +229,7 @@ export default function AnalysisPage() {
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
             Arvid leser og strukturerer innholdet i forsikringsavtalene dine
           </p>
-          <div className="space-y-3">
+          <div className="space-y-3" aria-live="polite" aria-label="Prosessering av dokumenter">
             {statuses.map((s) => (
               <div
                 key={s.fileName}
@@ -237,12 +237,12 @@ export default function AnalysisPage() {
               >
                 {s.done ? (
                   s.error ? (
-                    <span className="text-red-500 dark:text-red-400 text-sm">✕</span>
+                    <span className="text-red-500 dark:text-red-400 text-sm" aria-label="Feil">✕</span>
                   ) : (
-                    <span className="text-green-500 dark:text-green-400 text-sm">✓</span>
+                    <span className="text-green-500 dark:text-green-400 text-sm" aria-label="Fullført">✓</span>
                   )
                 ) : (
-                  <span className="inline-block w-4 h-4 border-2 border-amber-700 dark:border-amber-600 border-t-transparent rounded-full animate-spin" />
+                  <span className="inline-block w-4 h-4 border-2 border-amber-700 dark:border-amber-600 border-t-transparent rounded-full animate-spin" role="status" aria-label="Behandler" />
                 )}
                 <span className="text-sm text-gray-700 dark:text-gray-200 truncate">{s.fileName}</span>
                 {s.error && (
@@ -263,7 +263,7 @@ export default function AnalysisPage() {
           </p>
 
           {errors.length > 0 && (
-            <div className="mb-6 p-4 bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 rounded-lg text-sm text-amber-800 dark:text-amber-200">
+            <div role="alert" className="mb-6 p-4 bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 rounded-lg text-sm text-amber-800 dark:text-amber-200">
               <p className="font-medium mb-1">
                 {errors.length === 1 ? "Ett dokument" : `${errors.length} dokumenter`} kunne ikke analyseres:
               </p>
@@ -276,7 +276,7 @@ export default function AnalysisPage() {
           )}
 
           {quoteError && (
-            <div className="mb-6 p-4 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-700 dark:text-red-300">
+            <div role="alert" className="mb-6 p-4 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-700 dark:text-red-300">
               Kunne ikke generere tilbudsforespørsel: {quoteError}
             </div>
           )}
@@ -329,8 +329,8 @@ export default function AnalysisPage() {
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
             Arvid formulerer en kravspesifikasjon du kan sende til forsikringsselskaper
           </p>
-          <div className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-stone-800 rounded-lg border border-stone-200 dark:border-stone-700">
-            <span className="inline-block w-4 h-4 border-2 border-amber-700 dark:border-amber-600 border-t-transparent rounded-full animate-spin" />
+          <div className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-stone-800 rounded-lg border border-stone-200 dark:border-stone-700" role="status">
+            <span className="inline-block w-4 h-4 border-2 border-amber-700 dark:border-amber-600 border-t-transparent rounded-full animate-spin" aria-hidden="true" />
             <span className="text-sm text-gray-700 dark:text-gray-200">Formulerer forespørsel...</span>
           </div>
         </>
@@ -370,7 +370,7 @@ export default function AnalysisPage() {
             {compareMode ? "Last opp tilbudene du har mottatt fra forsikringsselskaper" : "Steg 4 av 4 – Last opp tilbudene du har mottatt fra forsikringsselskaper"}
           </p>
           {compareError && (
-            <div className="mb-6 p-4 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-700 dark:text-red-300">
+            <div role="alert" className="mb-6 p-4 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-700 dark:text-red-300">
               {compareError}
             </div>
           )}
@@ -387,7 +387,7 @@ export default function AnalysisPage() {
           </p>
 
           {compareError && (
-            <div className="mb-6 p-4 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-700 dark:text-red-300">
+            <div role="alert" className="mb-6 p-4 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-700 dark:text-red-300">
               {compareError}
             </div>
           )}
@@ -424,8 +424,8 @@ export default function AnalysisPage() {
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
             Arvid analyserer forskjeller i pris og vilkår
           </p>
-          <div className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-stone-800 rounded-lg border border-stone-200 dark:border-stone-700">
-            <span className="inline-block w-4 h-4 border-2 border-amber-700 dark:border-amber-600 border-t-transparent rounded-full animate-spin" />
+          <div className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-stone-800 rounded-lg border border-stone-200 dark:border-stone-700" role="status">
+            <span className="inline-block w-4 h-4 border-2 border-amber-700 dark:border-amber-600 border-t-transparent rounded-full animate-spin" aria-hidden="true" />
             <span className="text-sm text-gray-700 dark:text-gray-200">Kjører sammenligning...</span>
           </div>
         </>
@@ -438,7 +438,7 @@ export default function AnalysisPage() {
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
             Arvid leser tilbudene og sammenligner dem med avtalene du har i dag
           </p>
-          <div className="space-y-3">
+          <div className="space-y-3" aria-live="polite" aria-label="Prosessering av tilbud">
             {offerStatuses.map((s) => (
               <div
                 key={s.fileName}
@@ -446,12 +446,12 @@ export default function AnalysisPage() {
               >
                 {s.done ? (
                   s.error ? (
-                    <span className="text-red-500 dark:text-red-400 text-sm">✕</span>
+                    <span className="text-red-500 dark:text-red-400 text-sm" aria-label="Feil">✕</span>
                   ) : (
-                    <span className="text-green-500 dark:text-green-400 text-sm">✓</span>
+                    <span className="text-green-500 dark:text-green-400 text-sm" aria-label="Fullført">✓</span>
                   )
                 ) : (
-                  <span className="inline-block w-4 h-4 border-2 border-amber-700 dark:border-amber-600 border-t-transparent rounded-full animate-spin" />
+                  <span className="inline-block w-4 h-4 border-2 border-amber-700 dark:border-amber-600 border-t-transparent rounded-full animate-spin" role="status" aria-label="Behandler" />
                 )}
                 <span className="text-sm text-gray-700 dark:text-gray-200 truncate">{s.fileName}</span>
                 {s.error && (
