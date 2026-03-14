@@ -80,6 +80,10 @@ Forsikringsdokumenter inneholder personopplysninger. Arvid er designet med perso
 
 Den hostede versjonen på [arvid.cloud](https://arvid.cloud) bruker anonymisert, cookiefri bruksstatistikk (PostHog EU). Ingen personopplysninger samles inn. Se [personvernerklæringen](https://arvid.cloud/personvern) for detaljer.
 
+## Bidra
+
+Bidrag er velkomne! Se [CONTRIBUTING.md](CONTRIBUTING.md) for hvordan du kommer i gang.
+
 ## Lisens
 
 MIT
