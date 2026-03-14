@@ -1,10 +1,12 @@
+import Image from "next/image";
+
 // Landingsside
 export default function Home() {
   return (
     <main className="min-h-screen bg-orange-50 dark:bg-stone-950">
       {/* Hero */}
       <section className="max-w-3xl mx-auto px-6 pt-24 pb-24 text-center">
-        <img src="/arvid.png" alt="Arvid" className="mx-auto mb-6 h-52 w-52 object-contain drop-shadow-lg" />
+        <Image src="/arvid.png" alt="Arvid – Din nøytrale forsikringsrådgiver" width={208} height={208} className="mx-auto mb-6 object-contain drop-shadow-lg" priority />
         <h1 className="text-5xl font-bold tracking-tight text-stone-900 dark:text-stone-50 mb-4">Arvid</h1>
         <p className="text-2xl font-medium text-stone-700 dark:text-stone-200 mb-4">
           Din nøytrale forsikringsrådgiver.

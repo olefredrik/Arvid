@@ -1,3 +1,13 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Personvernerklæring – Arvid",
+  description: "Hvordan Arvid behandler data, bruk av anonymisert statistikk og dine rettigheter.",
+  alternates: {
+    canonical: "/personvern",
+  },
+};
+
 // Personvernerklæring for arvid.cloud
 export default function Personvern() {
   return (

@@ -210,9 +210,9 @@ export default function AnalysisPage() {
       {/* Steg 1: Opplasting */}
       {step === "upload" && (
         <>
-          <h1 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">
+          <h2 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">
             {compareMode ? "Last opp dine nåværende forsikringer" : "Last opp forsikringsdokumenter"}
-          </h1>
+          </h2>
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
             {compareMode
               ? "Last opp dine nåværende forsikringer – vi bruker dem som grunnlag for sammenligningen"
@@ -225,7 +225,7 @@ export default function AnalysisPage() {
       {/* Steg 1 → 2: Analyserer */}
       {step === "processing" && (
         <>
-          <h1 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">Analyserer dokumenter</h1>
+          <h2 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">Analyserer dokumenter</h2>
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
             Arvid leser og strukturerer innholdet i forsikringsavtalene dine
           </p>
@@ -257,7 +257,7 @@ export default function AnalysisPage() {
       {/* Steg 2: Oversikt */}
       {step === "overview" && (
         <>
-          <h1 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">Forsikringsoversikt</h1>
+          <h2 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">Forsikringsoversikt</h2>
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
             {compareMode ? "Se gjennom og bekreft at oversikten er riktig" : "Steg 2 av 3 – Se gjennom og bekreft at oversikten er riktig"}
           </p>
@@ -325,7 +325,7 @@ export default function AnalysisPage() {
       {/* Steg 2 → 3: Genererer */}
       {step === "generating" && (
         <>
-          <h1 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">Genererer tilbudsforespørsel</h1>
+          <h2 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">Genererer tilbudsforespørsel</h2>
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
             Arvid formulerer en kravspesifikasjon du kan sende til forsikringsselskaper
           </p>
@@ -339,7 +339,7 @@ export default function AnalysisPage() {
       {/* Steg 3: Rapport */}
       {step === "report" && quoteRequest && (
         <>
-          <h1 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">Tilbudsforespørsel</h1>
+          <h2 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">Tilbudsforespørsel</h2>
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
             Steg 3 av 4 – Last ned og send til forsikringsselskaper selv
           </p>
@@ -365,7 +365,7 @@ export default function AnalysisPage() {
       {/* Steg 4: Last opp tilbud */}
       {step === "compare-upload" && (
         <>
-          <h1 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">Last opp mottatte tilbud</h1>
+          <h2 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">Last opp mottatte tilbud</h2>
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
             {compareMode ? "Last opp tilbudene du har mottatt fra forsikringsselskaper" : "Steg 4 av 4 – Last opp tilbudene du har mottatt fra forsikringsselskaper"}
           </p>
@@ -381,7 +381,7 @@ export default function AnalysisPage() {
       {/* Steg 4: Gjennomgang av mottatte tilbud */}
       {step === "offer-review" && (
         <>
-          <h1 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">Se gjennom mottatte tilbud</h1>
+          <h2 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">Se gjennom mottatte tilbud</h2>
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
             Steg 4 av 5 – Kontroller at prisene er riktig ekstrahert før sammenligning
           </p>
@@ -420,7 +420,7 @@ export default function AnalysisPage() {
       {/* Steg 4: Kjører sammenligning */}
       {step === "comparing" && (
         <>
-          <h1 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">Sammenligner tilbud</h1>
+          <h2 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">Sammenligner tilbud</h2>
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
             Arvid analyserer forskjeller i pris og vilkår
           </p>
@@ -434,7 +434,7 @@ export default function AnalysisPage() {
       {/* Steg 4: Analyserer tilbud */}
       {step === "compare-processing" && (
         <>
-          <h1 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">Analyserer og sammenligner tilbud</h1>
+          <h2 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">Analyserer og sammenligner tilbud</h2>
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
             Arvid leser tilbudene og sammenligner dem med avtalene du har i dag
           </p>
@@ -466,7 +466,7 @@ export default function AnalysisPage() {
       {/* Steg 4: Sammenligningsresultat */}
       {step === "comparison" && comparison && (
         <>
-          <h1 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">Sammenligning av tilbud</h1>
+          <h2 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">Sammenligning av tilbud</h2>
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
             Steg 4 av 4 – Se hvordan tilbudet måler seg mot avtalene du har i dag
           </p>
