@@ -1,5 +1,9 @@
 # Rolf
 
+[![Test](https://github.com/olefredrik/Rolf/actions/workflows/test.yml/badge.svg)](https://github.com/olefredrik/Rolf/actions/workflows/test.yml)
+[![Latest release](https://img.shields.io/github/v/release/olefredrik/Rolf)](https://github.com/olefredrik/Rolf/releases)
+[![License: MIT](https://img.shields.io/badge/license-MIT-orange.svg)](https://github.com/olefredrik/Rolf/blob/main/LICENSE)
+
 Rolf er et open-source verktøy som hjelper norske forbrukere å forstå forsikringsavtalene sine, sammenstille dem i et nyttig format, og generere tilbudsforespørsler til konkurrerende selskaper.
 
 Rolf er nøytral, jobber alltid for brukeren, og har ingen kommersielle bindinger til forsikringsbransjen.
