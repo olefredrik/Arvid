@@ -201,7 +201,7 @@ export default function AnalysisPage() {
   const errors = statuses.filter((s) => s.error);
 
   return (
-    <main className="min-h-screen bg-amber-50 dark:bg-stone-950 p-8 max-w-4xl mx-auto">
+    <main className="min-h-screen bg-white dark:bg-stone-950 p-8 max-w-4xl mx-auto">
       <a href="/" className="text-sm text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 mb-8 inline-block">
         ← Tilbake
       </a>
