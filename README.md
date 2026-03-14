@@ -55,6 +55,12 @@ Legg inn din Anthropic API-nøkkel:
 ANTHROPIC_API_KEY=din-nøkkel-her
 ```
 
+Analytics er valgfritt og ikke aktivert som standard. Hvis du vil aktivere anonymisert bruksstatistikk, legg inn en nøkkel fra din foretrukne provider (se `.env.local.example` for detaljer):
+
+```
+NEXT_PUBLIC_POSTHOG_KEY=phc_...
+```
+
 ### Kjør lokalt
 
 ```bash
@@ -70,7 +76,9 @@ Forsikringsdokumenter inneholder personopplysninger. Arvid er designet med perso
 - Ingen dokumentinnhold lagres i database
 - Dokumenter prosesseres kun i sesjonen og kastes etterpå
 - Ingen innlogging eller brukerkontoer
-- Ingen tredjeparts sporingsscripts
+- Ingen cookies eller cookie-banner
+
+Den hostede versjonen på [arvid.cloud](https://arvid.cloud) bruker anonymisert, cookiefri bruksstatistikk (PostHog EU). Ingen personopplysninger samles inn. Se [personvernerklæringen](https://arvid.cloud/personvern) for detaljer.
 
 ## Lisens
 

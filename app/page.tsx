@@ -113,7 +113,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="border-t border-stone-200 dark:border-stone-800">
-        <div className="max-w-3xl mx-auto px-6 py-6 flex justify-between items-center text-xs text-stone-400 dark:text-stone-500">
+        <div className="max-w-3xl mx-auto px-6 py-6 flex justify-between items-center gap-4 text-xs text-stone-400 dark:text-stone-500">
           <span>
             Arvid er et sideprosjekt utviklet av{" "}
             <a
@@ -126,7 +126,13 @@ export default function Home() {
             </a>
           </span>
           <a
-            href="https://github.com/olefredrik/Rolf"
+            href="/personvern"
+            className="hover:text-stone-600 dark:hover:text-stone-300 transition-colors"
+          >
+            Personvern
+          </a>
+          <a
+            href="https://github.com/olefredrik/Arvid"
             className="flex items-center gap-1.5 hover:text-stone-600 dark:hover:text-stone-300 transition-colors"
             target="_blank"
             rel="noopener noreferrer"
