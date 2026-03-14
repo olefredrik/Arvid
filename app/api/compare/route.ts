@@ -155,6 +155,12 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     if (error instanceof Anthropic.APIError) {
       console.error("Claude API-feil:", error.status, error.message);
+      if (error.status === 402 || error.status === 529) {
+        return NextResponse.json(
+          { error: "Rolf er for øyeblikket utilgjengelig på grunn av høy trafikk. Prøv igjen om litt." },
+          { status: 503 }
+        );
+      }
       return NextResponse.json(
         { error: "Feil under AI-analyse. Prøv igjen." },
         { status: 502 }
