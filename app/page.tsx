@@ -120,7 +120,7 @@ export default function Home() {
             Laget av{" "}
             <a
               href="https://olefredrik.com"
-              className="hover:text-stone-600 dark:hover:text-stone-300 transition-colors"
+              className="underline decoration-transparent hover:decoration-current underline-offset-2 transition-colors duration-200"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -130,13 +130,13 @@ export default function Home() {
           <div className="flex items-center gap-4">
             <a
               href="/personvern"
-              className="hover:text-stone-600 dark:hover:text-stone-300 transition-colors"
+              className="underline decoration-transparent hover:decoration-current underline-offset-2 transition-colors duration-200"
             >
               Personvern
             </a>
             <a
               href="https://github.com/olefredrik/Arvid"
-              className="flex items-center gap-1.5 hover:text-stone-600 dark:hover:text-stone-300 transition-colors"
+              className="flex items-center gap-1.5 underline decoration-transparent hover:decoration-current underline-offset-2 transition-colors duration-200"
               target="_blank"
               rel="noopener noreferrer"
             >
