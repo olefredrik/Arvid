@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+
+export const maxDuration = 60; // sekunder – Claude-kall kan ta 20–30 sek for store dokumenter
 import Anthropic from "@anthropic-ai/sdk";
 import { extractTextFromPdf, normalizeText, prioritizeSections, TYPE_ID_TEXT_LENGTH } from "@/lib/pdf/parser";
 import { buildTypeIdentificationPrompt, buildExtractionPrompt } from "@/lib/insurance/prompts";
