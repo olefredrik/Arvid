@@ -596,7 +596,7 @@ export default function AnalysisPage() {
       {showResetConfirm && (
         <ConfirmDialog
           title="Nullstille tilbudet?"
-          message="Arvid fjerner alle tilbudspoliser og sender deg tilbake til opplasting. Dette kan ikke angres."
+          message="Arvid makulerer alle tilbudspoliser og sender deg tilbake til opplasting. Dette kan ikke angres."
           confirmLabel="Nullstill"
           onConfirm={() => {
             setOfferPolicies([]);
