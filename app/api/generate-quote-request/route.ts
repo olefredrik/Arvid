@@ -37,6 +37,13 @@ export async function POST(request: NextRequest) {
       ],
     });
 
+    if (response.stop_reason === "max_tokens") {
+      return NextResponse.json(
+        { error: "Arvid fikk litt for mye å jobbe med på en gang. Prøv med færre forsikringer, eller ta kontakt." },
+        { status: 422 }
+      );
+    }
+
     const text = response.content.find((b) => b.type === "text")?.text ?? "";
     const quoteRequest = JSON.parse(extractJson(text));
 
