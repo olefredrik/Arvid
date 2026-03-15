@@ -78,6 +78,25 @@ Om dokumenttyper:
 Felter som skal ekstraheres:
 ${fieldsDescription}
 
+Selskapsspesifikk terminologi – norske forsikringsselskaper bruker ulike begreper for de samme feltene:
+
+Egenandel (deductible):
+- If: "selvrisiko"
+- Tryg / Codan: "selvrisiko" eller "egenandel"
+- Gjensidige, Fremtind, Storebrand, SpareBank 1: "egenandel"
+
+Dekningsnivå (coverageLevel) – bruk det faktiske produktnavnet fra dokumentet:
+- If: "Basis", "Komfort", "Super", "Topp"
+- Gjensidige: "Basis", "Ekstra", "Optimal", "Topp"
+- Fremtind (DNB): "Standard", "Pluss", "Topp"
+- Storebrand: "Basis", "Mellom", "Topp"
+- SpareBank 1: "Basis", "Standard", "Pluss"
+
+Premie (annualPremium):
+- Noen dokumenter oppgir "terminpremie" (per kvartal eller måned) – regn om til årsbeløp (multipliser med antall terminer per år)
+- "Bruttopremie" og "nettopremie" kan forekomme – bruk bruttopremie (det kunden faktisk betaler)
+- "Forfallsbeløp" på faktura er typisk terminpremie, ikke årspremie
+
 Instruksjoner:
 - Returner KUN et rent JSON-objekt – ingen forklaring, ingen markdown, ingen kodeblokker
 - Bruk nøyaktig de feltene som er listet opp
