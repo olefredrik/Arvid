@@ -1,5 +1,7 @@
 "use client";
 
+import type { InsurancePolicy } from "@/lib/insurance/types";
+
 // Visning og nedlasting av generert tilbudsforespørsel
 export type QuoteRequest = {
   title: string;
@@ -9,10 +11,13 @@ export type QuoteRequest = {
 
 type Props = {
   quoteRequest: QuoteRequest;
+  policies: InsurancePolicy[];
   onBack: () => void;
 };
 
-export default function Report({ quoteRequest, onBack }: Props) {
+export default function Report({ quoteRequest, policies, onBack }: Props) {
+  const hasLowConfidence = policies.some((p) => p.extractionConfidence === "low");
+
   const handleDownload = () => {
     const date = new Date(quoteRequest.generatedAt).toLocaleDateString("nb-NO");
     const content = [
@@ -25,6 +30,9 @@ export default function Report({ quoteRequest, onBack }: Props) {
         s.content,
         "",
       ]),
+      ...(hasLowConfidence
+        ? ["---", "", "Merk: Arvid var usikker på noen felt i dokumentene dine. Dobbeltsjekk detaljene før du sender.", ""]
+        : []),
     ].join("\n");
 
     // BOM (U+FEFF) sikrer at tekstprogrammer tolker filen som UTF-8
@@ -33,7 +41,8 @@ export default function Report({ quoteRequest, onBack }: Props) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "tilbudsforespørsel.txt";
+    const isoDate = new Date(quoteRequest.generatedAt).toISOString().slice(0, 10);
+    a.download = `tilbudsforespørsel_${isoDate}.txt`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -60,6 +69,13 @@ export default function Report({ quoteRequest, onBack }: Props) {
           </div>
         ))}
       </div>
+
+      {/* Konfidensadvarsel */}
+      {hasLowConfidence && (
+        <div role="alert" className="p-4 bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 rounded-lg text-sm text-amber-800 dark:text-amber-200">
+          Arvid var usikker på noen felt i dokumentene dine. Dobbeltsjekk detaljene før du sender.
+        </div>
+      )}
 
       {/* Handlinger */}
       <div className="flex gap-3">

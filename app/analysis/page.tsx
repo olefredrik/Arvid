@@ -472,6 +472,7 @@ export default function AnalysisPage() {
           </p>
           <Report
             quoteRequest={quoteRequest}
+            policies={policies}
             onBack={() => setStep("overview")}
           />
           <div className="mt-8 pt-8 border-t border-gray-100 dark:border-gray-800">
