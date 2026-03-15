@@ -47,6 +47,13 @@ export async function POST(request: NextRequest) {
       messages: [{ role: "user", content: buildTypeIdentificationPrompt(shortText) }],
     });
 
+    if (typeResponse.stop_reason === "max_tokens") {
+      return NextResponse.json(
+        { error: "Dokumentet er for langt for Arvid å lese i sin helhet. Prøv å laste opp bare forsikringsbeviset, ikke hele vilkårsheftet." },
+        { status: 422 }
+      );
+    }
+
     const typeText =
       typeResponse.content.find((b) => b.type === "text")?.text ?? "";
     const typeResult = JSON.parse(extractJson(typeText)) as {
@@ -80,6 +87,10 @@ export async function POST(request: NextRequest) {
           ],
         });
 
+        if (extractResponse.stop_reason === "max_tokens") {
+          throw new Error("max_tokens");
+        }
+
         const extractText =
           extractResponse.content.find((b) => b.type === "text")?.text ?? "";
         const extracted = JSON.parse(extractJson(extractText)) as Record<string, unknown>;
@@ -104,11 +115,29 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ policies: extractionResults, fileName: file.name });
   } catch (error) {
+    if (error instanceof Error && error.message === "max_tokens") {
+      return NextResponse.json(
+        { error: "Dokumentet er for langt for Arvid å lese i sin helhet. Prøv å laste opp bare forsikringsbeviset, ikke hele vilkårsheftet." },
+        { status: 422 }
+      );
+    }
     if (error instanceof Anthropic.APIError) {
       console.error("Claude API-feil:", error.status, error.message);
-      if (error.status === 402 || error.status === 529) {
+      if (error.status === 429) {
         return NextResponse.json(
-          { error: "Arvid er for øyeblikket utilgjengelig på grunn av høy trafikk. Prøv igjen om litt." },
+          { error: "Arvid håndterer en litt for stor bunke akkurat nå. Vent et øyeblikk og prøv igjen." },
+          { status: 503 }
+        );
+      }
+      if (error.status === 529) {
+        return NextResponse.json(
+          { error: "Arvid er midlertidig utilgjengelig. Prøv igjen om litt." },
+          { status: 503 }
+        );
+      }
+      if (error.status === 402) {
+        return NextResponse.json(
+          { error: "Arvid er midlertidig utilgjengelig. Prøv igjen senere." },
           { status: 503 }
         );
       }

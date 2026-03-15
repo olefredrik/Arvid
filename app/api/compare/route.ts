@@ -115,6 +115,13 @@ export async function POST(request: NextRequest) {
       ],
     });
 
+    if (response.stop_reason === "max_tokens") {
+      return NextResponse.json(
+        { error: "Arvid fikk litt for mye å jobbe med på en gang. Prøv med færre forsikringer, eller ta kontakt." },
+        { status: 422 }
+      );
+    }
+
     const text = response.content.find((b) => b.type === "text")?.text ?? "";
     const aiResult = JSON.parse(extractJson(text)) as {
       comparisons: {
@@ -155,9 +162,21 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     if (error instanceof Anthropic.APIError) {
       console.error("Claude API-feil:", error.status, error.message);
-      if (error.status === 402 || error.status === 529) {
+      if (error.status === 429) {
         return NextResponse.json(
-          { error: "Arvid er for øyeblikket utilgjengelig på grunn av høy trafikk. Prøv igjen om litt." },
+          { error: "Arvid håndterer en litt for stor bunke akkurat nå. Vent et øyeblikk og prøv igjen." },
+          { status: 503 }
+        );
+      }
+      if (error.status === 529) {
+        return NextResponse.json(
+          { error: "Arvid er midlertidig utilgjengelig. Prøv igjen om litt." },
+          { status: 503 }
+        );
+      }
+      if (error.status === 402) {
+        return NextResponse.json(
+          { error: "Arvid er midlertidig utilgjengelig. Prøv igjen senere." },
           { status: 503 }
         );
       }
