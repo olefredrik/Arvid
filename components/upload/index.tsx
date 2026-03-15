@@ -15,21 +15,37 @@ type Props = {
   onFiles: (files: File[]) => void;
 };
 
+const MAX_FILE_SIZE = 4 * 1024 * 1024; // 4 MB – Vercels grense for request body er 4,5 MB
+
+type ValidationError = { name: string; reason: string };
+
 // Filoplastingskomponent med drag-and-drop for forsikringsdokumenter (PDF)
 export default function Upload({ onFiles }: Props) {
   const [pending, setPending] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<ValidationError[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const addFiles = useCallback((incoming: FileList | null) => {
     if (!incoming) return;
-    const pdfs = Array.from(incoming).filter((f) =>
-      f.name.toLowerCase().endsWith(".pdf")
-    );
+    const errors: ValidationError[] = [];
+    const valid: File[] = [];
+
+    for (const file of Array.from(incoming)) {
+      if (file.type !== "application/pdf" && !file.name.toLowerCase().endsWith(".pdf")) {
+        errors.push({ name: file.name, reason: "Bare PDF – Arvid er litt gammeldags på det punktet." });
+      } else if (file.size > MAX_FILE_SIZE) {
+        errors.push({ name: file.name, reason: "For stor for Arvid å bære. Del den opp eller prøv en annen fil (maks 4 MB)." });
+      } else {
+        valid.push(file);
+      }
+    }
+
+    setValidationErrors(errors);
     setPending((prev) => {
       // Unngå duplikater basert på navn og størrelse
       const existing = new Set(prev.map((f) => `${f.name}-${f.size}`));
-      const unique = pdfs.filter((f) => !existing.has(`${f.name}-${f.size}`));
+      const unique = valid.filter((f) => !existing.has(`${f.name}-${f.size}`));
       return [...prev, ...unique];
     });
   }, []);
@@ -82,6 +98,16 @@ export default function Upload({ onFiles }: Props) {
           onChange={(e) => addFiles(e.target.files)}
         />
       </button>
+
+      {/* Valideringsfeil */}
+      {validationErrors.length > 0 && (
+        <div role="alert" className="rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 px-4 py-3 text-sm text-red-700 dark:text-red-300">
+          <p className="font-medium mb-1">{validationErrors.length === 1 ? "Arvid måtte sette én fil til side:" : `Arvid måtte sette ${validationErrors.length} filer til side:`}</p>
+          {validationErrors.map((e) => (
+            <p key={e.name}>{e.name}: {e.reason}</p>
+          ))}
+        </div>
+      )}
 
       {/* Støttede forsikringstyper */}
       <details className="text-xs text-stone-400 dark:text-stone-500">
