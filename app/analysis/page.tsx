@@ -1,7 +1,49 @@
 "use client";
 
 // Hovedflyt: opplasting → analyse → oversikt → tilbudsforespørsel
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+
+// Sykler gjennom meldinger med jevne mellomrom mens Arvid jobber
+function useRotatingMessage(messages: string[], intervalMs = 3500): string {
+  const [index, setIndex] = useState(0);
+  const indexRef = useRef(0);
+
+  useEffect(() => {
+    indexRef.current = 0;
+    setIndex(0);
+    const id = setInterval(() => {
+      indexRef.current = (indexRef.current + 1) % messages.length;
+      setIndex(indexRef.current);
+    }, intervalMs);
+    return () => clearInterval(id);
+  }, [messages.length, intervalMs]);
+
+  return messages[index];
+}
+
+const EXTRACTION_MESSAGES = [
+  "Arvid blar gjennom dokumentene...",
+  "Arvid justerer brillene og leser videre...",
+  "Arvid har sett mer kompliserte poliser...",
+  "Arvid sjekker det med liten skrift også...",
+  "Arvid noterer egenandelen i margen...",
+];
+
+const QUOTE_MESSAGES = [
+  "Arvid formulerer seg med omhu...",
+  "Arvid har gjort dette mange ganger...",
+  "Arvid velger hvert ord nøye...",
+  "Arvid skriver rent... digitalt, da.",
+  "Arvid er fornøyd med formuleringen så langt...",
+];
+
+const COMPARISON_MESSAGES = [
+  "Arvid sammenligner pris og vilkår...",
+  "Arvid er ikke lett å imponere...",
+  "Arvid ser nøye på det som skiller tilbudene...",
+  "Arvid har lagt merke til noen forskjeller...",
+  "Arvid konkluderer straks...",
+];
 import Upload from "@/components/upload";
 import Overview from "@/components/overview";
 import Report, { type QuoteRequest } from "@/components/report";
@@ -21,6 +63,9 @@ type ProcessingStatus = {
 export default function AnalysisPage() {
   const { capture } = useAnalytics();
   const [step, setStep] = useState<Step>("upload");
+  const extractionMessage = useRotatingMessage(EXTRACTION_MESSAGES);
+  const quoteMessage = useRotatingMessage(QUOTE_MESSAGES);
+  const comparisonMessage = useRotatingMessage(COMPARISON_MESSAGES);
   const [compareMode, setCompareMode] = useState(false);
   const [policies, setPolicies] = useState<InsurancePolicy[]>([]);
   const [statuses, setStatuses] = useState<ProcessingStatus[]>([]);
@@ -247,7 +292,7 @@ export default function AnalysisPage() {
         <>
           <h2 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">Analyserer dokumenter</h2>
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
-            Arvid leser og strukturerer innholdet i forsikringsavtalene dine
+            {extractionMessage}
           </p>
           <div className="space-y-3" aria-live="polite" aria-label="Prosessering av dokumenter">
             {statuses.map((s) => (
@@ -357,7 +402,7 @@ export default function AnalysisPage() {
           </p>
           <div className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-stone-800 rounded-lg border border-stone-200 dark:border-stone-700" role="status">
             <span className="inline-block w-4 h-4 border-2 border-amber-700 dark:border-amber-600 border-t-transparent rounded-full animate-spin" aria-hidden="true" />
-            <span className="text-sm text-gray-700 dark:text-gray-200">Formulerer forespørsel...</span>
+            <span className="text-sm text-gray-700 dark:text-gray-200">{quoteMessage}</span>
           </div>
         </>
       )}
@@ -459,7 +504,7 @@ export default function AnalysisPage() {
           </p>
           <div className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-stone-800 rounded-lg border border-stone-200 dark:border-stone-700" role="status">
             <span className="inline-block w-4 h-4 border-2 border-amber-700 dark:border-amber-600 border-t-transparent rounded-full animate-spin" aria-hidden="true" />
-            <span className="text-sm text-gray-700 dark:text-gray-200">Kjører sammenligning...</span>
+            <span className="text-sm text-gray-700 dark:text-gray-200">{comparisonMessage}</span>
           </div>
         </>
       )}
@@ -469,7 +514,7 @@ export default function AnalysisPage() {
         <>
           <h2 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">Analyserer og sammenligner tilbud</h2>
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
-            Arvid leser tilbudene og sammenligner dem med avtalene du har i dag
+            {extractionMessage}
           </p>
           <div className="space-y-3" aria-live="polite" aria-label="Prosessering av tilbud">
             {offerStatuses.map((s) => (
