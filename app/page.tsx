@@ -87,7 +87,7 @@ export default function Home() {
       </section>
 
       {/* Tillit */}
-      <section className="max-w-3xl mx-auto px-6 py-16">
+      <section className="max-w-3xl mx-auto px-6 pt-16 pb-24">
         <h2 className="text-sm font-semibold text-stone-400 dark:text-stone-500 uppercase tracking-widest mb-10 text-center">
           Bygget på tillit
         </h2>
@@ -114,7 +114,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-stone-200 dark:border-stone-800">
+      <footer className="bg-stone-100 dark:bg-stone-900 border-t border-stone-200 dark:border-stone-800">
         <div className="max-w-3xl mx-auto px-6 py-6 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-stone-400 dark:text-stone-500">
           <span>
             Laget av{" "}
