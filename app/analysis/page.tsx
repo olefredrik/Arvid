@@ -27,6 +27,11 @@ const EXTRACTION_MESSAGES = [
   "Arvid har sett mer kompliserte poliser...",
   "Arvid sjekker det med liten skrift også...",
   "Arvid noterer egenandelen i margen...",
+  "Arvid leter etter forsikringsbeviset i bunken...",
+  "Arvid har full kontroll på situasjonen...",
+  "Arvid krysssjekker med sin indre kunnskapsbase...",
+  "Arvid er ikke overrasket over vilkårene...",
+  "Arvid tar seg god tid – det lønner seg.",
 ];
 
 const QUOTE_MESSAGES = [
@@ -35,6 +40,11 @@ const QUOTE_MESSAGES = [
   "Arvid velger hvert ord nøye...",
   "Arvid skriver rent... digitalt, da.",
   "Arvid er fornøyd med formuleringen så langt...",
+  "Arvid setter opp kravspesifikasjonen...",
+  "Arvid tenker på deg mens han skriver...",
+  "Arvid har formulert verre ting...",
+  "Arvid dobbeltsjekker at ingenting er glemt...",
+  "Arvid legger siste hånd på verket...",
 ];
 
 const COMPARISON_MESSAGES = [
@@ -43,6 +53,11 @@ const COMPARISON_MESSAGES = [
   "Arvid ser nøye på det som skiller tilbudene...",
   "Arvid har lagt merke til noen forskjeller...",
   "Arvid konkluderer straks...",
+  "Arvid tar ikke stilling til favoritter...",
+  "Arvid ser på mer enn bare prisen...",
+  "Arvid har bladd gjennom mange tilbud i sin tid...",
+  "Arvid veier fordeler og ulemper nøye...",
+  "Arvid liker ikke overraskelser i vilkårene...",
 ];
 import Upload from "@/components/upload";
 import Overview from "@/components/overview";
