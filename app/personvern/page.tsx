@@ -33,13 +33,20 @@ export default function Personvern() {
           <section>
             <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-50 mb-3">Forsikringsdokumenter</h2>
             <p className="text-sm leading-relaxed">
-              Dokumenter du laster opp sendes til Anthropic via Claude API for analyse og slettes umiddelbart etterpå.
+              Dokumenter du laster opp sendes til Anthropic for analyse via Claude API og slettes umiddelbart etterpå.
               Ingenting lagres i en database. Arvid har ingen tilgang til dokumentinnholdet etter at sesjonen er avsluttet.
             </p>
             <p className="text-sm leading-relaxed mt-3">
-              Anthropic er databehandler for innholdet i dokumentene under analysen.
+              Anthropic bruker ikke dokumentene til å trene AI-modeller.
+            </p>
+            <p className="text-sm leading-relaxed mt-3">
+              Anthropic Ireland Limited er databehandler for innholdet i dokumentene under analysen, i henhold til
+              databehandleravtalen (Data Processing Addendum) som er inngått som del av Anthropics kommersielle vilkår.
+              Overføring av data til Anthropic skjer på grunnlag av EUs standard kontraktsklausuler (SCCs).
               Se <a href="https://www.anthropic.com/privacy" target="_blank" rel="noopener noreferrer" className="underline hover:text-stone-900 dark:hover:text-stone-100">Anthropics personvernerklæring</a> for detaljer.
-              Databehandleravtale med Anthropic er inngått.
+            </p>
+            <p className="text-sm leading-relaxed mt-3">
+              Behandlingsgrunnlag: nødvendig for å levere tjenesten du ber om (art. 6(1)(b) GDPR).
             </p>
             <p className="text-sm leading-relaxed mt-3">
               Arvid støtter kun tingforsikringer. Personforsikringer som kan inneholde helseopplysninger er
@@ -54,7 +61,7 @@ export default function Personvern() {
             <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-50 mb-3">Bruksstatistikk</h2>
             <p className="text-sm leading-relaxed">
               Arvid bruker anonymisert bruksstatistikk via PostHog (EU-infrastruktur, Ireland).
-              Formålet er å forstå hvordan verktøyet brukes – for eksempel hvilke sider som besøkes.
+              Formålet er å forstå hvordan verktøyet brukes, for eksempel hvilke sider som besøkes.
             </p>
             <ul className="text-sm leading-relaxed mt-3 space-y-1 list-disc list-inside">
               <li>Ingen cookies lagres i nettleseren din</li>
@@ -71,16 +78,18 @@ export default function Personvern() {
             <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-50 mb-3">Ingen lagring</h2>
             <p className="text-sm leading-relaxed">
               Arvid bruker ingen databaser, ingen brukerkontoer og ingen innlogging.
-              Det finnes ingen personopplysninger å slette, korrigere eller eksportere.
+              Dokumenter behandles midlertidig under analysen og slettes umiddelbart etterpå.
+              Etter at sesjonen er avsluttet finnes det ingen personopplysninger å slette, korrigere eller eksportere.
             </p>
           </section>
 
           <section>
-            <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-50 mb-3">Kontakt</h2>
+            <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-50 mb-3">Behandlingsansvarlig</h2>
             <p className="text-sm leading-relaxed">
+              Behandlingsansvarlig for personopplysninger som behandles i Arvid er OFL Holding AS (org.nr. 922 020 523), selskapet bak Arvid.
               Spørsmål om personvern kan rettes til{" "}
-              <a href="https://olefredrik.com" target="_blank" rel="noopener noreferrer" className="underline hover:text-stone-900 dark:hover:text-stone-100">
-                Ole Fredrik Lie
+              <a href="mailto:hello@olefredrik.com" className="underline hover:text-stone-900 dark:hover:text-stone-100">
+                hello@olefredrik.com
               </a>.
             </p>
           </section>
