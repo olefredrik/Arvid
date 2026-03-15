@@ -329,7 +329,7 @@ export default function AnalysisPage() {
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
             {compareMode
               ? "Last opp dine nåværende forsikringer – vi bruker dem som grunnlag for sammenligningen"
-              : "Steg 1 av 3 – Last opp PDF-filene du har mottatt fra forsikringsselskapet"}
+              : "Steg 1 av 4 – Last opp PDF-filene du har mottatt fra forsikringsselskapet"}
           </p>
           <Upload onFiles={handleFiles} />
         </>
@@ -372,7 +372,7 @@ export default function AnalysisPage() {
         <>
           <h2 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">Forsikringsoversikt</h2>
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
-            {compareMode ? "Se gjennom og bekreft at oversikten er riktig" : "Steg 2 av 3 – Se gjennom og bekreft at oversikten er riktig"}
+            {compareMode ? "Se gjennom og bekreft at oversikten er riktig" : "Steg 2 av 4 – Se gjennom og bekreft at oversikten er riktig"}
           </p>
 
           {errors.length > 0 && (
@@ -512,7 +512,7 @@ export default function AnalysisPage() {
         <>
           <h2 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">Se gjennom mottatte tilbud</h2>
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
-            Steg 4 av 5 – Kontroller at prisene er riktig ekstrahert før sammenligning
+            Steg 4 av 4 – Kontroller at prisene er riktig ekstrahert før sammenligning
           </p>
 
           {offerErrors.length > 0 && (
