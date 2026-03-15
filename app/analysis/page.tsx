@@ -223,7 +223,7 @@ export default function AnalysisPage() {
   return (
     <main className="min-h-screen bg-white dark:bg-stone-950">
       <div className="max-w-4xl mx-auto px-4 py-6 sm:p-8">
-      <a href="/" className="text-sm text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 mb-8 inline-block">
+      <a href="/" className="text-sm text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 mb-8 inline-block">
         ← Tilbake
       </a>
 
