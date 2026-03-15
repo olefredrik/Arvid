@@ -61,6 +61,7 @@ const COMPARISON_MESSAGES = [
 ];
 import Upload from "@/components/upload";
 import Overview from "@/components/overview";
+import ConfirmDialog from "@/components/confirm-dialog";
 import Report, { type QuoteRequest } from "@/components/report";
 import Comparison from "@/components/comparison";
 import type { InsurancePolicy, InsuranceType, ComparisonResult } from "@/lib/insurance/types";
@@ -90,6 +91,7 @@ export default function AnalysisPage() {
   const [offerStatuses, setOfferStatuses] = useState<ProcessingStatus[]>([]);
   const [comparison, setComparison] = useState<ComparisonResult | null>(null);
   const [compareError, setCompareError] = useState<string | null>(null);
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -503,7 +505,7 @@ export default function AnalysisPage() {
               Legg til dokument
             </button>
             <button
-              onClick={() => { setOfferPolicies([]); setOfferStatuses([]); setCompareError(null); setStep("compare-upload"); }}
+              onClick={() => setShowResetConfirm(true)}
               className="px-4 py-2 text-sm text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300 transition-colors cursor-pointer"
             >
               Nullstill tilbud
@@ -590,6 +592,23 @@ export default function AnalysisPage() {
         </>
       )}
       </div>
+
+      {showResetConfirm && (
+        <ConfirmDialog
+          title="Nullstille tilbudet?"
+          message="Arvid fjerner alle tilbudspoliser og sender deg tilbake til opplasting. Dette kan ikke angres."
+          confirmLabel="Nullstill"
+          onConfirm={() => {
+            setOfferPolicies([]);
+            setOfferStatuses([]);
+            setCompareError(null);
+            setShowResetConfirm(false);
+            setStep("compare-upload");
+          }}
+          onCancel={() => setShowResetConfirm(false)}
+          isDestructive
+        />
+      )}
     </main>
   );
 }
