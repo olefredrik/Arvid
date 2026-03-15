@@ -93,7 +93,7 @@ export async function POST(request: NextRequest) {
       messages: [
         {
           role: "user",
-          content: buildComparisonPrompt(matchedPairs),
+          content: buildComparisonPrompt(matchedPairs, unmatchedCurrent, unmatchedOffers),
         },
       ],
     });
