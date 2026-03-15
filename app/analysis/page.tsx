@@ -297,7 +297,13 @@ export default function AnalysisPage() {
 
           {quoteError && (
             <div role="alert" className="mb-6 p-4 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-700 dark:text-red-300">
-              Kunne ikke generere tilbudsforespørsel: {quoteError}
+              <p className="mb-2">Kunne ikke generere tilbudsforespørsel: {quoteError}</p>
+              <button
+                onClick={handleGenerateQuoteRequest}
+                className="underline underline-offset-2 hover:no-underline cursor-pointer"
+              >
+                Prøv igjen
+              </button>
             </div>
           )}
 
@@ -395,6 +401,7 @@ export default function AnalysisPage() {
             </div>
           )}
           <Upload onFiles={handleOfferFiles} />
+
         </>
       )}
 
@@ -408,7 +415,13 @@ export default function AnalysisPage() {
 
           {compareError && (
             <div role="alert" className="mb-6 p-4 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-700 dark:text-red-300">
-              {compareError}
+              <p className="mb-2">{compareError}</p>
+              <button
+                onClick={handleRunComparison}
+                className="underline underline-offset-2 hover:no-underline cursor-pointer"
+              >
+                Prøv igjen
+              </button>
             </div>
           )}
 
