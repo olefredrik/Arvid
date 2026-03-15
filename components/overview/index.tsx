@@ -117,8 +117,22 @@ export default function Oversikt({ policies, onUpdate }: Props) {
     );
   };
 
+  const lowConfidencePolicies = policies.filter((p) => p.extractionConfidence === "low");
+
   return (
     <div>
+      {/* Varsel ved lav konfidens */}
+      {lowConfidencePolicies.length > 0 && (
+        <div role="alert" className="mb-4 rounded-lg border border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-950 px-4 py-3 text-sm text-amber-800 dark:text-amber-200">
+          <p className="font-medium mb-1">Vi er usikre på deler av analysen</p>
+          <p className="text-amber-700 dark:text-amber-300">
+            {lowConfidencePolicies.map((p) => INSURANCE_TYPE_LABELS[p.type]).join(", ")} har lav konfidens.
+            Last opp forsikringsbeviset (ikke bare de generelle vilkårene) for et mer nøyaktig resultat.
+            Du kan korrigere premie og egenandel ved å klikke på verdiene i tabellen.
+          </p>
+        </div>
+      )}
+
       {/* Desktop: tabell */}
       <div className="hidden md:block overflow-x-auto">
         <table className="w-full text-sm border-collapse">
