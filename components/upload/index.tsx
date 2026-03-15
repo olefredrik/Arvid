@@ -33,9 +33,9 @@ export default function Upload({ onFiles }: Props) {
 
     for (const file of Array.from(incoming)) {
       if (file.type !== "application/pdf" && !file.name.toLowerCase().endsWith(".pdf")) {
-        errors.push({ name: file.name, reason: "Kun PDF-filer støttes" });
+        errors.push({ name: file.name, reason: "Bare PDF – Arvid er litt gammeldags på det punktet." });
       } else if (file.size > MAX_FILE_SIZE) {
-        errors.push({ name: file.name, reason: `Filen er for stor (maks 4 MB)` });
+        errors.push({ name: file.name, reason: "For stor for Arvid å bære. Del den opp eller prøv en annen fil (maks 4 MB)." });
       } else {
         valid.push(file);
       }
@@ -102,7 +102,7 @@ export default function Upload({ onFiles }: Props) {
       {/* Valideringsfeil */}
       {validationErrors.length > 0 && (
         <div role="alert" className="rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 px-4 py-3 text-sm text-red-700 dark:text-red-300">
-          <p className="font-medium mb-1">{validationErrors.length === 1 ? "Én fil kunne ikke legges til:" : `${validationErrors.length} filer kunne ikke legges til:`}</p>
+          <p className="font-medium mb-1">{validationErrors.length === 1 ? "Arvid måtte sette én fil til side:" : `Arvid måtte sette ${validationErrors.length} filer til side:`}</p>
           {validationErrors.map((e) => (
             <p key={e.name}>{e.name}: {e.reason}</p>
           ))}
