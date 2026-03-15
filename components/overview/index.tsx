@@ -2,6 +2,7 @@
 
 // Forsikringsoversikt – tabell på desktop, kort-layout på mobil
 import { useState } from "react";
+import { Lightbulb } from "lucide-react";
 import type { InsurancePolicy, InsuranceType } from "@/lib/insurance/types";
 import { INSURANCE_TYPE_LABELS } from "@/lib/insurance/types";
 import { sumPolicies } from "@/lib/utils";
@@ -178,7 +179,7 @@ export default function Oversikt({ policies, onUpdate }: Props) {
           )}
         </table>
         {onUpdate && (
-          <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">Klikk på egenandel eller premie for å korrigere</p>
+          <p className="text-xs text-gray-400 dark:text-gray-500 mt-2"><Lightbulb className="inline w-3.5 h-3.5 mr-1 text-gray-400 dark:text-gray-500" aria-hidden="true" /> Tips: Du kan klikke på egenandel eller premie for å korrigere tallene</p>
         )}
       </div>
 
@@ -232,7 +233,7 @@ export default function Oversikt({ policies, onUpdate }: Props) {
           </div>
         )}
         {onUpdate && (
-          <p className="text-xs text-gray-400 dark:text-gray-500">Trykk på egenandel eller premie for å korrigere</p>
+          <p className="text-xs text-gray-400 dark:text-gray-500"><Lightbulb className="inline w-3.5 h-3.5 mr-1 text-gray-400 dark:text-gray-500" aria-hidden="true" /> Tips: Du kan klikke på egenandel eller premie for å korrigere tallene</p>
         )}
       </div>
     </div>

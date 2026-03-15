@@ -98,6 +98,7 @@ Premie (annualPremium):
 - Noen dokumenter oppgir "terminpremie" (per kvartal eller måned) – regn om til årsbeløp (multipliser med antall terminer per år)
 - "Bruttopremie" og "nettopremie" kan forekomme – bruk bruttopremie (det kunden faktisk betaler)
 - "Forfallsbeløp" på faktura er typisk terminpremie, ikke årspremie
+- Gjensidige bruker "Pris etter rabatter" for det kunden faktisk betaler – bruk denne verdien som annualPremium
 
 Instruksjoner:
 - Returner KUN et rent JSON-objekt – ingen forklaring, ingen markdown, ingen kodeblokker
