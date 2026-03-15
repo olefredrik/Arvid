@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { EXTRACTION_SCHEMAS } from "./schema";
+import { INSURANCE_CATEGORIES } from "./types";
 import type { InsuranceType } from "./types";
 
 // Alle støttede forsikringstyper
@@ -65,5 +66,27 @@ describe("EXTRACTION_SCHEMAS", () => {
     for (const type of ALL_TYPES) {
       expect(EXTRACTION_SCHEMAS[type].type).toBe(type);
     }
+  });
+});
+
+describe("INSURANCE_CATEGORIES", () => {
+  it("dekker alle støttede forsikringstyper", () => {
+    const typesInCategories = Object.values(INSURANCE_CATEGORIES).flat();
+    for (const type of ALL_TYPES) {
+      expect(typesInCategories, `${type} mangler i INSURANCE_CATEGORIES`).toContain(type);
+    }
+  });
+
+  it("inneholder ingen ukjente forsikringstyper", () => {
+    const typesInCategories = Object.values(INSURANCE_CATEGORIES).flat();
+    for (const type of typesInCategories) {
+      expect(ALL_TYPES, `${type} i INSURANCE_CATEGORIES er ikke definert i ALL_TYPES`).toContain(type);
+    }
+  });
+
+  it("ingen type dukker opp i flere kategorier", () => {
+    const typesInCategories = Object.values(INSURANCE_CATEGORIES).flat();
+    const unique = new Set(typesInCategories);
+    expect(unique.size, "En eller flere typer er listet i flere kategorier").toBe(typesInCategories.length);
   });
 });

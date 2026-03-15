@@ -1,6 +1,15 @@
 "use client";
 
 import { useRef, useState, useCallback } from "react";
+import { Home, Car, Sailboat, PawPrint } from "lucide-react";
+
+// Støttede forsikringstyper gruppert etter kategori
+const SUPPORTED_TYPES = [
+  { category: "Eiendom", icon: Home, types: ["Hus", "Hytte", "Innbo"] },
+  { category: "Kjøretøy", icon: Car, types: ["Bil", "Veteranbil", "Avregistrert kjøretøy", "Russebil", "Bobil", "Campingvogn", "Moped", "ATV", "MC", "Elsparkesykkel", "Snøscooter", "Tilhenger", "Sykkel"] },
+  { category: "Fritid og verdier", icon: Sailboat, types: ["Båt", "Drone", "Bunad"] },
+  { category: "Dyr og reise", icon: PawPrint, types: ["Dyr", "Reise"] },
+];
 
 type Props = {
   onFiles: (files: File[]) => void;
@@ -73,6 +82,24 @@ export default function Upload({ onFiles }: Props) {
           onChange={(e) => addFiles(e.target.files)}
         />
       </button>
+
+      {/* Støttede forsikringstyper */}
+      <details className="text-xs text-stone-400 dark:text-stone-500">
+        <summary className="cursor-pointer hover:text-stone-600 dark:hover:text-stone-300 transition-colors select-none">
+          Støttede forsikringstyper
+        </summary>
+        <div className="mt-3 pt-3 border-t border-stone-200 dark:border-stone-700 divide-y divide-stone-100 dark:divide-stone-800">
+          {SUPPORTED_TYPES.map(({ category, icon: Icon, types }) => (
+            <div key={category} className="py-3">
+              <p className="font-medium text-stone-500 dark:text-stone-400 mb-1 flex items-center gap-1.5">
+                <Icon size={13} aria-hidden="true" />
+                {category}
+              </p>
+              <p className="text-stone-500 dark:text-stone-400">{types.join(", ")}</p>
+            </div>
+          ))}
+        </div>
+      </details>
 
       {/* Liste over valgte filer */}
       {pending.length > 0 && (

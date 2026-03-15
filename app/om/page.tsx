@@ -38,6 +38,26 @@ export default function Om() {
           </section>
 
           <section>
+            <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-50 mb-3">Støttede forsikringstyper</h2>
+            <p className="text-sm leading-relaxed">
+              Arvid støtter tingforsikringer som hus, hytte, innbo, bil og en rekke andre kjøretøy og
+              fritidsobjekter. Se den fullstendige listen i opplastingsflyten.
+            </p>
+            <p className="text-sm leading-relaxed mt-3">
+              Personforsikringer som livsforsikring, uføreforsikring, behandlingsforsikring og helseforsikring
+              er bevisst ikke støttet. Disse dokumentene kan inneholde helseopplysninger og medisinsk historikk,
+              som er særlige kategorier av personopplysninger med strengere krav under GDPR enn det Arvid er
+              bygget for å håndtere.
+            </p>
+            <p className="text-sm leading-relaxed mt-3">
+              Les mer om hvordan Arvid håndterer dokumentene dine i{" "}
+              <a href="/personvern" className="underline hover:text-stone-900 dark:hover:text-stone-100">
+                personvernerklæringen
+              </a>.
+            </p>
+          </section>
+
+          <section>
             <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-50 mb-3">Ansvar og begrensninger</h2>
             <p className="text-sm leading-relaxed">
               Arvid bruker kunstig intelligens til å lese og strukturere forsikringsdokumentene dine. Verktøyet
