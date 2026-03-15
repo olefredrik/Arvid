@@ -115,7 +115,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="bg-orange-100 dark:bg-stone-900 border-t border-orange-200 dark:border-stone-800">
-        <div className="max-w-3xl mx-auto px-6 py-6 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-stone-400 dark:text-stone-500">
+        <div className="max-w-3xl mx-auto px-6 py-6 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-stone-500 dark:text-stone-400">
           <span>
             Laget av{" "}
             <a
