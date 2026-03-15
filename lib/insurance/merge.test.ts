@@ -7,6 +7,7 @@ function makePolicy(overrides: Partial<InsurancePolicy> = {}): InsurancePolicy {
   return {
     type: "car",
     company: "TestAS",
+    policyNumber: null,
     coverageLevel: "Kasko",
     deductible: 4000,
     maxCoverage: null,
