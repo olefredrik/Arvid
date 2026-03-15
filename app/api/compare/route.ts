@@ -5,14 +5,9 @@ import Anthropic from "@anthropic-ai/sdk";
 import { buildComparisonPrompt } from "@/lib/insurance/prompts";
 import type { InsurancePolicy, ComparisonResult, PolicyComparison } from "@/lib/insurance/types";
 import { mergePolicies } from "@/lib/insurance/merge";
+import { extractJson, sumPolicies } from "@/lib/utils";
 
 const client = new Anthropic();
-
-// Fjern eventuelle markdown-kodeblokker fra Claude-respons før JSON.parse
-function extractJson(text: string): string {
-  const match = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
-  return match ? match[1] : text.trim();
-}
 
 // Sammenligner nåværende forsikringer med mottatte tilbud
 export async function POST(request: NextRequest) {
@@ -86,20 +81,6 @@ export async function POST(request: NextRequest) {
       if (!matchedTypes.has(type)) {
         unmatchedOffers.push(merged.policy);
       }
-    }
-
-    // Totalberegning – bundlede priser telles kun én gang per unik selskap+pris-kombinasjon
-    function sumPolicies(policies: InsurancePolicy[]): number {
-      const seenBundles = new Set<string>();
-      return policies.reduce((sum, p) => {
-        if (p.annualPremium == null) return sum;
-        if (p.isBundledPremium) {
-          const key = `${p.company}:${p.annualPremium}`;
-          if (seenBundles.has(key)) return sum;
-          seenBundles.add(key);
-        }
-        return sum + p.annualPremium;
-      }, 0);
     }
 
     const currentTotal = sumPolicies(currentPolicies);

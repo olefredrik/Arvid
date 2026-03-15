@@ -4,14 +4,9 @@ export const maxDuration = 60; // sekunder – Claude-kall kan ta 20–30 sek fo
 import Anthropic from "@anthropic-ai/sdk";
 import { buildQuoteRequestPrompt } from "@/lib/insurance/prompts";
 import type { InsurancePolicy } from "@/lib/insurance/types";
+import { extractJson } from "@/lib/utils";
 
 const client = new Anthropic();
-
-// Fjern eventuelle markdown-kodeblokker fra Claude-respons før JSON.parse
-function extractJson(text: string): string {
-  const match = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
-  return match ? match[1] : text.trim();
-}
 
 // Genererer strukturert tilbudsforespørsel basert på ekstraherte forsikringsdata
 export async function POST(request: NextRequest) {

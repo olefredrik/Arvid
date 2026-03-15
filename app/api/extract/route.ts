@@ -5,14 +5,9 @@ import Anthropic from "@anthropic-ai/sdk";
 import { extractTextFromPdf, normalizeText, prioritizeSections, TYPE_ID_TEXT_LENGTH } from "@/lib/pdf/parser";
 import { buildTypeIdentificationPrompt, buildExtractionPrompt } from "@/lib/insurance/prompts";
 import type { InsuranceType, InsurancePolicy } from "@/lib/insurance/types";
+import { extractJson } from "@/lib/utils";
 
 const client = new Anthropic();
-
-// Fjern eventuelle markdown-kodeblokker fra Claude-respons før JSON.parse
-function extractJson(text: string): string {
-  const match = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
-  return match ? match[1] : text.trim();
-}
 
 // Ekstraherer strukturert forsikringsdata fra en PDF-fil
 // Ett dokument kan inneholde flere forsikringstyper (f.eks. hus + innbo)
