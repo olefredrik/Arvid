@@ -33,13 +33,20 @@ export default function Personvern() {
           <section>
             <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-50 mb-3">Forsikringsdokumenter</h2>
             <p className="text-sm leading-relaxed">
-              Dokumenter du laster opp sendes til Anthropic Claude API for analyse og slettes umiddelbart etterpå.
+              Dokumenter du laster opp sendes til Anthropic via Claude API for analyse og slettes umiddelbart etterpå.
               Ingenting lagres i en database. Arvid har ingen tilgang til dokumentinnholdet etter at sesjonen er avsluttet.
             </p>
             <p className="text-sm leading-relaxed mt-3">
               Anthropic er databehandler for innholdet i dokumentene under analysen.
               Se <a href="https://www.anthropic.com/privacy" target="_blank" rel="noopener noreferrer" className="underline hover:text-stone-900 dark:hover:text-stone-100">Anthropics personvernerklæring</a> for detaljer.
-              Databehandleravtale med Anthropic er inngått før lansering.
+              Databehandleravtale med Anthropic er inngått.
+            </p>
+            <p className="text-sm leading-relaxed mt-3">
+              Arvid støtter kun tingforsikringer. Personforsikringer som kan inneholde helseopplysninger er
+              bevisst ikke støttet. Les mer om dette under{" "}
+              <a href="/om" className="underline hover:text-stone-900 dark:hover:text-stone-100">
+                Om tjenesten
+              </a>.
             </p>
           </section>
 
