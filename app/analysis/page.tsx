@@ -144,9 +144,11 @@ export default function AnalysisPage() {
       );
     }
 
-    const merged = mergePoliciesByType(results);
-    setPolicies(merged);
-    capture("analysis_completed", { policy_count: merged.length, insurance_types: merged.map((p) => p.type) });
+    setPolicies((prev) => {
+      const merged = mergePoliciesByType([...prev, ...results]);
+      capture("analysis_completed", { policy_count: merged.length, insurance_types: merged.map((p) => p.type) });
+      return merged;
+    });
     setStep("overview");
   };
 
@@ -235,7 +237,7 @@ export default function AnalysisPage() {
     }
 
     if (results.length > 0) {
-      setOfferPolicies(mergePoliciesByType(results));
+      setOfferPolicies((prev) => mergePoliciesByType([...prev, ...results]));
       setStep("offer-review");
     } else {
       setStep("compare-upload");
@@ -372,7 +374,7 @@ export default function AnalysisPage() {
               <Overview policies={policies} onUpdate={handlePolicyUpdate} />
               <div className="mt-8 flex gap-3">
                 <button
-                  onClick={() => { setPolicies([]); setStatuses([]); setStep("upload"); }}
+                  onClick={() => { setStatuses([]); setStep("upload"); }}
                   className="px-4 py-2 text-sm text-stone-600 dark:text-stone-300 border border-stone-300 dark:border-stone-600 rounded-lg hover:bg-white dark:hover:bg-stone-800 transition-colors cursor-pointer"
                 >
                   Last opp flere dokumenter
@@ -495,10 +497,16 @@ export default function AnalysisPage() {
 
           <div className="mt-8 flex gap-3">
             <button
-              onClick={() => { setOfferPolicies([]); setOfferStatuses([]); setCompareError(null); setStep("compare-upload"); }}
+              onClick={() => { setOfferStatuses([]); setCompareError(null); setStep("compare-upload"); }}
               className="px-4 py-2 text-sm text-stone-600 dark:text-stone-300 border border-stone-300 dark:border-stone-600 rounded-lg hover:bg-white dark:hover:bg-stone-800 transition-colors cursor-pointer"
             >
-              Last opp på nytt
+              Legg til dokument
+            </button>
+            <button
+              onClick={() => { setOfferPolicies([]); setOfferStatuses([]); setCompareError(null); setStep("compare-upload"); }}
+              className="px-4 py-2 text-sm text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300 transition-colors cursor-pointer"
+            >
+              Nullstill tilbud
             </button>
             <button
               onClick={handleRunComparison}
