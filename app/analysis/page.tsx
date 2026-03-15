@@ -8,6 +8,7 @@ import Report, { type QuoteRequest } from "@/components/report";
 import Comparison from "@/components/comparison";
 import type { InsurancePolicy, InsuranceType, ComparisonResult } from "@/lib/insurance/types";
 import { mergePoliciesByType } from "@/lib/insurance/merge";
+import { useAnalytics } from "@/lib/hooks/useAnalytics";
 
 type Step = "upload" | "processing" | "overview" | "generating" | "report" | "compare-upload" | "compare-processing" | "offer-review" | "comparing" | "comparison";
 
@@ -18,6 +19,7 @@ type ProcessingStatus = {
 };
 
 export default function AnalysisPage() {
+  const { capture } = useAnalytics();
   const [step, setStep] = useState<Step>("upload");
   const [compareMode, setCompareMode] = useState(false);
   const [policies, setPolicies] = useState<InsurancePolicy[]>([]);
@@ -37,6 +39,7 @@ export default function AnalysisPage() {
   const handleFiles = async (files: File[]) => {
     setStep("processing");
     setStatuses(files.map((f) => ({ fileName: f.name, done: false })));
+    capture("analysis_started", { file_count: files.length });
 
     const results: InsurancePolicy[] = [];
 
@@ -60,16 +63,19 @@ export default function AnalysisPage() {
               idx === i ? { ...s, done: true, error: data.error ?? "Ukjent feil" } : s
             )
           );
+          capture("pdf_extraction_failed", { file_name: file.name });
           continue;
         }
 
         results.push(...(data.policies as InsurancePolicy[]));
+        capture("pdf_extracted", { file_name: file.name, policy_count: (data.policies as InsurancePolicy[]).length });
       } catch {
         setStatuses((prev) =>
           prev.map((s, idx) =>
             idx === i ? { ...s, done: true, error: "Nettverksfeil" } : s
           )
         );
+        capture("pdf_extraction_failed", { file_name: file.name, reason: "network_error" });
         continue;
       }
 
@@ -78,7 +84,9 @@ export default function AnalysisPage() {
       );
     }
 
-    setPolicies(mergePoliciesByType(results));
+    const merged = mergePoliciesByType(results);
+    setPolicies(merged);
+    capture("analysis_completed", { policy_count: merged.length, insurance_types: merged.map((p) => p.type) });
     setStep("overview");
   };
 
@@ -91,6 +99,7 @@ export default function AnalysisPage() {
   const handleGenerateQuoteRequest = async () => {
     setStep("generating");
     setQuoteError(null);
+    capture("quote_request_started");
 
     try {
       const response = await fetch("/api/generate-quote-request", {
@@ -104,20 +113,24 @@ export default function AnalysisPage() {
       if (!response.ok) {
         setQuoteError(data.error ?? "Ukjent feil");
         setStep("overview");
+        capture("quote_request_failed");
         return;
       }
 
       setQuoteRequest(data.quoteRequest as QuoteRequest);
+      capture("quote_request_generated");
       setStep("report");
     } catch {
       setQuoteError("Nettverksfeil – prøv igjen");
       setStep("overview");
+      capture("quote_request_failed", { reason: "network_error" });
     }
   };
 
   const handleOfferFiles = async (files: File[]) => {
     setStep("compare-processing");
     setOfferStatuses(files.map((f) => ({ fileName: f.name, done: false })));
+    capture("comparison_started", { file_count: files.length });
 
     const results: InsurancePolicy[] = [];
 
@@ -140,16 +153,19 @@ export default function AnalysisPage() {
               idx === i ? { ...s, done: true, error: data.error ?? "Ukjent feil" } : s
             )
           );
+          capture("pdf_extraction_failed", { file_name: file.name, context: "offer" });
           continue;
         }
 
         results.push(...(data.policies as InsurancePolicy[]));
+        capture("pdf_extracted", { file_name: file.name, context: "offer", policy_count: (data.policies as InsurancePolicy[]).length });
       } catch {
         setOfferStatuses((prev) =>
           prev.map((s, idx) =>
             idx === i ? { ...s, done: true, error: "Nettverksfeil" } : s
           )
         );
+        capture("pdf_extraction_failed", { file_name: file.name, context: "offer", reason: "network_error" });
         continue;
       }
 
@@ -175,6 +191,7 @@ export default function AnalysisPage() {
   const handleRunComparison = async () => {
     setStep("comparing");
     setCompareError(null);
+    capture("comparison_run");
     try {
       const response = await fetch("/api/compare", {
         method: "POST",
@@ -187,14 +204,17 @@ export default function AnalysisPage() {
       if (!response.ok) {
         setCompareError(data.error ?? "Ukjent feil");
         setStep("offer-review");
+        capture("comparison_failed");
         return;
       }
 
       setComparison(data.comparison as ComparisonResult);
+      capture("comparison_completed");
       setStep("comparison");
     } catch {
       setCompareError("Nettverksfeil – prøv igjen");
       setStep("offer-review");
+      capture("comparison_failed", { reason: "network_error" });
     }
   };
 
@@ -474,6 +494,7 @@ export default function AnalysisPage() {
             comparison={comparison}
             onBack={() => setStep("offer-review")}
             onRestart={() => {
+              capture("analysis_reset");
               setPolicies([]);
               setStatuses([]);
               setQuoteRequest(null);
