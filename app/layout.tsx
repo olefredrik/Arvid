@@ -21,15 +21,15 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Arvid – Forstå og forbedre forsikringene dine",
-  description: "Last opp forsikringsavtalene dine som PDF og få strukturert oversikt over dekning og egenandel. Generer en tilbudsforespørsel og finn bedre priser.",
+  title: "Arvid – Forstå forsikringene dine og bytt på egne premisser",
+  description: "Forsikringsvilkår er kjedelige å lese. Last opp avtalene dine som PDF, få en strukturert oversikt, og generer en ferdig tilbudsforespørsel til andre selskaper. Gratis.",
   metadataBase: new URL("https://arvid.cloud"),
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "Arvid – Forstå og forbedre forsikringene dine",
-    description: "Last opp forsikringsavtalene dine som PDF og få strukturert oversikt over dekning og egenandel. Generer en tilbudsforespørsel og finn bedre priser.",
+    title: "Arvid – Forstå forsikringene dine og bytt på egne premisser",
+    description: "Forsikringsvilkår er kjedelige å lese. Last opp avtalene dine som PDF, få en strukturert oversikt, og generer en ferdig tilbudsforespørsel til andre selskaper. Gratis.",
     url: "https://arvid.cloud",
     siteName: "Arvid",
     images: [
@@ -45,8 +45,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Arvid – Forstå og forbedre forsikringene dine",
-    description: "Last opp forsikringsavtalene dine som PDF og få strukturert oversikt over dekning og egenandel. Generer en tilbudsforespørsel og finn bedre priser.",
+    title: "Arvid – Forstå forsikringene dine og bytt på egne premisser",
+    description: "Forsikringsvilkår er kjedelige å lese. Last opp avtalene dine som PDF, få en strukturert oversikt, og generer en ferdig tilbudsforespørsel til andre selskaper. Gratis.",
     images: ["/arvid-og-image.jpg"],
   },
 };
