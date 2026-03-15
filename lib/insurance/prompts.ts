@@ -78,6 +78,27 @@ Om dokumenttyper:
 Felter som skal ekstraheres:
 ${fieldsDescription}
 
+Selskapsspesifikk terminologi – norske forsikringsselskaper bruker ulike produktnavn for de samme dekningsnivåene:
+
+Dekningsnivå (coverageLevel) – bruk det faktiske produktnavnet fra dokumentet:
+
+Bilforsikring:
+- If: "Ansvar", "Delkasko", "Kasko", "Super"
+- Gjensidige: "Ansvar", "Delkasko", "Kasko", "Pluss"
+- Fremtind (DNB / SpareBank 1): "Ansvar", "Minikasko", "Kasko", "Topp"
+- Storebrand: "Ansvar", "Delkasko", "Kasko", "Super"
+- Tryg: "Ansvar", "Delkasko", "Kasko", "Bil Ekstra"
+
+Bolig- og innboforsikring:
+- If: "Basis", "Utvidet", "Super"
+- Gjensidige: "Hus" / "Innbo", "Hus Pluss" / "Innbo Pluss"
+- Storebrand: "Standard", "Super"
+
+Premie (annualPremium):
+- Noen dokumenter oppgir "terminpremie" (per kvartal eller måned) – regn om til årsbeløp (multipliser med antall terminer per år)
+- "Bruttopremie" og "nettopremie" kan forekomme – bruk bruttopremie (det kunden faktisk betaler)
+- "Forfallsbeløp" på faktura er typisk terminpremie, ikke årspremie
+
 Instruksjoner:
 - Returner KUN et rent JSON-objekt – ingen forklaring, ingen markdown, ingen kodeblokker
 - Bruk nøyaktig de feltene som er listet opp
