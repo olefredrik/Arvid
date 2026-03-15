@@ -10,6 +10,8 @@ export const metadata: Metadata = {
 
 // Personvernerklæring for arvid.cloud
 export default function Personvern() {
+  const dataController = process.env.DATA_CONTROLLER ?? "[behandlingsansvarlig ikke konfigurert]";
+  const contactEmail = process.env.CONTACT_EMAIL ?? "[e-post ikke konfigurert]";
   return (
     <main className="min-h-screen bg-orange-50 dark:bg-stone-950">
       <div className="max-w-2xl mx-auto px-6 py-16">
@@ -86,10 +88,10 @@ export default function Personvern() {
           <section>
             <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-50 mb-3">Behandlingsansvarlig</h2>
             <p className="text-sm leading-relaxed">
-              Behandlingsansvarlig for personopplysninger som behandles i Arvid er OFL Holding AS (org.nr. 922 020 523), selskapet bak Arvid.
+              Behandlingsansvarlig for personopplysninger som behandles i Arvid er {dataController}, selskapet bak Arvid.
               Spørsmål om personvern kan rettes til{" "}
-              <a href="mailto:hello@olefredrik.com" className="underline hover:text-stone-900 dark:hover:text-stone-100">
-                hello@olefredrik.com
+              <a href={`mailto:${contactEmail}`} className="underline hover:text-stone-900 dark:hover:text-stone-100">
+                {contactEmail}
               </a>.
             </p>
           </section>

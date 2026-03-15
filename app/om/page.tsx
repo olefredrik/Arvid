@@ -65,7 +65,11 @@ export default function Om() {
               Se alltid gjennom resultatene selv før du tar beslutninger basert på dem.
             </p>
             <p className="text-sm leading-relaxed mt-3">
-              Du bruker Arvid på eget ansvar.
+              Du bruker Arvid på eget ansvar. Les{" "}
+              <a href="/vilkaar" className="underline hover:text-stone-900 dark:hover:text-stone-100">
+                vilkår for bruk
+              </a>{" "}
+              for fullstendig ansvarsbegrensning.
             </p>
           </section>
 

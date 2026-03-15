@@ -137,6 +137,12 @@ export default function Home() {
               Om tjenesten
             </a>
             <a
+              href="/vilkaar"
+              className="underline decoration-transparent hover:decoration-current underline-offset-2 transition-colors duration-200"
+            >
+              Vilkår
+            </a>
+            <a
               href="/personvern"
               className="underline decoration-transparent hover:decoration-current underline-offset-2 transition-colors duration-200"
             >
