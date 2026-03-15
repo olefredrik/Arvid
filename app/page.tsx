@@ -129,6 +129,12 @@ export default function Home() {
           </span>
           <div className="flex items-center gap-4">
             <a
+              href="/om"
+              className="underline decoration-transparent hover:decoration-current underline-offset-2 transition-colors duration-200"
+            >
+              Om tjenesten
+            </a>
+            <a
               href="/personvern"
               className="underline decoration-transparent hover:decoration-current underline-offset-2 transition-colors duration-200"
             >

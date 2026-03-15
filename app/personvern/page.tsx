@@ -13,7 +13,7 @@ export default function Personvern() {
   return (
     <main className="min-h-screen bg-orange-50 dark:bg-stone-950">
       <div className="max-w-2xl mx-auto px-6 py-16">
-        <a href="/" className="text-sm text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300 mb-10 inline-block">
+        <a href="/" className="text-sm text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 mb-10 inline-block">
           ← Tilbake
         </a>
 
