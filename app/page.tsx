@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { FileUp } from "lucide-react";
+import ArvidPortrait from "@/components/arvid-portrait";
 
 // Landingsside
 export default function Home() {
@@ -7,7 +7,7 @@ export default function Home() {
     <main className="min-h-screen bg-orange-50 dark:bg-stone-950">
       {/* Hero */}
       <section className="max-w-3xl mx-auto px-6 pt-16 pb-16 sm:pt-24 sm:pb-24 text-center">
-        <Image src="/arvid.png" alt="Arvid – Din nøytrale forsikringsassistent" width={208} height={208} className="mx-auto mb-6 object-contain drop-shadow-lg w-36 h-36 sm:w-52 sm:h-52" priority />
+        <ArvidPortrait />
         <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-stone-900 dark:text-stone-50 mb-4">Arvid</h1>
         <p className="text-xl sm:text-2xl font-medium text-stone-700 dark:text-stone-200 mb-4">
           Din nøytrale forsikringsassistent.

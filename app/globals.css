@@ -12,3 +12,9 @@ h1, h2, h3, h4 {
 body {
   font-family: var(--font-body), system-ui, sans-serif;
 }
+
+/* Blunkeanimasjon for Arvid-portrett */
+@keyframes arvid-blink {
+  0%, 91%, 100% { opacity: 0; }
+  92%, 96%      { opacity: 1; }
+}
