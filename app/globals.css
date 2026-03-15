@@ -4,8 +4,10 @@
 @variant dark (&:where(.dark, .dark *));
 
 /* Overskriftsfont – DM Serif Display */
+/* DM Serif Display finnes kun i Regular (400) – font-normal forhindrer syntetisert bold i Safari */
 h1, h2, h3, h4 {
   font-family: var(--font-heading), Georgia, serif;
+  font-weight: 400;
 }
 
 /* Brødtekstfont – DM Sans */
