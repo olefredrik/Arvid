@@ -35,6 +35,7 @@ export type ExtractionConfidence = "high" | "medium" | "low";
 export type InsurancePolicy = {
   type: InsuranceType;
   company: string;
+  policyNumber: string | null;
   coverageLevel: string;
   deductible: number | null;
   maxCoverage: number | null;

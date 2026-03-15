@@ -100,6 +100,7 @@ export async function POST(request: NextRequest) {
         const policy: InsurancePolicy = {
           type: insuranceType,
           company: (extracted.company as string) ?? "Ukjent selskap",
+          policyNumber: (extracted.policyNumber as string | null) ?? null,
           coverageLevel: (extracted.coverageLevel as string) ?? "Ukjent",
           deductible: (extracted.deductible as number | null) ?? null,
           maxCoverage: (extracted.maxCoverage as number | null) ?? null,
