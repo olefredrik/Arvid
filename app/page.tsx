@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { FileUp } from "lucide-react";
 
 // Landingsside
 export default function Home() {
@@ -17,8 +18,9 @@ export default function Home() {
         </p>
         <a
           href="/analysis"
-          className="inline-block bg-orange-600 dark:bg-orange-700 text-white px-8 py-3.5 rounded-lg font-medium text-base hover:bg-orange-700 dark:hover:bg-orange-800 transition-colors"
+          className="inline-flex items-center gap-2 bg-orange-600 dark:bg-orange-700 text-white px-8 py-3.5 rounded-lg font-medium text-base hover:bg-orange-700 dark:hover:bg-orange-800 transition-colors"
         >
+          <FileUp size={18} aria-hidden="true" />
           Last opp forsikringene dine
         </a>
         <p className="mt-4 text-sm text-stone-400 dark:text-stone-500">
@@ -50,8 +52,8 @@ export default function Home() {
       </section>
 
       {/* Slik fungerer det */}
-      <section className="max-w-3xl mx-auto px-6 py-16">
-        <h2 className="text-sm font-semibold text-stone-400 dark:text-stone-500 uppercase tracking-widest mb-10 text-center">
+      <section className="max-w-3xl mx-auto px-6 pt-8 pb-16">
+        <h2 className="font-sans! text-sm font-semibold text-stone-400 dark:text-stone-500 uppercase tracking-wider mb-10 text-center">
           Slik fungerer det
         </h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -87,8 +89,8 @@ export default function Home() {
       </section>
 
       {/* Tillit */}
-      <section className="max-w-3xl mx-auto px-6 pt-16 pb-24">
-        <h2 className="text-sm font-semibold text-stone-400 dark:text-stone-500 uppercase tracking-widest mb-10 text-center">
+      <section className="max-w-3xl mx-auto px-6 pt-16 pb-40">
+        <h2 className="font-sans! text-sm font-semibold text-stone-400 dark:text-stone-500 uppercase tracking-wider mb-10 text-center">
           Bygget på tillit
         </h2>
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-3 text-center">

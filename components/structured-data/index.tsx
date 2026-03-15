@@ -8,7 +8,7 @@ export default function StructuredData() {
         "@id": "https://arvid.cloud/#website",
         "url": "https://arvid.cloud",
         "name": "Arvid",
-        "description": "Forstå forsikringsavtalene dine og finn bedre tilbud",
+        "description": "Forstå forsikringene dine og bytt på egne premisser. Ingen kommersielle bindinger til forsikringsbransjen.",
         "inLanguage": "nb-NO",
       },
       {
@@ -16,7 +16,7 @@ export default function StructuredData() {
         "@id": "https://arvid.cloud/#app",
         "name": "Arvid – Din nøytrale forsikringsassistent",
         "url": "https://arvid.cloud",
-        "description": "Arvid hjelper norske forbrukere å forstå forsikringsavtalene sine, sammenstille dem i et nyttig format, og evaluere konkurransetilbud.",
+        "description": "Arvid hjelper norske forbrukere å forstå hva forsikringene deres faktisk dekker, og gjør det enkelt å innhente konkurransetilbud uten kommersielle bindinger.",
         "applicationCategory": "FinanceApplication",
         "operatingSystem": "Web",
         "offers": {
