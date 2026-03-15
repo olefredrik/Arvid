@@ -78,19 +78,21 @@ Om dokumenttyper:
 Felter som skal ekstraheres:
 ${fieldsDescription}
 
-Selskapsspesifikk terminologi – norske forsikringsselskaper bruker ulike begreper for de samme feltene:
-
-Egenandel (deductible):
-- If: "selvrisiko"
-- Tryg / Codan: "selvrisiko" eller "egenandel"
-- Gjensidige, Fremtind, Storebrand, SpareBank 1: "egenandel"
+Selskapsspesifikk terminologi – norske forsikringsselskaper bruker ulike produktnavn for de samme dekningsnivåene:
 
 Dekningsnivå (coverageLevel) – bruk det faktiske produktnavnet fra dokumentet:
-- If: "Basis", "Komfort", "Super", "Topp"
-- Gjensidige: "Basis", "Ekstra", "Optimal", "Topp"
-- Fremtind (DNB): "Standard", "Pluss", "Topp"
-- Storebrand: "Basis", "Mellom", "Topp"
-- SpareBank 1: "Basis", "Standard", "Pluss"
+
+Bilforsikring:
+- If: "Ansvar", "Delkasko", "Kasko", "Super"
+- Gjensidige: "Ansvar", "Delkasko", "Kasko", "Pluss"
+- Fremtind (DNB / SpareBank 1): "Ansvar", "Minikasko", "Kasko", "Topp"
+- Storebrand: "Ansvar", "Delkasko", "Kasko", "Super"
+- Tryg: "Ansvar", "Delkasko", "Kasko", "Bil Ekstra"
+
+Bolig- og innboforsikring:
+- If: "Basis", "Utvidet", "Super"
+- Gjensidige: "Hus" / "Innbo", "Hus Pluss" / "Innbo Pluss"
+- Storebrand: "Standard", "Super"
 
 Premie (annualPremium):
 - Noen dokumenter oppgir "terminpremie" (per kvartal eller måned) – regn om til årsbeløp (multipliser med antall terminer per år)
