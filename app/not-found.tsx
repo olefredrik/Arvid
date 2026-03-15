@@ -13,7 +13,7 @@ export default function NotFound() {
           className="mx-auto mb-8 w-full max-w-sm sm:max-w-md"
           priority
         />
-        <p className="text-7xl font-bold text-amber-600 dark:text-amber-500 mb-8">404</p>
+        <p className="text-xs font-mono text-stone-400 dark:text-stone-500 mb-3">404</p>
         <h1 className="text-xl font-semibold text-stone-900 dark:text-stone-50 mb-3">
           Arvid har gått gjennom bunken to ganger. Ingen spor.
         </h1>
