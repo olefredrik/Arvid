@@ -28,10 +28,21 @@ function VerdictBadge({ verdict }: { verdict: "Bytt" | "Behold" | "Vurder" }) {
 export default function Comparison({ comparison, onBack, onRestart }: Props) {
   const hasPriceDiff = comparison.currentTotal != null && comparison.offerTotal != null;
   const totalDiff = hasPriceDiff ? comparison.offerTotal! - comparison.currentTotal! : null;
+  const DIFF_LIMIT = 5;
   const [expanded, setExpanded] = useState<Set<number>>(new Set());
+  const [expandedDiffs, setExpandedDiffs] = useState<Set<number>>(new Set());
 
   const toggleExpanded = (i: number) => {
     setExpanded((prev) => {
+      const next = new Set(prev);
+      if (next.has(i)) next.delete(i);
+      else next.add(i);
+      return next;
+    });
+  };
+
+  const toggleDiffs = (i: number) => {
+    setExpandedDiffs((prev) => {
       const next = new Set(prev);
       if (next.has(i)) next.delete(i);
       else next.add(i);
@@ -94,9 +105,9 @@ export default function Comparison({ comparison, onBack, onRestart }: Props) {
                 {c.current.deductible != null && (
                   <p className="text-sm text-gray-500 dark:text-gray-400">Egenandel: {c.current.deductible.toLocaleString("nb-NO")} kr</p>
                 )}
-                {c.current.annualPremium != null && (
-                  <p className="text-sm font-medium text-gray-700 dark:text-gray-200 mt-1">{c.current.annualPremium.toLocaleString("nb-NO")} kr/år</p>
-                )}
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-200 mt-1">
+                  {c.current.annualPremium != null ? `${c.current.annualPremium.toLocaleString("nb-NO")} kr/år` : "–"}
+                </p>
               </div>
               <div className="px-4 py-3 border-t sm:border-t-0 border-gray-100 dark:border-gray-700">
                 <p className="text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-2">Tilbud</p>
@@ -130,19 +141,35 @@ export default function Comparison({ comparison, onBack, onRestart }: Props) {
                   <span className="text-gray-400 dark:text-gray-500" aria-hidden="true">{expanded.has(i) ? "▲" : "▼"}</span>
                 </button>
                 {expanded.has(i) && (
-                  <div className="px-4 py-3 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+                  <div className="px-4 py-3 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 space-y-3">
                     {c.assessment && (
-                      <p className="text-sm text-gray-600 dark:text-gray-300 mb-2 leading-relaxed">{c.assessment}</p>
+                      <div>
+                        <p className="text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-1">Vurdering</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{c.assessment}</p>
+                      </div>
                     )}
                     {c.coverageDifferences.length > 0 && (
-                      <ul className="space-y-1">
-                        {c.coverageDifferences.map((diff, j) => (
-                          <li key={j} className="text-xs text-gray-500 dark:text-gray-400 flex gap-2">
-                            <span className="shrink-0">•</span>
-                            <span>{diff}</span>
-                          </li>
-                        ))}
-                      </ul>
+                      <div>
+                        <p className="text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-1">Konkrete avvik</p>
+                        <ul className="space-y-1">
+                          {(expandedDiffs.has(i) ? c.coverageDifferences : c.coverageDifferences.slice(0, DIFF_LIMIT)).map((diff, j) => (
+                            <li key={j} className="text-xs text-gray-500 dark:text-gray-400 flex gap-2">
+                              <span className="shrink-0">•</span>
+                              <span>{diff}</span>
+                            </li>
+                          ))}
+                        </ul>
+                        {c.coverageDifferences.length > DIFF_LIMIT && (
+                          <button
+                            onClick={() => toggleDiffs(i)}
+                            className="mt-2 text-xs text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 underline underline-offset-2 cursor-pointer"
+                          >
+                            {expandedDiffs.has(i)
+                              ? "Vis færre"
+                              : `Vis alle ${c.coverageDifferences.length} avvik`}
+                          </button>
+                        )}
+                      </div>
                     )}
                   </div>
                 )}

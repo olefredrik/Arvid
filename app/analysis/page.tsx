@@ -328,8 +328,8 @@ export default function AnalysisPage() {
           </h2>
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
             {compareMode
-              ? "Last opp dine nåværende forsikringer – vi bruker dem som grunnlag for sammenligningen"
-              : "Steg 1 av 4 – Last opp PDF-filene du har mottatt fra forsikringsselskapet"}
+              ? "Arvid bruker disse som utgangspunkt når tilbudet skal vurderes."
+              : "Arvid liker best forsikringsbevis, ikke bare generelle vilkår."}
           </p>
           <Upload onFiles={handleFiles} />
         </>
@@ -372,7 +372,7 @@ export default function AnalysisPage() {
         <>
           <h2 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">Forsikringsoversikt</h2>
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
-            {compareMode ? "Se gjennom og bekreft at oversikten er riktig" : "Steg 2 av 4 – Se gjennom og bekreft at oversikten er riktig"}
+            Arvid kan ta feil. Stemmer premie og egenandel? Klikk på tallene hvis du ønsker å korrigere.
           </p>
 
           {errors.length > 0 && (
@@ -468,7 +468,7 @@ export default function AnalysisPage() {
         <>
           <h2 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">Tilbudsforespørsel</h2>
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
-            Steg 3 av 4 – Last ned og send til forsikringsselskaper selv
+            Last ned og send til selskaper du vurderer. Har du allerede mottatt tilbud? Bla ned.
           </p>
           <Report
             quoteRequest={quoteRequest}
@@ -495,7 +495,7 @@ export default function AnalysisPage() {
         <>
           <h2 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">Last opp mottatte tilbud</h2>
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
-            {compareMode ? "Last opp tilbudene du har mottatt fra forsikringsselskaper" : "Steg 4 av 4 – Last opp tilbudene du har mottatt fra forsikringsselskaper"}
+            Arvid trenger tilbudsdokumentet for å sammenligne pris og vilkår mot det du har i dag.
           </p>
           {compareError && (
             <div role="alert" className="mb-6 p-4 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-700 dark:text-red-300">
@@ -512,7 +512,7 @@ export default function AnalysisPage() {
         <>
           <h2 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">Se gjennom mottatte tilbud</h2>
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
-            Steg 4 av 4 – Kontroller at prisene er riktig ekstrahert før sammenligning
+            Arvid kan feiltolke tall fra tilbudsdokumenter. Rett opp eventuelle feil før du går videre.
           </p>
 
           {offerErrors.length > 0 && (
@@ -556,25 +556,27 @@ export default function AnalysisPage() {
 
           <Overview policies={offerPolicies} onUpdate={handleOfferPolicyUpdate} />
 
-          <div className="mt-8 flex gap-3">
-            <button
-              onClick={() => { setOfferStatuses([]); setCompareError(null); setStep("compare-upload"); }}
-              className="px-4 py-2 text-sm text-stone-600 dark:text-stone-300 border border-stone-300 dark:border-stone-600 rounded-lg hover:bg-white dark:hover:bg-stone-800 transition-colors cursor-pointer"
-            >
-              Legg til dokument
-            </button>
+          <div className="mt-8 flex justify-between items-center">
             <button
               onClick={() => setShowResetConfirm(true)}
               className="px-4 py-2 text-sm text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300 transition-colors cursor-pointer"
             >
               Nullstill tilbud
             </button>
-            <button
-              onClick={handleRunComparison}
-              className="px-6 py-2 bg-orange-600 dark:bg-orange-700 text-white text-sm font-medium rounded-lg hover:bg-orange-700 dark:hover:bg-orange-800 transition-colors cursor-pointer"
-            >
-              Bekreft og sammenlign →
-            </button>
+            <div className="flex gap-3">
+              <button
+                onClick={() => { setOfferStatuses([]); setCompareError(null); setStep("compare-upload"); }}
+                className="px-4 py-2 text-sm text-stone-600 dark:text-stone-300 border border-stone-300 dark:border-stone-600 rounded-lg hover:bg-white dark:hover:bg-stone-800 transition-colors cursor-pointer"
+              >
+                Legg til dokument
+              </button>
+              <button
+                onClick={handleRunComparison}
+                className="px-6 py-2 bg-orange-600 dark:bg-orange-700 text-white text-sm font-medium rounded-lg hover:bg-orange-700 dark:hover:bg-orange-800 transition-colors cursor-pointer"
+              >
+                Bekreft og sammenlign →
+              </button>
+            </div>
           </div>
         </>
       )}
@@ -630,7 +632,7 @@ export default function AnalysisPage() {
         <>
           <h2 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">Sammenligning av tilbud</h2>
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
-            Steg 4 av 4 – Se hvordan tilbudet måler seg mot avtalene du har i dag
+            Her er Arvids vurdering. Les den kritisk, og ta beslutningen selv.
           </p>
           <Comparison
             comparison={comparison}
