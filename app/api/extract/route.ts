@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
-import { extractTextFromPdf, normalizeText, TYPE_ID_TEXT_LENGTH } from "@/lib/pdf/parser";
+import { extractTextFromPdf, normalizeText, prioritizeSections, TYPE_ID_TEXT_LENGTH } from "@/lib/pdf/parser";
 import { buildTypeIdentificationPrompt, buildExtractionPrompt } from "@/lib/insurance/prompts";
 import type { InsuranceType, InsurancePolicy } from "@/lib/insurance/types";
 
@@ -30,8 +30,8 @@ export async function POST(request: NextRequest) {
     // Trekk ut og normaliser tekst fra PDF
     const buffer = Buffer.from(await file.arrayBuffer());
     const rawText = await extractTextFromPdf(buffer);
-    const documentText = normalizeText(rawText);          // brukes til ekstraksjon
-    const shortText = normalizeText(rawText, TYPE_ID_TEXT_LENGTH); // brukes til typeidentifikasjon
+    const documentText = prioritizeSections(rawText);              // ekstraksjon: høyverdi-seksjoner først
+    const shortText = normalizeText(rawText, TYPE_ID_TEXT_LENGTH); // typeidentifikasjon: første N tegn
 
     if (!documentText) {
       return NextResponse.json(
