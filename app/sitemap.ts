@@ -9,6 +9,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
+      url: "https://arvid.cloud/om",
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.5,
+    },
+    {
       url: "https://arvid.cloud/personvern",
       lastModified: new Date(),
       changeFrequency: "yearly",
