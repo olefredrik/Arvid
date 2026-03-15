@@ -150,7 +150,12 @@ export default function Oversikt({ policies, onUpdate }: Props) {
             {policies.map((policy) => (
               <tr key={policy.type} className="hover:bg-gray-50 dark:hover:bg-gray-800">
                 <td className="p-3 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">{INSURANCE_TYPE_LABELS[policy.type]}</td>
-                <td className="p-3 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">{policy.company}</td>
+                <td className="p-3 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">
+                  <div>{policy.company}</div>
+                  {policy.policyNumber && (
+                    <div className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{policy.policyNumber}</div>
+                  )}
+                </td>
                 <td className="p-3 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">{policy.coverageLevel}</td>
                 <td className="p-3 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">
                   {renderAmount(policy, "deductible")}
@@ -193,7 +198,10 @@ export default function Oversikt({ policies, onUpdate }: Props) {
           <div key={policy.type} className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
             <div className="px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
               <p className="font-medium text-sm text-gray-900 dark:text-gray-50">{INSURANCE_TYPE_LABELS[policy.type]}</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400">{policy.company}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                {policy.company}
+                {policy.policyNumber && <span className="text-gray-400 dark:text-gray-500"> · {policy.policyNumber}</span>}
+              </p>
             </div>
             <div className="px-4 py-3 space-y-2 text-sm">
               <div className="flex justify-between gap-4">

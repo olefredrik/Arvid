@@ -26,6 +26,7 @@ export function mergePolicies(policies: InsurancePolicy[]): InsurancePolicy {
   return {
     type: policies[0].type,
     company: (first("company") as string) ?? "",
+    policyNumber: (first("policyNumber") as string | null) ?? null,
     coverageLevel: (first("coverageLevel") as string) ?? "",
     deductible: (first("deductible") as number | null) ?? null,
     maxCoverage: (first("maxCoverage") as number | null) ?? null,
