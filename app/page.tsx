@@ -87,7 +87,7 @@ export default function Home() {
       </section>
 
       {/* Tillit */}
-      <section className="max-w-3xl mx-auto px-6 py-16">
+      <section className="max-w-3xl mx-auto px-6 pt-16 pb-24">
         <h2 className="text-sm font-semibold text-stone-400 dark:text-stone-500 uppercase tracking-widest mb-10 text-center">
           Bygget på tillit
         </h2>
@@ -114,13 +114,13 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-stone-200 dark:border-stone-800">
-        <div className="max-w-3xl mx-auto px-6 py-6 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-stone-400 dark:text-stone-500">
+      <footer className="bg-orange-100 dark:bg-stone-900 border-t border-orange-200 dark:border-stone-800">
+        <div className="max-w-3xl mx-auto px-6 py-6 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-stone-500 dark:text-stone-400">
           <span>
             Laget av{" "}
             <a
               href="https://olefredrik.com"
-              className="hover:text-stone-600 dark:hover:text-stone-300 transition-colors"
+              className="underline decoration-transparent hover:decoration-current underline-offset-2 transition-colors duration-200"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -130,13 +130,13 @@ export default function Home() {
           <div className="flex items-center gap-4">
             <a
               href="/personvern"
-              className="hover:text-stone-600 dark:hover:text-stone-300 transition-colors"
+              className="underline decoration-transparent hover:decoration-current underline-offset-2 transition-colors duration-200"
             >
               Personvern
             </a>
             <a
               href="https://github.com/olefredrik/Arvid"
-              className="flex items-center gap-1.5 hover:text-stone-600 dark:hover:text-stone-300 transition-colors"
+              className="flex items-center gap-1.5 underline decoration-transparent hover:decoration-current underline-offset-2 transition-colors duration-200"
               target="_blank"
               rel="noopener noreferrer"
             >
