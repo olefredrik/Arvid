@@ -2,10 +2,10 @@
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const pdfParse = require("pdf-parse/lib/pdf-parse.js") as (buffer: Buffer) => Promise<{ text: string }>;
 
-// Maks tegn for ekstraksjon (~3K tokens) og type-identifikasjon (~750 tokens)
-// Holder begge kallene godt under 10K tokens/min-grensen på gratisplanen
-export const EXTRACTION_TEXT_LENGTH = 12_000;
-export const TYPE_ID_TEXT_LENGTH = 3_000;
+// Maks tegn for ekstraksjon (~15K tokens) og type-identifikasjon (~2K tokens)
+// claude-sonnet-4-6 har 200K kontekstvindu – økt grense gir vesentlig bedre dekning av lange forsikringsdokumenter
+export const EXTRACTION_TEXT_LENGTH = 60_000;
+export const TYPE_ID_TEXT_LENGTH = 8_000;
 
 // Ekstraher ren tekst fra en PDF-fil (Buffer)
 export async function extractTextFromPdf(buffer: Buffer): Promise<string> {
