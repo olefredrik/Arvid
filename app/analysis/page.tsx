@@ -92,6 +92,8 @@ export default function AnalysisPage() {
   const [comparison, setComparison] = useState<ComparisonResult | null>(null);
   const [compareError, setCompareError] = useState<string | null>(null);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [failedFiles, setFailedFiles] = useState<File[]>([]);
+  const [failedOfferFiles, setFailedOfferFiles] = useState<File[]>([]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -101,9 +103,11 @@ export default function AnalysisPage() {
   const handleFiles = async (files: File[]) => {
     setStep("processing");
     setStatuses(files.map((f) => ({ fileName: f.name, done: false })));
+    setFailedFiles([]);
     capture("analysis_started", { file_count: files.length });
 
     const results: InsurancePolicy[] = [];
+    const newFailedFiles: File[] = [];
 
     // Analyser filer sekvensielt for å unngå å overbelaste API-et
     for (let i = 0; i < files.length; i++) {
@@ -112,12 +116,20 @@ export default function AnalysisPage() {
         const formData = new FormData();
         formData.append("file", file);
 
-        const response = await fetch("/api/extract", {
+        let response = await fetch("/api/extract", {
           method: "POST",
           body: formData,
         });
+        let data = await response.json();
 
-        const data = await response.json();
+        // Auto-retry én gang ved rate limiting
+        if (response.status === 429) {
+          await new Promise<void>((resolve) => setTimeout(resolve, 5000));
+          const retryFormData = new FormData();
+          retryFormData.append("file", file);
+          response = await fetch("/api/extract", { method: "POST", body: retryFormData });
+          data = await response.json();
+        }
 
         if (!response.ok) {
           setStatuses((prev) =>
@@ -125,6 +137,7 @@ export default function AnalysisPage() {
               idx === i ? { ...s, done: true, error: data.error ?? "Ukjent feil" } : s
             )
           );
+          newFailedFiles.push(file);
           capture("pdf_extraction_failed", { file_name: file.name });
           continue;
         }
@@ -137,6 +150,7 @@ export default function AnalysisPage() {
             idx === i ? { ...s, done: true, error: "Nettverksfeil" } : s
           )
         );
+        newFailedFiles.push(file);
         capture("pdf_extraction_failed", { file_name: file.name, reason: "network_error" });
         continue;
       }
@@ -146,6 +160,7 @@ export default function AnalysisPage() {
       );
     }
 
+    setFailedFiles(newFailedFiles);
     setPolicies((prev) => {
       const merged = mergePoliciesByType([...prev, ...results]);
       capture("analysis_completed", { policy_count: merged.length, insurance_types: merged.map((p) => p.type) });
@@ -194,9 +209,11 @@ export default function AnalysisPage() {
   const handleOfferFiles = async (files: File[]) => {
     setStep("compare-processing");
     setOfferStatuses(files.map((f) => ({ fileName: f.name, done: false })));
+    setFailedOfferFiles([]);
     capture("comparison_started", { file_count: files.length });
 
     const results: InsurancePolicy[] = [];
+    const newFailedOfferFiles: File[] = [];
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
@@ -204,12 +221,20 @@ export default function AnalysisPage() {
         const formData = new FormData();
         formData.append("file", file);
 
-        const response = await fetch("/api/extract", {
+        let response = await fetch("/api/extract", {
           method: "POST",
           body: formData,
         });
+        let data = await response.json();
 
-        const data = await response.json();
+        // Auto-retry én gang ved rate limiting
+        if (response.status === 429) {
+          await new Promise<void>((resolve) => setTimeout(resolve, 5000));
+          const retryFormData = new FormData();
+          retryFormData.append("file", file);
+          response = await fetch("/api/extract", { method: "POST", body: retryFormData });
+          data = await response.json();
+        }
 
         if (!response.ok) {
           setOfferStatuses((prev) =>
@@ -217,6 +242,7 @@ export default function AnalysisPage() {
               idx === i ? { ...s, done: true, error: data.error ?? "Ukjent feil" } : s
             )
           );
+          newFailedOfferFiles.push(file);
           capture("pdf_extraction_failed", { file_name: file.name, context: "offer" });
           continue;
         }
@@ -229,6 +255,7 @@ export default function AnalysisPage() {
             idx === i ? { ...s, done: true, error: "Nettverksfeil" } : s
           )
         );
+        newFailedOfferFiles.push(file);
         capture("pdf_extraction_failed", { file_name: file.name, context: "offer", reason: "network_error" });
         continue;
       }
@@ -238,6 +265,7 @@ export default function AnalysisPage() {
       );
     }
 
+    setFailedOfferFiles(newFailedOfferFiles);
     if (results.length > 0) {
       setOfferPolicies((prev) => mergePoliciesByType([...prev, ...results]));
       setStep("offer-review");
@@ -283,6 +311,7 @@ export default function AnalysisPage() {
   };
 
   const errors = statuses.filter((s) => s.error);
+  const offerErrors = offerStatuses.filter((s) => s.error);
 
   return (
     <main className="min-h-screen bg-white dark:bg-stone-950">
@@ -356,6 +385,14 @@ export default function AnalysisPage() {
                   {s.fileName}: {s.error}
                 </p>
               ))}
+              {failedFiles.length > 0 && (
+                <button
+                  onClick={() => handleFiles(failedFiles)}
+                  className="mt-3 underline underline-offset-2 hover:no-underline cursor-pointer"
+                >
+                  Prøv igjen for {failedFiles.length === 1 ? "denne filen" : `disse ${failedFiles.length} filene`}
+                </button>
+              )}
             </div>
           )}
 
@@ -476,6 +513,27 @@ export default function AnalysisPage() {
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
             Steg 4 av 5 – Kontroller at prisene er riktig ekstrahert før sammenligning
           </p>
+
+          {offerErrors.length > 0 && (
+            <div role="alert" className="mb-6 p-4 bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 rounded-lg text-sm text-amber-800 dark:text-amber-200">
+              <p className="font-medium mb-1">
+                {offerErrors.length === 1 ? "Ett tilbudsdokument" : `${offerErrors.length} tilbudsdokumenter`} kunne ikke analyseres:
+              </p>
+              {offerErrors.map((s) => (
+                <p key={s.fileName}>
+                  {s.fileName}: {s.error}
+                </p>
+              ))}
+              {failedOfferFiles.length > 0 && (
+                <button
+                  onClick={() => handleOfferFiles(failedOfferFiles)}
+                  className="mt-3 underline underline-offset-2 hover:no-underline cursor-pointer"
+                >
+                  Prøv igjen for {failedOfferFiles.length === 1 ? "denne filen" : `disse ${failedOfferFiles.length} filene`}
+                </button>
+              )}
+            </div>
+          )}
 
           {compareError && (
             <div role="alert" className="mb-6 p-4 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-700 dark:text-red-300">
