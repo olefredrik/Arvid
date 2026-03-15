@@ -117,7 +117,9 @@ ${documentText}
 
 // Prompt for sammenligning av nåværende forsikringer med mottatte tilbud
 export const buildComparisonPrompt = (
-  matchedPairs: { current: object; offer: object; premiumDiff: number | null }[]
+  matchedPairs: { current: object; offer: object; premiumDiff: number | null }[],
+  unmatchedCurrent: object[],
+  unmatchedOffers: object[]
 ): string => `
 Du er en nøytral norsk forsikringsekspert som sammenligner eksisterende forsikringer med mottatte tilbud.
 
@@ -129,10 +131,17 @@ Instruksjoner:
 - Ta hensyn til pris i den samlede anbefalingen, men presenter ikke prisen på nytt i "assessment"
 - verdict: "Bytt" hvis tilbudet er klart bedre totalt sett, "Behold" hvis nåværende er bedre eller likeverdig, "Vurder" hvis situasjonen er tvetydig
 - Ikke oppfinn avvik som ikke fremgår av dataene – si heller "ingen vesentlige avvik funnet" hvis så er tilfelle
+- Ta hensyn til ufullstendige dekninger i den samlede anbefalingen: forsikringstyper brukeren har i dag men som mangler i tilbudet er en ulempe, mens tilbudet inneholder typer brukeren ikke har i dag er en fordel
 
 Forsikringspar:
 ${JSON.stringify(matchedPairs, null, 2)}
-
+${unmatchedCurrent.length > 0 ? `
+Forsikringstyper brukeren har i dag, men som IKKE finnes i tilbudet:
+${JSON.stringify(unmatchedCurrent, null, 2)}
+` : ""}${unmatchedOffers.length > 0 ? `
+Forsikringstyper som KUN finnes i tilbudet (brukeren har ikke dette i dag):
+${JSON.stringify(unmatchedOffers, null, 2)}
+` : ""}
 Returner KUN et rent JSON-objekt – ingen forklaring, ingen markdown, ingen kodeblokker:
 {
   "comparisons": [
@@ -143,7 +152,7 @@ Returner KUN et rent JSON-objekt – ingen forklaring, ingen markdown, ingen kod
       "verdict": "Bytt" | "Behold" | "Vurder"
     }
   ],
-  "recommendation": "<samlet anbefaling på 2-3 setninger basert på pris og vilkår>"
+  "recommendation": "<samlet anbefaling på 2-3 setninger basert på pris og vilkår – ta med om tilbudet mangler eller legger til dekning>"
 }
 `.trim();
 
