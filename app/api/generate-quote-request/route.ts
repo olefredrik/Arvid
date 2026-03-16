@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
     }
 
     const text = response.content.find((b) => b.type === "text")?.text ?? "";
-    let quoteRequest: unknown;
+    let quoteRequest: Record<string, unknown>;
     try {
       quoteRequest = JSON.parse(extractJson(text));
     } catch {
@@ -60,6 +60,9 @@ export async function POST(request: NextRequest) {
         { status: 502 }
       );
     }
+
+    // Sett generatedAt med faktisk servertid – Claude kjenner ikke dagens dato
+    quoteRequest.generatedAt = new Date().toISOString();
 
     return NextResponse.json({ quoteRequest });
   } catch (error) {
