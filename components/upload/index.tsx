@@ -109,6 +109,11 @@ export default function Upload({ onFiles }: Props) {
         </div>
       )}
 
+      {/* Personforsikring-advarsel */}
+      <p className="text-sm font-medium text-stone-500 dark:text-stone-400">
+        Arvid kjenner skadeforsikringer. Liv, uføre og helse er utenfor hans ekspertise og støttes derfor ikke.
+      </p>
+
       {/* Støttede forsikringstyper */}
       <details className="text-xs text-stone-400 dark:text-stone-500">
         <summary className="cursor-pointer hover:text-stone-600 dark:hover:text-stone-300 transition-colors select-none">
