@@ -1,6 +1,6 @@
 {
   "name": "arvid",
-  "version": "0.19.7",
+  "version": "0.19.8",
   "description": "AI-assistert forsikringsrådgiver for norske forbrukere",
   "private": true,
   "scripts": {
