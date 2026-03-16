@@ -374,7 +374,7 @@ export default function AnalysisPage() {
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
             {compareMode
               ? "Arvid bruker disse som utgangspunkt når tilbudet skal vurderes."
-              : "Arvid liker best forsikringsbevis, ikke bare generelle vilkår."}
+              : "Forsikringsbevis er best, ikke bare generelle vilkår."}
           </p>
           <Upload onFiles={handleFiles} />
         </>
