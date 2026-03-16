@@ -2,6 +2,7 @@
 
 // Hovedflyt: opplasting → analyse → oversikt → tilbudsforespørsel
 import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 
 // Sykler gjennom meldinger med jevne mellomrom mens Arvid jobber
 function useRotatingMessage(messages: string[], intervalMs = 3500): string {
@@ -325,9 +326,9 @@ export default function AnalysisPage() {
   return (
     <main className="min-h-screen bg-white dark:bg-stone-950">
       <div className="max-w-4xl mx-auto px-4 py-6 sm:p-8">
-      <a href="/" className="text-sm text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 mb-8 inline-block">
+      <Link href="/" className="text-sm text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 mb-8 inline-block">
         ← Tilbake
-      </a>
+      </Link>
 
       {/* Steg 1: Opplasting */}
       {step === "upload" && (

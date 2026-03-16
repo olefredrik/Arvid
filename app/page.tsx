@@ -1,4 +1,5 @@
 import { FileUp } from "lucide-react";
+import Link from "next/link";
 import ArvidPortrait from "@/components/arvid-portrait";
 
 // Landingsside
@@ -16,18 +17,18 @@ export default function Home() {
           Last opp forsikringsavtalene dine som PDF. Arvid leser dem, lager en oversikt,
           og genererer en ferdig tilbudsforespørsel du kan sende til andre selskaper.
         </p>
-        <a
+        <Link
           href="/analysis"
           className="inline-flex items-center gap-2 bg-orange-600 dark:bg-orange-700 text-white px-8 py-3.5 rounded-lg font-medium text-base hover:bg-orange-700 dark:hover:bg-orange-800 transition-colors"
         >
           <FileUp size={18} aria-hidden="true" />
           Last opp forsikringene dine
-        </a>
+        </Link>
         <p className="mt-4 text-sm text-stone-400 dark:text-stone-500">
           Allerede mottatt tilbud?{" "}
-          <a href="/analysis?mode=compare" className="text-orange-600 dark:text-orange-400 hover:underline">
+          <Link href="/analysis?mode=compare" className="text-orange-600 dark:text-orange-400 hover:underline">
             Sammenlign tilbud her
-          </a>
+          </Link>
         </p>
         <div className="flex flex-wrap justify-center gap-4 sm:gap-6 mt-6 text-sm text-stone-400 dark:text-stone-500">
           <span className="flex items-center gap-1.5">
@@ -130,24 +131,24 @@ export default function Home() {
             </a>
           </span>
           <div className="flex items-center gap-4">
-            <a
+            <Link
               href="/om"
               className="underline decoration-transparent hover:decoration-current underline-offset-2 transition-colors duration-200"
             >
               Om tjenesten
-            </a>
-            <a
+            </Link>
+            <Link
               href="/vilkaar"
               className="underline decoration-transparent hover:decoration-current underline-offset-2 transition-colors duration-200"
             >
               Vilkår
-            </a>
-            <a
+            </Link>
+            <Link
               href="/personvern"
               className="underline decoration-transparent hover:decoration-current underline-offset-2 transition-colors duration-200"
             >
               Personvern
-            </a>
+            </Link>
             <a
               href="https://github.com/olefredrik/Arvid"
               className="flex items-center gap-1.5 underline decoration-transparent hover:decoration-current underline-offset-2 transition-colors duration-200"
