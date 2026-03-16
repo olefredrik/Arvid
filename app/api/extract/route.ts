@@ -111,7 +111,19 @@ export async function POST(request: NextRequest) {
       })
     );
 
-    return NextResponse.json({ policies: extractionResults, fileName: file.name });
+    // Filtrer ut spøkelsespoliser: lav konfidens og ingen nøkkeldata betyr at typen sannsynligvis ikke finnes i dokumentet
+    const validPolicies = extractionResults.filter(
+      (p) => !(p.extractionConfidence === "low" && p.annualPremium === null && p.deductible === null && (p.coverageLevel === "Ukjent" || p.coverageLevel === ""))
+    );
+
+    if (validPolicies.length === 0) {
+      return NextResponse.json(
+        { error: "Kunne ikke identifisere forsikringstype i dokumentet" },
+        { status: 422 }
+      );
+    }
+
+    return NextResponse.json({ policies: validPolicies, fileName: file.name });
   } catch (error) {
     if (error instanceof Error && error.message === "max_tokens") {
       return NextResponse.json(

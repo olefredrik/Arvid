@@ -32,11 +32,11 @@ Mulige typer:
 - travel (reiseforsikring)
 
 Viktige avklaringer:
-- Et dokument kan inneholde flere forsikringstyper. List opp alle som er klart beskrevet.
+- Ta kun med forsikringstyper som er eksplisitt nevnt i dokumentet. Hvis du er usikker på om en type er tilstede, utelat den – ikke inkluder den med lav konfidens.
 - "Hjem"-forsikring dekker typisk både hus og innbo – identifiser begge hvis det fremgår av dokumentet.
 - "Bilforsikring" og "ansvarsforsikring" er begge car, ikke separate typer.
 - Forsikringsvilkår (generelle vilkår) alene er ikke nok – det må fremgå at det er en aktiv polise for denne kunden.
-- Bruk confidence "low" hvis dokumentet er uklart eller kun inneholder generelle vilkår uten spesifikke kundeopplysninger.
+- Bruk confidence "low" kun for typer du er sikker på er tilstede, men der dokumentet mangler kundespesifikke opplysninger (som premie og egenandel).
 
 Returner KUN et rent JSON-objekt – ingen forklaring, ingen markdown, ingen kodeblokker:
 {
