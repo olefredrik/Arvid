@@ -1,9 +1,21 @@
 import type { InsurancePolicy } from "./insurance/types";
 
-// Trekker ut JSON fra tekst som kan være pakket inn i markdown-kodeblokker
+// Trekker ut JSON fra tekst som kan være pakket inn i markdown-kodeblokker,
+// eller som inneholder tekst før/etter JSON-blokken
 export function extractJson(text: string): string {
-  const match = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
-  return match ? match[1] : text.trim();
+  const codeBlock = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+  if (codeBlock) return codeBlock[1];
+
+  // Finn første { eller [ og siste } eller ] for å håndtere tekst rundt JSON-blokken
+  const firstBrace = text.indexOf("{");
+  const firstBracket = text.indexOf("[");
+  const lastBrace = text.lastIndexOf("}");
+  const lastBracket = text.lastIndexOf("]");
+
+  if (firstBrace !== -1 && lastBrace > firstBrace) return text.slice(firstBrace, lastBrace + 1);
+  if (firstBracket !== -1 && lastBracket > firstBracket) return text.slice(firstBracket, lastBracket + 1);
+
+  return text.trim();
 }
 
 // Summerer årlig premie for en liste poliser.
