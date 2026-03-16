@@ -17,11 +17,11 @@ export async function POST(request: NextRequest) {
     const file = formData.get("file") as File | null;
 
     if (!file) {
-      return NextResponse.json({ error: "Ingen fil mottatt" }, { status: 400 });
+      return NextResponse.json({ error: "Det ser ut til at filen ikke fulgte med. Prøv igjen." }, { status: 400 });
     }
 
     if (!file.name.toLowerCase().endsWith(".pdf")) {
-      return NextResponse.json({ error: "Kun PDF-filer støttes" }, { status: 400 });
+      return NextResponse.json({ error: "Arvid leser bare PDF-filer. Sjekk at du laster opp riktig filtype." }, { status: 400 });
     }
 
     // Trekk ut og normaliser tekst fra PDF
@@ -53,17 +53,22 @@ export async function POST(request: NextRequest) {
 
     const typeText =
       typeResponse.content.find((b) => b.type === "text")?.text ?? "";
-    const typeResult = JSON.parse(extractJson(typeText)) as {
-      types: InsuranceType[];
-      confidence: InsurancePolicy["extractionConfidence"];
-      reason: string;
-    };
+
+    let typeResult: { types: InsuranceType[]; confidence: InsurancePolicy["extractionConfidence"]; reason: string };
+    try {
+      typeResult = JSON.parse(extractJson(typeText)) as typeof typeResult;
+    } catch {
+      return NextResponse.json(
+        { error: "Arvid fant ingen gjenkjennelige forsikringstyper i dokumentet. Er det et forsikringsbevis eller en forsikringsavtale?" },
+        { status: 422 }
+      );
+    }
 
     const detectedTypes = typeResult.types?.length ? typeResult.types : [];
 
     if (detectedTypes.length === 0) {
       return NextResponse.json(
-        { error: "Kunne ikke identifisere forsikringstype i dokumentet" },
+        { error: "Arvid fant ingen gjenkjennelige forsikringstyper i dokumentet. Er det et forsikringsbevis eller en forsikringsavtale?" },
         { status: 422 }
       );
     }
@@ -90,7 +95,14 @@ export async function POST(request: NextRequest) {
 
         const extractText =
           extractResponse.content.find((b) => b.type === "text")?.text ?? "";
-        const extracted = JSON.parse(extractJson(extractText)) as Record<string, unknown>;
+
+        let extracted: Record<string, unknown>;
+        try {
+          extracted = JSON.parse(extractJson(extractText));
+        } catch {
+          // Returner en tom polise med lav konfidens – spøkelsesfilteret fjerner den
+          extracted = {};
+        }
 
         const policy: InsurancePolicy = {
           type: insuranceType,
@@ -118,7 +130,7 @@ export async function POST(request: NextRequest) {
 
     if (validPolicies.length === 0) {
       return NextResponse.json(
-        { error: "Kunne ikke identifisere forsikringstype i dokumentet" },
+        { error: "Arvid fant ingen gjenkjennelige forsikringstyper i dokumentet. Er det et forsikringsbevis eller en forsikringsavtale?" },
         { status: 422 }
       );
     }
@@ -152,14 +164,14 @@ export async function POST(request: NextRequest) {
         );
       }
       return NextResponse.json(
-        { error: "Feil under AI-analyse. Prøv igjen." },
+        { error: "Noe gikk galt under analysen. Prøv igjen." },
         { status: 502 }
       );
     }
 
     console.error("Ekstraksjonsfeil:", error);
     return NextResponse.json(
-      { error: "Feil under analyse av dokument" },
+      { error: "Noe gikk galt under analysen. Prøv igjen." },
       { status: 500 }
     );
   }

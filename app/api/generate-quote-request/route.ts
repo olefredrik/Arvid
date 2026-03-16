@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
 
     if (!body.policies || body.policies.length === 0) {
       return NextResponse.json(
-        { error: "Ingen forsikringsdata mottatt" },
+        { error: "Arvid har ingen forsikringer å jobbe med. Prøv å starte analysen på nytt." },
         { status: 400 }
       );
     }
@@ -42,7 +42,15 @@ export async function POST(request: NextRequest) {
     }
 
     const text = response.content.find((b) => b.type === "text")?.text ?? "";
-    const quoteRequest = JSON.parse(extractJson(text));
+    let quoteRequest: unknown;
+    try {
+      quoteRequest = JSON.parse(extractJson(text));
+    } catch {
+      return NextResponse.json(
+        { error: "Noe gikk galt under genereringen. Prøv igjen." },
+        { status: 502 }
+      );
+    }
 
     return NextResponse.json({ quoteRequest });
   } catch (error) {
@@ -67,14 +75,14 @@ export async function POST(request: NextRequest) {
         );
       }
       return NextResponse.json(
-        { error: "Feil under AI-generering. Prøv igjen." },
+        { error: "Noe gikk galt under genereringen. Prøv igjen." },
         { status: 502 }
       );
     }
 
     console.error("Genereringsfeil:", error);
     return NextResponse.json(
-      { error: "Feil under generering av tilbudsforespørsel" },
+      { error: "Noe gikk galt under genereringen. Prøv igjen." },
       { status: 500 }
     );
   }
