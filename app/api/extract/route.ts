@@ -6,12 +6,21 @@ import { extractTextFromPdf, normalizeText, prioritizeSections, TYPE_ID_TEXT_LEN
 import { buildTypeIdentificationPrompt, buildExtractionPrompt } from "@/lib/insurance/prompts";
 import type { InsuranceType, InsurancePolicy } from "@/lib/insurance/types";
 import { extractJson } from "@/lib/utils";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 const client = new Anthropic();
 
 // Ekstraherer strukturert forsikringsdata fra en PDF-fil
 // Ett dokument kan inneholde flere forsikringstyper (f.eks. hus + innbo)
 export async function POST(request: NextRequest) {
+  const rateLimit = checkRateLimit(request);
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      { error: "Du har sendt for mange forespørsler på kort tid. Vent litt og prøv igjen." },
+      { status: 429, headers: { "Retry-After": String(rateLimit.retryAfter) } }
+    );
+  }
+
   try {
     const formData = await request.formData();
     const file = formData.get("file") as File | null;
