@@ -70,7 +70,7 @@ import { mergePoliciesByType } from "@/lib/insurance/merge";
 import { useAnalytics } from "@/lib/hooks/useAnalytics";
 
 // Parser API-respons trygt – håndterer 504-timeout og HTML-body fra Vercel
-async function safeJson(response: Response): Promise<Record<string, unknown>> {
+async function safeJson(response: Response): Promise<{ error?: string; [key: string]: unknown }> {
   if (response.status === 504) {
     return { error: "Arvid er populær i dag og håndterer litt for mange forespørsler på én gang. Hent deg en kopp kaffe, så er han klar for deg igjen om et par minutter." };
   }
