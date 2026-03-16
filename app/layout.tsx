@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { DM_Serif_Display, DM_Sans } from "next/font/google";
 import "./globals.css";
 import ThemeToggle from "@/components/theme-toggle";
+import RadioPlayer from "@/components/radio-player";
 import Analytics from "@/components/analytics";
 import StructuredData from "@/components/structured-data";
 
@@ -65,6 +66,7 @@ export default function RootLayout({
       </head>
       <body className={`${dmSerifDisplay.variable} ${dmSans.variable} bg-amber-50 dark:bg-stone-950 transition-colors`}>
         {children}
+        <RadioPlayer />
         <ThemeToggle />
         <Analytics />
       </body>
