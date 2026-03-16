@@ -86,6 +86,18 @@ export default function Personvern() {
           </section>
 
           <section>
+            <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-50 mb-3">Misbruksvern</h2>
+            <p className="text-sm leading-relaxed">
+              For å beskytte tjenesten mot automatisert misbruk bruker Arvid midlertidig hastighetsbegrensning per IP-adresse.
+              IP-adressen lagres kun i serverminnet og slettes automatisk etter 10 minutter.
+              Den lagres aldri til disk, knyttes ikke til noen annen informasjon og brukes ikke til sporing.
+            </p>
+            <p className="text-sm leading-relaxed mt-3">
+              Behandlingsgrunnlag: berettiget interesse (art. 6(1)(f) GDPR) – nødvendig for å beskytte tjenestens tilgjengelighet.
+            </p>
+          </section>
+
+          <section>
             <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-50 mb-3">Behandlingsansvarlig</h2>
             <p className="text-sm leading-relaxed">
               Behandlingsansvarlig for personopplysninger som behandles i Arvid er {dataController}, selskapet bak Arvid.
