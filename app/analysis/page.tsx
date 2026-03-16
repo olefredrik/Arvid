@@ -120,7 +120,11 @@ export default function AnalysisPage() {
 
   const handleFiles = async (files: File[]) => {
     setStep("processing");
-    setStatuses(files.map((f) => ({ fileName: f.name, done: false })));
+    // Behold vellykkede statuser slik at brukeren ser hvilke filer som allerede er analysert
+    setStatuses((prev) => [
+      ...prev.filter((s) => s.done && !s.error),
+      ...files.map((f) => ({ fileName: f.name, done: false })),
+    ]);
     setFailedFiles([]);
     setInvalidFiles([]);
     capture("analysis_started", { file_count: files.length });
@@ -153,8 +157,8 @@ export default function AnalysisPage() {
 
         if (!response.ok) {
           setStatuses((prev) =>
-            prev.map((s, idx) =>
-              idx === i ? { ...s, done: true, error: data.error ?? "Ukjent feil" } : s
+            prev.map((s) =>
+              s.fileName === file.name && !s.done ? { ...s, done: true, error: data.error ?? "Ukjent feil" } : s
             )
           );
           // 400/413 betyr at selve filen er feil – retry hjelper ikke
@@ -171,8 +175,8 @@ export default function AnalysisPage() {
         capture("pdf_extracted", { file_name: file.name, policy_count: (data.policies as InsurancePolicy[]).length });
       } catch {
         setStatuses((prev) =>
-          prev.map((s, idx) =>
-            idx === i ? { ...s, done: true, error: "Nettverksfeil" } : s
+          prev.map((s) =>
+            s.fileName === file.name && !s.done ? { ...s, done: true, error: "Nettverksfeil" } : s
           )
         );
         newFailedFiles.push(file);
@@ -181,7 +185,7 @@ export default function AnalysisPage() {
       }
 
       setStatuses((prev) =>
-        prev.map((s, idx) => (idx === i ? { ...s, done: true } : s))
+        prev.map((s) => (s.fileName === file.name && !s.done ? { ...s, done: true } : s))
       );
     }
 
