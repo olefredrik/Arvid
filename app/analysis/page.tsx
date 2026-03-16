@@ -107,6 +107,10 @@ export default function AnalysisPage() {
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [failedFiles, setFailedFiles] = useState<File[]>([]);
   const [failedOfferFiles, setFailedOfferFiles] = useState<File[]>([]);
+  const [invalidFiles, setInvalidFiles] = useState<string[]>([]);
+  const [invalidOfferFiles, setInvalidOfferFiles] = useState<string[]>([]);
+  const replaceFileRef = useRef<HTMLInputElement>(null);
+  const replaceOfferFileRef = useRef<HTMLInputElement>(null);
   const [allPoliciesRemoved, setAllPoliciesRemoved] = useState(false);
 
   useEffect(() => {
@@ -118,10 +122,12 @@ export default function AnalysisPage() {
     setStep("processing");
     setStatuses(files.map((f) => ({ fileName: f.name, done: false })));
     setFailedFiles([]);
+    setInvalidFiles([]);
     capture("analysis_started", { file_count: files.length });
 
     const results: InsurancePolicy[] = [];
     const newFailedFiles: File[] = [];
+    const newInvalidFiles: string[] = [];
 
     // Analyser filer sekvensielt for å unngå å overbelaste API-et
     for (let i = 0; i < files.length; i++) {
@@ -151,7 +157,12 @@ export default function AnalysisPage() {
               idx === i ? { ...s, done: true, error: data.error ?? "Ukjent feil" } : s
             )
           );
-          newFailedFiles.push(file);
+          // 400/413 betyr at selve filen er feil – retry hjelper ikke
+          if (response.status === 400 || response.status === 413) {
+            newInvalidFiles.push(file.name);
+          } else {
+            newFailedFiles.push(file);
+          }
           capture("pdf_extraction_failed", { file_name: file.name });
           continue;
         }
@@ -175,6 +186,7 @@ export default function AnalysisPage() {
     }
 
     setFailedFiles(newFailedFiles);
+    setInvalidFiles(newInvalidFiles);
     setPolicies((prev) => {
       const merged = mergePoliciesByType([...prev, ...results]);
       capture("analysis_completed", { policy_count: merged.length, insurance_types: merged.map((p) => p.type) });
@@ -232,10 +244,12 @@ export default function AnalysisPage() {
     setStep("compare-processing");
     setOfferStatuses(files.map((f) => ({ fileName: f.name, done: false })));
     setFailedOfferFiles([]);
+    setInvalidOfferFiles([]);
     capture("comparison_started", { file_count: files.length });
 
     const results: InsurancePolicy[] = [];
     const newFailedOfferFiles: File[] = [];
+    const newInvalidOfferFiles: string[] = [];
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
@@ -264,7 +278,11 @@ export default function AnalysisPage() {
               idx === i ? { ...s, done: true, error: data.error ?? "Ukjent feil" } : s
             )
           );
-          newFailedOfferFiles.push(file);
+          if (response.status === 400 || response.status === 413) {
+            newInvalidOfferFiles.push(file.name);
+          } else {
+            newFailedOfferFiles.push(file);
+          }
           capture("pdf_extraction_failed", { file_name: file.name, context: "offer" });
           continue;
         }
@@ -288,6 +306,7 @@ export default function AnalysisPage() {
     }
 
     setFailedOfferFiles(newFailedOfferFiles);
+    setInvalidOfferFiles(newInvalidOfferFiles);
     if (results.length > 0) {
       setOfferPolicies((prev) => mergePoliciesByType([...prev, ...results]));
       setStep("offer-review");
@@ -414,6 +433,28 @@ export default function AnalysisPage() {
                 >
                   Prøv igjen for {failedFiles.length === 1 ? "denne filen" : `disse ${failedFiles.length} filene`}
                 </button>
+              )}
+              {invalidFiles.length > 0 && (
+                <>
+                  <input
+                    ref={replaceFileRef}
+                    type="file"
+                    accept=".pdf"
+                    multiple
+                    className="hidden"
+                    onChange={(e) => {
+                      const files = Array.from(e.target.files ?? []);
+                      if (files.length > 0) handleFiles(files);
+                      e.target.value = "";
+                    }}
+                  />
+                  <button
+                    onClick={() => replaceFileRef.current?.click()}
+                    className="mt-3 underline underline-offset-2 hover:no-underline cursor-pointer block"
+                  >
+                    Last opp en annen fil
+                  </button>
+                </>
               )}
             </div>
           )}
@@ -568,6 +609,28 @@ export default function AnalysisPage() {
                 >
                   Prøv igjen for {failedOfferFiles.length === 1 ? "denne filen" : `disse ${failedOfferFiles.length} filene`}
                 </button>
+              )}
+              {invalidOfferFiles.length > 0 && (
+                <>
+                  <input
+                    ref={replaceOfferFileRef}
+                    type="file"
+                    accept=".pdf"
+                    multiple
+                    className="hidden"
+                    onChange={(e) => {
+                      const files = Array.from(e.target.files ?? []);
+                      if (files.length > 0) handleOfferFiles(files);
+                      e.target.value = "";
+                    }}
+                  />
+                  <button
+                    onClick={() => replaceOfferFileRef.current?.click()}
+                    className="mt-3 underline underline-offset-2 hover:no-underline cursor-pointer block"
+                  >
+                    Last opp en annen fil
+                  </button>
+                </>
               )}
             </div>
           )}
