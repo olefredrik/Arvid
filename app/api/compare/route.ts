@@ -6,11 +6,20 @@ import { buildComparisonPrompt } from "@/lib/insurance/prompts";
 import type { InsurancePolicy, ComparisonResult, PolicyComparison } from "@/lib/insurance/types";
 import { mergePolicies } from "@/lib/insurance/merge";
 import { extractJson, sumPolicies } from "@/lib/utils";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 const client = new Anthropic();
 
 // Sammenligner nåværende forsikringer med mottatte tilbud
 export async function POST(request: NextRequest) {
+  const rateLimit = checkRateLimit(request);
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      { error: "Du har sendt for mange forespørsler på kort tid. Vent litt og prøv igjen." },
+      { status: 429, headers: { "Retry-After": String(rateLimit.retryAfter) } }
+    );
+  }
+
   try {
     const body = await request.json() as {
       currentPolicies: InsurancePolicy[];

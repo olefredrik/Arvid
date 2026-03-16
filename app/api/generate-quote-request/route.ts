@@ -5,11 +5,20 @@ import Anthropic from "@anthropic-ai/sdk";
 import { buildQuoteRequestPrompt } from "@/lib/insurance/prompts";
 import type { InsurancePolicy } from "@/lib/insurance/types";
 import { extractJson } from "@/lib/utils";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 const client = new Anthropic();
 
 // Genererer strukturert tilbudsforespørsel basert på ekstraherte forsikringsdata
 export async function POST(request: NextRequest) {
+  const rateLimit = checkRateLimit(request);
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      { error: "Du har sendt for mange forespørsler på kort tid. Vent litt og prøv igjen." },
+      { status: 429, headers: { "Retry-After": String(rateLimit.retryAfter) } }
+    );
+  }
+
   try {
     const body = await request.json() as {
       policies: InsurancePolicy[];
