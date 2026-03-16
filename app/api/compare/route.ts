@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
 
     if (!currentPolicies?.length || !offerPolicies?.length) {
       return NextResponse.json(
-        { error: "Mangler forsikringsdata" },
+        { error: "Arvid har ingen forsikringer å sammenligne. Prøv å starte analysen på nytt." },
         { status: 400 }
       );
     }
@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
 
     if (matchedPairs.length === 0) {
       return NextResponse.json(
-        { error: "Ingen forsikringstyper samsvarte mellom nåværende avtaler og tilbudet" },
+        { error: "Ingen av typene i tilbudet samsvarte med forsikringene dine. Sjekk at du har lastet opp riktig dokument." },
         { status: 400 }
       );
     }
@@ -106,7 +106,7 @@ export async function POST(request: NextRequest) {
     }
 
     const text = response.content.find((b) => b.type === "text")?.text ?? "";
-    const aiResult = JSON.parse(extractJson(text)) as {
+    let aiResult: {
       comparisons: {
         insuranceType: string;
         assessment: string;
@@ -115,6 +115,14 @@ export async function POST(request: NextRequest) {
       }[];
       recommendation: string;
     };
+    try {
+      aiResult = JSON.parse(extractJson(text)) as typeof aiResult;
+    } catch {
+      return NextResponse.json(
+        { error: "Noe gikk galt under sammenligningen. Prøv igjen." },
+        { status: 502 }
+      );
+    }
 
     // Bygg fullstendig sammenligningsresultat
     const comparisons: PolicyComparison[] = aiResult.comparisons.map((c) => {
@@ -164,14 +172,14 @@ export async function POST(request: NextRequest) {
         );
       }
       return NextResponse.json(
-        { error: "Feil under AI-analyse. Prøv igjen." },
+        { error: "Noe gikk galt under sammenligningen. Prøv igjen." },
         { status: 502 }
       );
     }
 
     console.error("Sammenligningsfeil:", error);
     return NextResponse.json(
-      { error: "Feil under sammenligning av tilbud" },
+      { error: "Noe gikk galt under sammenligningen. Prøv igjen." },
       { status: 500 }
     );
   }
