@@ -43,6 +43,14 @@ export async function POST(request: NextRequest) {
 
     // Trekk ut og normaliser tekst fra PDF
     const buffer = Buffer.from(await file.arrayBuffer());
+
+    // Sjekk magic bytes – alle gyldige PDF-filer starter med %PDF
+    if (buffer.length < 4 || buffer.slice(0, 4).toString("ascii") !== "%PDF") {
+      return NextResponse.json(
+        { error: "Filen ser ikke ut til å være en gyldig PDF. Sjekk at du laster opp riktig fil." },
+        { status: 400 }
+      );
+    }
     const rawText = await extractTextFromPdf(buffer);
     const documentText = prioritizeSections(rawText);              // ekstraksjon: høyverdi-seksjoner først
     const shortText = normalizeText(rawText, TYPE_ID_TEXT_LENGTH); // typeidentifikasjon: første N tegn
