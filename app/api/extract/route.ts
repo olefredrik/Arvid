@@ -24,6 +24,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Arvid leser bare PDF-filer. Sjekk at du laster opp riktig filtype." }, { status: 400 });
     }
 
+    const MAX_FILE_SIZE = 4 * 1024 * 1024; // 4 MB
+    if (file.size > MAX_FILE_SIZE) {
+      return NextResponse.json(
+        { error: "Filen er for stor. Arvid leser PDF-er opp til 4 MB – prøv å laste opp bare forsikringsbeviset, ikke hele vilkårsheftet." },
+        { status: 413 }
+      );
+    }
+
     // Trekk ut og normaliser tekst fra PDF
     const buffer = Buffer.from(await file.arrayBuffer());
     const rawText = await extractTextFromPdf(buffer);
