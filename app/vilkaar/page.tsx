@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -15,9 +16,9 @@ export default function Vilkaar() {
   return (
     <main className="min-h-screen bg-orange-50 dark:bg-stone-950">
       <div className="max-w-2xl mx-auto px-6 py-16">
-        <a href="/" className="text-sm text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 mb-10 inline-block">
+        <Link href="/" className="text-sm text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 mb-10 inline-block">
           ← Tilbake
-        </a>
+        </Link>
 
         <h1 className="text-3xl font-bold text-stone-900 dark:text-stone-50 mb-2">Vilkår for bruk</h1>
         <p className="text-sm text-stone-400 dark:text-stone-500 mb-12">Sist oppdatert: mars 2026</p>
@@ -75,9 +76,9 @@ export default function Vilkaar() {
             <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-50 mb-3">Personvern</h2>
             <p className="text-sm leading-relaxed">
               Les om hvordan Arvid behandler data i{" "}
-              <a href="/personvern" className="underline hover:text-stone-900 dark:hover:text-stone-100">
+              <Link href="/personvern" className="underline hover:text-stone-900 dark:hover:text-stone-100">
                 personvernerklæringen
-              </a>.
+              </Link>.
             </p>
           </section>
 
