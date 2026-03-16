@@ -2,14 +2,16 @@
 
 // Forsikringsoversikt – tabell på desktop, kort-layout på mobil
 import { useState } from "react";
-import { Lightbulb } from "lucide-react";
+import { Lightbulb, Trash2 } from "lucide-react";
 import type { InsurancePolicy, InsuranceType } from "@/lib/insurance/types";
 import { INSURANCE_TYPE_LABELS } from "@/lib/insurance/types";
 import { sumPolicies } from "@/lib/utils";
+import ConfirmDialog from "@/components/confirm-dialog";
 
 type Props = {
   policies: InsurancePolicy[];
   onUpdate?: (type: InsuranceType, field: "annualPremium" | "deductible", value: number | null) => void;
+  onRemove?: (type: InsuranceType) => void;
 };
 
 type EditingCell = { type: InsuranceType; field: "annualPremium" | "deductible" } | null;
@@ -67,13 +69,14 @@ function EditableAmount({
       {isLowConfidence && value != null && (
         <span aria-label="Prisen er usikker – klikk for å korrigere" title="Prisen er usikker – klikk for å korrigere" className="text-amber-500 dark:text-amber-400 cursor-help">⚠</span>
       )}
-      <span className="opacity-0 group-hover:opacity-100 text-gray-300 dark:text-gray-600 text-xs ml-1" aria-hidden="true">✎</span>
+      <span className="opacity-30 group-hover:opacity-100 text-gray-400 dark:text-gray-500 text-xs ml-1" aria-hidden="true">✎</span>
     </button>
   );
 }
 
-export default function Oversikt({ policies, onUpdate }: Props) {
+export default function Oversikt({ policies, onUpdate, onRemove }: Props) {
   const [editing, setEditing] = useState<EditingCell>(null);
+  const [pendingRemove, setPendingRemove] = useState<InsuranceType | null>(null);
 
   if (policies.length === 0) {
     return <p className="text-gray-500 dark:text-gray-400">Ingen forsikringer analysert ennå.</p>;
@@ -135,6 +138,7 @@ export default function Oversikt({ policies, onUpdate }: Props) {
               <th className="p-3 border border-gray-200 dark:border-gray-700 font-medium text-gray-900 dark:text-gray-100">Egenandel</th>
               <th className="p-3 border border-gray-200 dark:border-gray-700 font-medium text-gray-900 dark:text-gray-100">Maks dekning</th>
               <th className="p-3 border border-gray-200 dark:border-gray-700 font-medium text-gray-900 dark:text-gray-100">Årspremie</th>
+              {onRemove && <th className="p-3 border border-gray-200 dark:border-gray-700 w-8" aria-label="Fjern" />}
             </tr>
           </thead>
           <tbody>
@@ -162,6 +166,17 @@ export default function Oversikt({ policies, onUpdate }: Props) {
                     )}
                   </div>
                 </td>
+                {onRemove && (
+                  <td className="p-3 border border-gray-200 dark:border-gray-700 text-center">
+                    <button
+                      onClick={() => setPendingRemove(policy.type)}
+                      aria-label={`Fjern ${INSURANCE_TYPE_LABELS[policy.type]}`}
+                      className="text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400 transition-colors cursor-pointer"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
@@ -174,6 +189,7 @@ export default function Oversikt({ policies, onUpdate }: Props) {
                 <td className="p-3 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">
                   {totalPremium.toLocaleString("nb-NO")} kr
                 </td>
+                {onRemove && <td className="p-3 border border-gray-200 dark:border-gray-700" />}
               </tr>
             </tfoot>
           )}
@@ -187,12 +203,23 @@ export default function Oversikt({ policies, onUpdate }: Props) {
       <div className="md:hidden space-y-3">
         {policies.map((policy) => (
           <div key={policy.type} className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
-            <div className="px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-              <p className="font-medium text-sm text-gray-900 dark:text-gray-50">{INSURANCE_TYPE_LABELS[policy.type]}</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400">
-                {policy.company}
-                {policy.policyNumber && <span className="text-gray-400 dark:text-gray-500"> · {policy.policyNumber}</span>}
-              </p>
+            <div className="px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+              <div>
+                <p className="font-medium text-sm text-gray-900 dark:text-gray-50">{INSURANCE_TYPE_LABELS[policy.type]}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  {policy.company}
+                  {policy.policyNumber && <span className="text-gray-400 dark:text-gray-500"> · {policy.policyNumber}</span>}
+                </p>
+              </div>
+              {onRemove && (
+                <button
+                  onClick={() => setPendingRemove(policy.type)}
+                  aria-label={`Fjern ${INSURANCE_TYPE_LABELS[policy.type]}`}
+                  className="text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400 transition-colors ml-2"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              )}
             </div>
             <div className="px-4 py-3 space-y-2 text-sm">
               <div className="flex justify-between gap-4">
@@ -236,6 +263,16 @@ export default function Oversikt({ policies, onUpdate }: Props) {
           <p className="text-xs text-gray-400 dark:text-gray-500"><Lightbulb className="inline w-3.5 h-3.5 mr-1 text-gray-400 dark:text-gray-500" aria-hidden="true" /> Tips: Du kan klikke på egenandel eller premie for å korrigere tallene</p>
         )}
       </div>
+      {pendingRemove && (
+        <ConfirmDialog
+          title="Fjern forsikring"
+          message={`Er du sikker på at du vil fjerne ${INSURANCE_TYPE_LABELS[pendingRemove]} fra oversikten?`}
+          confirmLabel="Fjern"
+          onConfirm={() => { onRemove?.(pendingRemove); setPendingRemove(null); }}
+          onCancel={() => setPendingRemove(null)}
+          isDestructive
+        />
+      )}
     </div>
   );
 }

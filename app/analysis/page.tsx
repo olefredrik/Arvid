@@ -94,6 +94,7 @@ export default function AnalysisPage() {
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [failedFiles, setFailedFiles] = useState<File[]>([]);
   const [failedOfferFiles, setFailedOfferFiles] = useState<File[]>([]);
+  const [allPoliciesRemoved, setAllPoliciesRemoved] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -173,6 +174,14 @@ export default function AnalysisPage() {
     setPolicies((prev) =>
       prev.map((p) => (p.type === type ? { ...p, [field]: value } : p))
     );
+  };
+
+  const handlePolicyRemove = (type: InsuranceType) => {
+    setPolicies((prev) => {
+      const next = prev.filter((p) => p.type !== type);
+      if (next.length === 0) setAllPoliciesRemoved(true);
+      return next;
+    });
   };
 
   const handleGenerateQuoteRequest = async () => {
@@ -410,10 +419,10 @@ export default function AnalysisPage() {
 
           {policies.length > 0 ? (
             <>
-              <Overview policies={policies} onUpdate={handlePolicyUpdate} />
+              <Overview policies={policies} onUpdate={handlePolicyUpdate} onRemove={handlePolicyRemove} />
               <div className="mt-8 flex gap-3">
                 <button
-                  onClick={() => { setStatuses([]); setStep("upload"); }}
+                  onClick={() => { setStatuses([]); setAllPoliciesRemoved(false); setStep("upload"); }}
                   className="px-4 py-2 text-sm text-stone-600 dark:text-stone-300 border border-stone-300 dark:border-stone-600 rounded-lg hover:bg-white dark:hover:bg-stone-800 transition-colors cursor-pointer"
                 >
                   Last opp flere dokumenter
@@ -437,13 +446,27 @@ export default function AnalysisPage() {
             </>
           ) : (
             <div className="text-center py-12">
-              <p className="text-gray-500 dark:text-gray-400 mb-4">Ingen forsikringer ble ekstrahert.</p>
-              <button
-                onClick={() => { setStatuses([]); setStep("upload"); }}
-                className="text-amber-700 dark:text-amber-500 hover:underline text-sm cursor-pointer"
-              >
-                Prøv igjen
-              </button>
+              {allPoliciesRemoved ? (
+                <>
+                  <p className="text-gray-500 dark:text-gray-400 mb-4">Du har fjernet alle forsikringene.</p>
+                  <button
+                    onClick={() => { setStatuses([]); setAllPoliciesRemoved(false); setStep("upload"); }}
+                    className="text-amber-700 dark:text-amber-500 hover:underline text-sm cursor-pointer"
+                  >
+                    Last opp nye dokumenter
+                  </button>
+                </>
+              ) : (
+                <>
+                  <p className="text-gray-500 dark:text-gray-400 mb-4">Ingen forsikringer ble ekstrahert.</p>
+                  <button
+                    onClick={() => { setStatuses([]); setStep("upload"); }}
+                    className="text-amber-700 dark:text-amber-500 hover:underline text-sm cursor-pointer"
+                  >
+                    Prøv igjen
+                  </button>
+                </>
+              )}
             </div>
           )}
         </>
