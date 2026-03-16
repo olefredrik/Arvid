@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -13,9 +14,9 @@ export default function Om() {
   return (
     <main className="min-h-screen bg-orange-50 dark:bg-stone-950">
       <div className="max-w-2xl mx-auto px-6 py-16">
-        <a href="/" className="text-sm text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 mb-10 inline-block">
+        <Link href="/" className="text-sm text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 mb-10 inline-block">
           ← Tilbake
-        </a>
+        </Link>
 
         <h1 className="text-3xl font-bold text-stone-900 dark:text-stone-50 mb-12">Om tjenesten</h1>
 
@@ -51,9 +52,9 @@ export default function Om() {
             </p>
             <p className="text-sm leading-relaxed mt-3">
               Les mer om hvordan Arvid håndterer dokumentene dine i{" "}
-              <a href="/personvern" className="underline hover:text-stone-900 dark:hover:text-stone-100">
+              <Link href="/personvern" className="underline hover:text-stone-900 dark:hover:text-stone-100">
                 personvernerklæringen
-              </a>.
+              </Link>.
             </p>
           </section>
 
@@ -66,9 +67,9 @@ export default function Om() {
             </p>
             <p className="text-sm leading-relaxed mt-3">
               Du bruker Arvid på eget ansvar. Les{" "}
-              <a href="/vilkaar" className="underline hover:text-stone-900 dark:hover:text-stone-100">
+              <Link href="/vilkaar" className="underline hover:text-stone-900 dark:hover:text-stone-100">
                 vilkår for bruk
-              </a>{" "}
+              </Link>{" "}
               for fullstendig ansvarsbegrensning.
             </p>
           </section>

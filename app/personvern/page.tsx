@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -15,9 +16,9 @@ export default function Personvern() {
   return (
     <main className="min-h-screen bg-orange-50 dark:bg-stone-950">
       <div className="max-w-2xl mx-auto px-6 py-16">
-        <a href="/" className="text-sm text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 mb-10 inline-block">
+        <Link href="/" className="text-sm text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 mb-10 inline-block">
           ← Tilbake
-        </a>
+        </Link>
 
         <h1 className="text-3xl font-bold text-stone-900 dark:text-stone-50 mb-2">Personvernerklæring</h1>
         <p className="text-sm text-stone-400 dark:text-stone-500 mb-12">Sist oppdatert: mars 2026</p>
@@ -53,9 +54,9 @@ export default function Personvern() {
             <p className="text-sm leading-relaxed mt-3">
               Arvid støtter kun tingforsikringer. Personforsikringer som kan inneholde helseopplysninger er
               bevisst ikke støttet. Les mer om dette under{" "}
-              <a href="/om" className="underline hover:text-stone-900 dark:hover:text-stone-100">
+              <Link href="/om" className="underline hover:text-stone-900 dark:hover:text-stone-100">
                 Om tjenesten
-              </a>.
+              </Link>.
             </p>
           </section>
 
