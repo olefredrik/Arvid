@@ -69,6 +69,18 @@ import type { InsurancePolicy, InsuranceType, ComparisonResult } from "@/lib/ins
 import { mergePoliciesByType } from "@/lib/insurance/merge";
 import { useAnalytics } from "@/lib/hooks/useAnalytics";
 
+// Parser API-respons trygt – håndterer 504-timeout og HTML-body fra Vercel
+async function safeJson(response: Response): Promise<{ error?: string; [key: string]: unknown }> {
+  if (response.status === 504) {
+    return { error: "Arvid er populær i dag og håndterer litt for mange forespørsler på én gang. Hent deg en kopp kaffe, så er han klar for deg igjen om et par minutter." };
+  }
+  try {
+    return await response.json();
+  } catch {
+    return { error: "Noe gikk galt. Prøv igjen." };
+  }
+}
+
 type Step = "upload" | "processing" | "overview" | "generating" | "report" | "compare-upload" | "compare-processing" | "offer-review" | "comparing" | "comparison";
 
 type ProcessingStatus = {
@@ -122,7 +134,7 @@ export default function AnalysisPage() {
           method: "POST",
           body: formData,
         });
-        let data = await response.json();
+        let data = await safeJson(response);
 
         // Auto-retry én gang ved rate limiting
         if (response.status === 429) {
@@ -130,7 +142,7 @@ export default function AnalysisPage() {
           const retryFormData = new FormData();
           retryFormData.append("file", file);
           response = await fetch("/api/extract", { method: "POST", body: retryFormData });
-          data = await response.json();
+          data = await safeJson(response);
         }
 
         if (!response.ok) {
@@ -197,7 +209,7 @@ export default function AnalysisPage() {
         body: JSON.stringify({ policies }),
       });
 
-      const data = await response.json();
+      const data = await safeJson(response);
 
       if (!response.ok) {
         setQuoteError(data.error ?? "Ukjent feil");
@@ -235,7 +247,7 @@ export default function AnalysisPage() {
           method: "POST",
           body: formData,
         });
-        let data = await response.json();
+        let data = await safeJson(response);
 
         // Auto-retry én gang ved rate limiting
         if (response.status === 429) {
@@ -243,7 +255,7 @@ export default function AnalysisPage() {
           const retryFormData = new FormData();
           retryFormData.append("file", file);
           response = await fetch("/api/extract", { method: "POST", body: retryFormData });
-          data = await response.json();
+          data = await safeJson(response);
         }
 
         if (!response.ok) {
@@ -301,7 +313,7 @@ export default function AnalysisPage() {
         body: JSON.stringify({ currentPolicies: policies, offerPolicies }),
       });
 
-      const data = await response.json();
+      const data = await safeJson(response);
 
       if (!response.ok) {
         setCompareError(data.error ?? "Ukjent feil");
