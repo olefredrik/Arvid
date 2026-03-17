@@ -75,6 +75,8 @@ Om dokumenttyper:
 - Forsikringsvilkår er generelle vilkår som gjelder alle kunder – bruk disse kun for inklusjoner og eksklusjoner, ikke for kundespesifikke verdier.
 - Betalingsoversikt eller faktura kan bekrefte premiebeløp.
 
+For kjøretøyforsikring: ekstraher kun informasjon om DET SPESIFIKKE kjøretøyet denne polisen er tegnet for. Biler nevnt som eksempler i vilkårsteksten, i tabeller over dekningsgrenser, eller i forklaringer av generelle regler skal ikke brukes som grunnlag for registreringsnummer, modell eller årsmodell.
+
 Felter som skal ekstraheres:
 ${fieldsDescription}
 
