@@ -111,6 +111,8 @@ export default function AnalysisPage() {
   const [failedOfferFiles, setFailedOfferFiles] = useState<File[]>([]);
   const [invalidFiles, setInvalidFiles] = useState<string[]>([]);
   const [invalidOfferFiles, setInvalidOfferFiles] = useState<string[]>([]);
+  const [unrecognizedFiles, setUnrecognizedFiles] = useState<string[]>([]);
+  const [unrecognizedOfferFiles, setUnrecognizedOfferFiles] = useState<string[]>([]);
   const replaceFileRef = useRef<HTMLInputElement>(null);
   const replaceOfferFileRef = useRef<HTMLInputElement>(null);
   const [allPoliciesRemoved, setAllPoliciesRemoved] = useState(false);
@@ -129,11 +131,13 @@ export default function AnalysisPage() {
     ]);
     setFailedFiles([]);
     setInvalidFiles([]);
+    setUnrecognizedFiles([]);
     capture("analysis_started", { file_count: files.length });
 
     const results: InsurancePolicy[] = [];
     const newFailedFiles: File[] = [];
     const newInvalidFiles: string[] = [];
+    const newUnrecognizedFiles: string[] = [];
 
     // Analyser filer sekvensielt for å unngå å overbelaste API-et
     for (let i = 0; i < files.length; i++) {
@@ -163,9 +167,11 @@ export default function AnalysisPage() {
               s.fileName === file.name && !s.done ? { ...s, done: true, error: data.error ?? "Ukjent feil" } : s
             )
           );
-          // 400/413 betyr at selve filen er feil – retry hjelper ikke
+          // 400/413 = ugyldig fil, 422 = ingen forsikringstyper funnet – retry hjelper ikke
           if (response.status === 400 || response.status === 413) {
             newInvalidFiles.push(file.name);
+          } else if (response.status === 422) {
+            newUnrecognizedFiles.push(file.name);
           } else {
             newFailedFiles.push(file);
           }
@@ -193,6 +199,7 @@ export default function AnalysisPage() {
 
     setFailedFiles(newFailedFiles);
     setInvalidFiles(newInvalidFiles);
+    setUnrecognizedFiles(newUnrecognizedFiles);
     // Tildel intern _id til nylig ekstraherte poliser
     const resultsWithIds = results.map((p) => ({ ...p, _id: crypto.randomUUID() }));
     setPolicies((prev) => {
@@ -268,11 +275,13 @@ export default function AnalysisPage() {
     setOfferStatuses(files.map((f) => ({ fileName: f.name, done: false })));
     setFailedOfferFiles([]);
     setInvalidOfferFiles([]);
+    setUnrecognizedOfferFiles([]);
     capture("comparison_started", { file_count: files.length });
 
     const results: InsurancePolicy[] = [];
     const newFailedOfferFiles: File[] = [];
     const newInvalidOfferFiles: string[] = [];
+    const newUnrecognizedOfferFiles: string[] = [];
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
@@ -303,6 +312,8 @@ export default function AnalysisPage() {
           );
           if (response.status === 400 || response.status === 413) {
             newInvalidOfferFiles.push(file.name);
+          } else if (response.status === 422) {
+            newUnrecognizedOfferFiles.push(file.name);
           } else {
             newFailedOfferFiles.push(file);
           }
@@ -330,6 +341,7 @@ export default function AnalysisPage() {
 
     setFailedOfferFiles(newFailedOfferFiles);
     setInvalidOfferFiles(newInvalidOfferFiles);
+    setUnrecognizedOfferFiles(newUnrecognizedOfferFiles);
     if (results.length > 0) {
       const resultsWithIds = results.map((p) => ({ ...p, _id: crypto.randomUUID() }));
       setOfferPolicies((prev) => mergePoliciesByType([...prev, ...resultsWithIds]).policies);
@@ -375,8 +387,12 @@ export default function AnalysisPage() {
     }
   };
 
-  const errors = statuses.filter((s) => s.error);
-  const offerErrors = offerStatuses.filter((s) => s.error);
+  const allErrors = statuses.filter((s) => s.error);
+  const errors = allErrors.filter((s) => !unrecognizedFiles.includes(s.fileName));
+  const unrecognizedErrors = allErrors.filter((s) => unrecognizedFiles.includes(s.fileName));
+  const allOfferErrors = offerStatuses.filter((s) => s.error);
+  const offerErrors = allOfferErrors.filter((s) => !unrecognizedOfferFiles.includes(s.fileName));
+  const unrecognizedOfferErrors = allOfferErrors.filter((s) => unrecognizedOfferFiles.includes(s.fileName));
 
   return (
     <main className="min-h-screen bg-white dark:bg-stone-950">
@@ -439,6 +455,18 @@ export default function AnalysisPage() {
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
             Arvid kan ta feil. Stemmer premie og egenandel? Klikk på tallene hvis du ønsker å korrigere.
           </p>
+
+          {unrecognizedErrors.length > 0 && (
+            <div className="mb-6 p-4 bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-700 rounded-lg text-sm text-stone-600 dark:text-stone-400">
+              <p className="font-medium mb-1 text-stone-700 dark:text-stone-300">
+                {unrecognizedErrors.length === 1 ? "Ett dokument" : `${unrecognizedErrors.length} dokumenter`} inneholdt ingen forsikringsdata:
+              </p>
+              {unrecognizedErrors.map((s) => (
+                <p key={s.fileName}>{s.fileName}</p>
+              ))}
+              <p className="mt-2">Generelle vilkår inneholder sjelden personlig policyinformasjon – dette er normalt og betyr ikke at noe mangler.</p>
+            </div>
+          )}
 
           {errors.length > 0 && (
             <div role="alert" className="mb-6 p-4 bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 rounded-lg text-sm text-amber-800 dark:text-amber-200">
@@ -642,6 +670,18 @@ export default function AnalysisPage() {
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
             Arvid kan feiltolke tall fra tilbudsdokumenter. Rett opp eventuelle feil før du går videre.
           </p>
+
+          {unrecognizedOfferErrors.length > 0 && (
+            <div className="mb-6 p-4 bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-700 rounded-lg text-sm text-stone-600 dark:text-stone-400">
+              <p className="font-medium mb-1 text-stone-700 dark:text-stone-300">
+                {unrecognizedOfferErrors.length === 1 ? "Ett dokument" : `${unrecognizedOfferErrors.length} dokumenter`} inneholdt ingen forsikringsdata:
+              </p>
+              {unrecognizedOfferErrors.map((s) => (
+                <p key={s.fileName}>{s.fileName}</p>
+              ))}
+              <p className="mt-2">Generelle vilkår inneholder sjelden personlig policyinformasjon – dette er normalt og betyr ikke at noe mangler.</p>
+            </div>
+          )}
 
           {offerErrors.length > 0 && (
             <div role="alert" className="mb-6 p-4 bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 rounded-lg text-sm text-amber-800 dark:text-amber-200">
