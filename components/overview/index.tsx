@@ -10,11 +10,11 @@ import ConfirmDialog from "@/components/confirm-dialog";
 
 type Props = {
   policies: InsurancePolicy[];
-  onUpdate?: (type: InsuranceType, field: "annualPremium" | "deductible", value: number | null) => void;
-  onRemove?: (type: InsuranceType) => void;
+  onUpdate?: (id: string, field: "annualPremium" | "deductible", value: number | null) => void;
+  onRemove?: (id: string) => void;
 };
 
-type EditingCell = { type: InsuranceType; field: "annualPremium" | "deductible" } | null;
+type EditingCell = { id: string; field: "annualPremium" | "deductible" } | null;
 
 function EditableAmount({
   value,
@@ -76,7 +76,7 @@ function EditableAmount({
 
 export default function Oversikt({ policies, onUpdate, onRemove }: Props) {
   const [editing, setEditing] = useState<EditingCell>(null);
-  const [pendingRemove, setPendingRemove] = useState<InsuranceType | null>(null);
+  const [pendingRemove, setPendingRemove] = useState<InsurancePolicy | null>(null);
 
   if (policies.length === 0) {
     return <p className="text-gray-500 dark:text-gray-400">Ingen forsikringer analysert ennå.</p>;
@@ -86,9 +86,9 @@ export default function Oversikt({ policies, onUpdate, onRemove }: Props) {
   const totalPremium = sumPolicies(policies);
   const hasPremiumData = policies.some((p) => p.annualPremium != null);
 
-  const commit = (type: InsuranceType, field: "annualPremium" | "deductible", value: number | null) => {
+  const commit = (id: string, field: "annualPremium" | "deductible", value: number | null) => {
     setEditing(null);
-    onUpdate?.(type, field, value);
+    onUpdate?.(id, field, value);
   };
 
   const renderAmount = (
@@ -96,6 +96,7 @@ export default function Oversikt({ policies, onUpdate, onRemove }: Props) {
     field: "annualPremium" | "deductible",
     isLowConfidence = false
   ) => {
+    const id = policy._id ?? policy.type;
     const value = policy[field];
     if (!onUpdate) {
       return value != null ? `${value.toLocaleString("nb-NO")} kr` : "–";
@@ -103,10 +104,10 @@ export default function Oversikt({ policies, onUpdate, onRemove }: Props) {
     return (
       <EditableAmount
         value={value}
-        isEditing={editing?.type === policy.type && editing.field === field}
+        isEditing={editing?.id === id && editing.field === field}
         isLowConfidence={isLowConfidence}
-        onStartEdit={() => setEditing({ type: policy.type, field })}
-        onCommit={(v) => commit(policy.type, field, v)}
+        onStartEdit={() => setEditing({ id, field })}
+        onCommit={(v) => commit(id, field, v)}
       />
     );
   };
@@ -143,7 +144,7 @@ export default function Oversikt({ policies, onUpdate, onRemove }: Props) {
           </thead>
           <tbody>
             {policies.map((policy) => (
-              <tr key={policy.type} className="hover:bg-gray-50 dark:hover:bg-gray-800">
+              <tr key={policy._id ?? policy.type} className="hover:bg-gray-50 dark:hover:bg-gray-800">
                 <td className="p-3 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">{INSURANCE_TYPE_LABELS[policy.type]}</td>
                 <td className="p-3 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200">
                   <div>{policy.company}</div>
@@ -169,7 +170,7 @@ export default function Oversikt({ policies, onUpdate, onRemove }: Props) {
                 {onRemove && (
                   <td className="p-3 border border-gray-200 dark:border-gray-700 text-center">
                     <button
-                      onClick={() => setPendingRemove(policy.type)}
+                      onClick={() => setPendingRemove(policy)}
                       aria-label={`Fjern ${INSURANCE_TYPE_LABELS[policy.type]}`}
                       className="text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400 transition-colors cursor-pointer"
                     >
@@ -202,7 +203,7 @@ export default function Oversikt({ policies, onUpdate, onRemove }: Props) {
       {/* Mobil: kort-layout */}
       <div className="md:hidden space-y-3">
         {policies.map((policy) => (
-          <div key={policy.type} className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+          <div key={policy._id ?? policy.type} className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
             <div className="px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
               <div>
                 <p className="font-medium text-sm text-gray-900 dark:text-gray-50">{INSURANCE_TYPE_LABELS[policy.type]}</p>
@@ -213,7 +214,7 @@ export default function Oversikt({ policies, onUpdate, onRemove }: Props) {
               </div>
               {onRemove && (
                 <button
-                  onClick={() => setPendingRemove(policy.type)}
+                  onClick={() => setPendingRemove(policy)}
                   aria-label={`Fjern ${INSURANCE_TYPE_LABELS[policy.type]}`}
                   className="text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400 transition-colors ml-2"
                 >
@@ -266,9 +267,9 @@ export default function Oversikt({ policies, onUpdate, onRemove }: Props) {
       {pendingRemove && (
         <ConfirmDialog
           title="Fjern forsikring"
-          message={`Er du sikker på at du vil fjerne ${INSURANCE_TYPE_LABELS[pendingRemove]} fra oversikten?`}
+          message={`Er du sikker på at du vil fjerne ${INSURANCE_TYPE_LABELS[pendingRemove.type]} fra oversikten?`}
           confirmLabel="Fjern"
-          onConfirm={() => { onRemove?.(pendingRemove); setPendingRemove(null); }}
+          onConfirm={() => { onRemove?.(pendingRemove._id ?? pendingRemove.type); setPendingRemove(null); }}
           onCancel={() => setPendingRemove(null)}
           isDestructive
         />

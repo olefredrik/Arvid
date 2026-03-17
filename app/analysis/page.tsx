@@ -66,7 +66,8 @@ import ConfirmDialog from "@/components/confirm-dialog";
 import Report, { type QuoteRequest } from "@/components/report";
 import Comparison from "@/components/comparison";
 import type { InsurancePolicy, InsuranceType, ComparisonResult } from "@/lib/insurance/types";
-import { mergePoliciesByType } from "@/lib/insurance/merge";
+import { INSURANCE_TYPE_LABELS } from "@/lib/insurance/types";
+import { mergePoliciesByType, type AmbiguousMerge } from "@/lib/insurance/merge";
 import { useAnalytics } from "@/lib/hooks/useAnalytics";
 
 // Parser API-respons trygt – håndterer 504-timeout og HTML-body fra Vercel
@@ -105,6 +106,7 @@ export default function AnalysisPage() {
   const [comparison, setComparison] = useState<ComparisonResult | null>(null);
   const [compareError, setCompareError] = useState<string | null>(null);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [ambiguousMerges, setAmbiguousMerges] = useState<AmbiguousMerge[]>([]);
   const [failedFiles, setFailedFiles] = useState<File[]>([]);
   const [failedOfferFiles, setFailedOfferFiles] = useState<File[]>([]);
   const [invalidFiles, setInvalidFiles] = useState<string[]>([]);
@@ -191,26 +193,43 @@ export default function AnalysisPage() {
 
     setFailedFiles(newFailedFiles);
     setInvalidFiles(newInvalidFiles);
+    // Tildel intern _id til nylig ekstraherte poliser
+    const resultsWithIds = results.map((p) => ({ ...p, _id: crypto.randomUUID() }));
     setPolicies((prev) => {
-      const merged = mergePoliciesByType([...prev, ...results]);
+      const { policies: merged, ambiguous } = mergePoliciesByType([...prev, ...resultsWithIds]);
+      setAmbiguousMerges(ambiguous);
       capture("analysis_completed", { policy_count: merged.length, insurance_types: merged.map((p) => p.type) });
       return merged;
     });
     setStep("overview");
   };
 
-  const handlePolicyUpdate = (type: InsuranceType, field: "annualPremium" | "deductible", value: number | null) => {
+  const handlePolicyUpdate = (id: string, field: "annualPremium" | "deductible", value: number | null) => {
     setPolicies((prev) =>
-      prev.map((p) => (p.type === type ? { ...p, [field]: value } : p))
+      prev.map((p) => (p._id === id ? { ...p, [field]: value } : p))
     );
   };
 
-  const handlePolicyRemove = (type: InsuranceType) => {
+  const handlePolicyRemove = (id: string) => {
     setPolicies((prev) => {
-      const next = prev.filter((p) => p.type !== type);
+      const next = prev.filter((p) => p._id !== id);
       if (next.length === 0) setAllPoliciesRemoved(true);
       return next;
     });
+  };
+
+  // Del opp en tvetydig sammenslåing til separate poliser
+  const handleSplitAmbiguous = (merge: AmbiguousMerge) => {
+    const withIds = merge.originals.map((p) => ({ ...p, _id: crypto.randomUUID() }));
+    setPolicies((prev) => {
+      const withoutMerged = prev.filter((p) => p._id !== merge.merged._id);
+      return [...withoutMerged, ...withIds];
+    });
+    setAmbiguousMerges((prev) => prev.filter((m) => m.merged._id !== merge.merged._id));
+  };
+
+  const handleDismissAmbiguous = (merge: AmbiguousMerge) => {
+    setAmbiguousMerges((prev) => prev.filter((m) => m.merged._id !== merge.merged._id));
   };
 
   const handleGenerateQuoteRequest = async () => {
@@ -312,16 +331,17 @@ export default function AnalysisPage() {
     setFailedOfferFiles(newFailedOfferFiles);
     setInvalidOfferFiles(newInvalidOfferFiles);
     if (results.length > 0) {
-      setOfferPolicies((prev) => mergePoliciesByType([...prev, ...results]));
+      const resultsWithIds = results.map((p) => ({ ...p, _id: crypto.randomUUID() }));
+      setOfferPolicies((prev) => mergePoliciesByType([...prev, ...resultsWithIds]).policies);
       setStep("offer-review");
     } else {
       setStep("compare-upload");
     }
   };
 
-  const handleOfferPolicyUpdate = (type: InsuranceType, field: "annualPremium" | "deductible", value: number | null) => {
+  const handleOfferPolicyUpdate = (id: string, field: "annualPremium" | "deductible", value: number | null) => {
     setOfferPolicies((prev) =>
-      prev.map((p) => (p.type === type ? { ...p, [field]: value } : p))
+      prev.map((p) => (p._id === id ? { ...p, [field]: value } : p))
     );
   };
 
@@ -472,6 +492,33 @@ export default function AnalysisPage() {
               >
                 Prøv igjen
               </button>
+            </div>
+          )}
+
+          {ambiguousMerges.length > 0 && (
+            <div className="mb-6 space-y-3">
+              {ambiguousMerges.map((merge) => (
+                <div key={merge.merged._id} role="alert" className="p-4 bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 rounded-lg text-sm text-amber-800 dark:text-amber-200">
+                  <p className="font-medium mb-1">
+                    Vi fant {merge.originals.length} {INSURANCE_TYPE_LABELS[merge.merged.type].toLowerCase()}er fra {merge.merged.company} i dokumentene dine.
+                  </p>
+                  <p className="mb-3">Er dette separate avtaler, eller tilhører de samme forsikring fordelt på flere dokumenter?</p>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => handleSplitAmbiguous(merge)}
+                      className="px-3 py-1.5 bg-amber-700 dark:bg-amber-600 text-white rounded-md hover:bg-amber-800 dark:hover:bg-amber-700 transition-colors cursor-pointer text-xs font-medium"
+                    >
+                      Separate avtaler
+                    </button>
+                    <button
+                      onClick={() => handleDismissAmbiguous(merge)}
+                      className="px-3 py-1.5 border border-amber-300 dark:border-amber-700 rounded-md hover:bg-amber-100 dark:hover:bg-amber-900 transition-colors cursor-pointer text-xs"
+                    >
+                      Samme forsikring
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
 

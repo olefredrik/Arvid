@@ -100,37 +100,56 @@ describe("mergePolicies", () => {
 });
 
 describe("mergePoliciesByType", () => {
-  it("returnerer én polise per type", () => {
+  it("returnerer én polise per type+selskap-kombinasjon", () => {
     const policies = [
       makePolicy({ type: "car", company: "A" }),
       makePolicy({ type: "car", company: "B" }),
       makePolicy({ type: "house", company: "C" }),
     ];
-    const result = mergePoliciesByType(policies);
-    expect(result).toHaveLength(2);
-    const types = result.map((p) => p.type);
-    expect(types).toContain("car");
-    expect(types).toContain("house");
+    const { policies: result } = mergePoliciesByType(policies);
+    expect(result).toHaveLength(3);
   });
 
-  it("slår sammen poliser av samme type", () => {
+  it("slår sammen poliser av samme type og selskap", () => {
     const policies = [
       makePolicy({ type: "contents", company: "If", annualPremium: null }),
       makePolicy({ type: "contents", company: "If", annualPremium: 2500 }),
     ];
-    const result = mergePoliciesByType(policies);
+    const { policies: result } = mergePoliciesByType(policies);
     expect(result).toHaveLength(1);
     expect(result[0].company).toBe("If");
     expect(result[0].annualPremium).toBe(2500);
   });
 
+  it("flagger tvetydig sammenslåing når polisenummer mangler", () => {
+    const policies = [
+      makePolicy({ type: "car", company: "Frende", policyNumber: null }),
+      makePolicy({ type: "car", company: "Frende", policyNumber: null }),
+    ];
+    const { policies: result, ambiguous } = mergePoliciesByType(policies);
+    expect(result).toHaveLength(1);
+    expect(ambiguous).toHaveLength(1);
+    expect(ambiguous[0].originals).toHaveLength(2);
+  });
+
+  it("flagger ikke som tvetydig når polisenummer er ulikt", () => {
+    const policies = [
+      makePolicy({ type: "car", company: "Frende", policyNumber: "111" }),
+      makePolicy({ type: "car", company: "Frende", policyNumber: "222" }),
+    ];
+    const { policies: result, ambiguous } = mergePoliciesByType(policies);
+    expect(result).toHaveLength(2);
+    expect(ambiguous).toHaveLength(0);
+  });
+
   it("håndterer tom liste", () => {
-    expect(mergePoliciesByType([])).toEqual([]);
+    const { policies: result } = mergePoliciesByType([]);
+    expect(result).toEqual([]);
   });
 
   it("returnerer enkeltpolise uendret ved én per type", () => {
     const policy = makePolicy({ type: "travel" });
-    const result = mergePoliciesByType([policy]);
+    const { policies: result } = mergePoliciesByType([policy]);
     expect(result).toHaveLength(1);
     expect(result[0]).toBe(policy);
   });
