@@ -75,6 +75,8 @@ Om dokumenttyper:
 - Forsikringsvilkår er generelle vilkår som gjelder alle kunder – bruk disse kun for inklusjoner og eksklusjoner, ikke for kundespesifikke verdier.
 - Betalingsoversikt eller faktura kan bekrefte premiebeløp.
 
+For kjøretøyforsikring: registreringsnummer, merke, modell og årsmodell skal hentes fra forsikringsbeviset – typisk i en seksjon kalt «Ditt kjøretøy», «Forsikret kjøretøy», «Forsikrede gjenstander» eller tilsvarende, med kundesspesifikke verdier. Kjøretøy nevnt som eksempler i vilkårsteksten, i tabeller over dekningsgrenser, eller i forklaringer av generelle regler er IKKE det forsikrede kjøretøyet og skal ikke brukes for disse feltene.
+
 Felter som skal ekstraheres:
 ${fieldsDescription}
 
@@ -171,7 +173,8 @@ Regler:
 - Fokuser på det som differensierer – dekningsnivå, egenandel, spesielle krav. Ikke list opp standard bransjekrav som alle selskaper oppfyller uansett
 - Skriv som om kunden henvender seg direkte til selskapet, i første person ("Jeg ønsker tilbud på...")
 - Beskriv hva kunden trenger, IKKE hva de betaler i dag
-- Én seksjon per forsikringstype (heading = forsikringstype, f.eks. "Reiseforsikring")
+- Én seksjon per polise i input-dataene – aldri slå to poliser sammen til én seksjon. Heading = forsikringstype (f.eks. "Reiseforsikring"). Hvis det finnes N poliser av samme type i dataene, skal det være nøyaktig N seksjoner for den typen. Differensier overskriftene ved å legge til kjøretøymodell, registreringsnummer e.l., eller fall tilbake til "(1 av N)", "(2 av N)" osv.
+- For kjøretøyforsikringer: inkluder alltid kjøretøyidentifikasjon (merke, modell, årsmodell, registreringsnummer) tidlig i seksjonen. Sjekk feltene registrationNumber, vehicleModel, vehicleYear – og notes-arrayen som backup. Uten dette kan ikke forsikringsselskapet gi et konkret tilbud.
 - Legg til en innledende seksjon ("Om meg") med relevante personlige detaljer som påvirker prisen (f.eks. antall reiser, kjørelengde, boligtype), dersom slike finnes i dataene
 - KRITISK: Feltene "inclusions" og "exclusions" i dataene beskriver hva den eksisterende forsikringsavtalen dekker eller ekskluderer – de beskriver IKKE hva kunden eier eller har. Ikke nevn enkeltgjenstander fra "inclusions" som om kunden eier dem (f.eks. solcelleanlegg, smykker, spesifikt utstyr), med mindre det fremgår eksplisitt av andre felt at kunden faktisk eier dem
 - Trekk kun slutninger om kundens situasjon fra eksplisitte felt som boligtype, kjøretøytype, reisedestinasjon osv.

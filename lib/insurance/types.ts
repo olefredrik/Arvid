@@ -33,6 +33,7 @@ export type ExtractionConfidence = "high" | "medium" | "low";
 
 // Én forsikringspolise ekstrahert fra et dokument
 export type InsurancePolicy = {
+  _id?: string; // Intern klient-ID, ikke fra Claude – brukes for å identifisere poliser i state
   type: InsuranceType;
   company: string;
   policyNumber: string | null;
