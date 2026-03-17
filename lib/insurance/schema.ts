@@ -131,6 +131,24 @@ const contentsFields: FieldDefinition[] = [
 const vehicleFields: FieldDefinition[] = [
   ...commonFields,
   {
+    key: "registrationNumber",
+    label: "Registreringsnummer",
+    description: "Kjøretøyets registreringsnummer (regnr), f.eks. 'AB 12345'",
+    required: false,
+  },
+  {
+    key: "vehicleModel",
+    label: "Kjøretøymodell",
+    description: "Merke og modell på kjøretøyet, f.eks. 'Toyota RAV4', 'BMW i3S'. Ikke inkluder årsmodell her.",
+    required: false,
+  },
+  {
+    key: "vehicleYear",
+    label: "Årsmodell",
+    description: "Årsmodell eller første registreringsår for kjøretøyet, f.eks. '2022'",
+    required: false,
+  },
+  {
     key: "vehicleUsage",
     label: "Kjørelengde/bruk",
     description: "Estimert kjørelengde per år eller bruksbegrensning",
