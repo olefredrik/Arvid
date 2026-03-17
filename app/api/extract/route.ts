@@ -129,7 +129,7 @@ export async function POST(request: NextRequest) {
           extracted = {};
         }
 
-        const policy: InsurancePolicy = {
+        const corePolicy: InsurancePolicy = {
           type: insuranceType,
           company: (extracted.company as string) ?? "Ukjent selskap",
           policyNumber: (extracted.policyNumber as string | null) ?? null,
@@ -143,6 +143,10 @@ export async function POST(request: NextRequest) {
           notes: (extracted.notes as string[]) ?? [],
           extractionConfidence: (extracted.extractionConfidence as InsurancePolicy["extractionConfidence"]) ?? typeResult.confidence ?? "low",
         };
+
+        // Behold typesspesifikke felter (f.eks. registrationNumber, vehicleModel, vehicleYear)
+        // som ikke er del av basistypen, slik at de sendes med til tilbudsforespørselen
+        const policy = Object.assign({}, extracted, corePolicy) as InsurancePolicy;
 
         return policy;
       })
