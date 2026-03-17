@@ -74,6 +74,22 @@ export default function Om() {
             </p>
           </section>
 
+          <section>
+            <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-50 mb-3">Organisasjoner</h2>
+            <p className="text-sm leading-relaxed">
+              Organisasjoner som ønsker å tilby Arvid gratis til sine medlemmer eller brukere, er velkomne til å
+              ta kontakt. Arvid er åpen kildekode under AGPL v3 – det finnes derfor ingen lisenskostnad, men
+              dersom din organisasjon ønsker å utforske et samarbeid om drift, tilpasning eller finansiering av
+              API-kostnader, hører jeg gjerne fra deg.
+            </p>
+            <p className="text-sm leading-relaxed mt-3">
+              Ta kontakt på{" "}
+              <a href="mailto:hello@olefredrik.com" className="underline hover:text-stone-900 dark:hover:text-stone-100">
+                hello@olefredrik.com
+              </a>.
+            </p>
+          </section>
+
         </div>
       </div>
     </main>
