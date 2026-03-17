@@ -1,14 +1,25 @@
-// Slår sammen flere poliser av samme type til én – tar beste tilgjengelige verdi per felt
+// Slår sammen poliser som tilhører samme fysiske forsikringsavtale.
+// Nøkkel: type + selskap + polisenummer. To biler fra samme selskap med ulike
+// polisenumre forblir separate rader. Faller tilbake til type + selskap hvis
+// polisenummer mangler, og til type alene hvis selskap også mangler.
 import type { InsurancePolicy } from "./types";
 
+function mergeKey(policy: InsurancePolicy): string {
+  const parts: string[] = [policy.type];
+  if (policy.company) parts.push(policy.company);
+  if (policy.policyNumber) parts.push(policy.policyNumber);
+  return parts.join("|");
+}
+
 export function mergePoliciesByType(policies: InsurancePolicy[]): InsurancePolicy[] {
-  const byType = new Map<string, InsurancePolicy[]>();
+  const byKey = new Map<string, InsurancePolicy[]>();
   for (const policy of policies) {
-    const group = byType.get(policy.type) ?? [];
+    const key = mergeKey(policy);
+    const group = byKey.get(key) ?? [];
     group.push(policy);
-    byType.set(policy.type, group);
+    byKey.set(key, group);
   }
-  return [...byType.values()].map(mergePolicies);
+  return [...byKey.values()].map(mergePolicies);
 }
 
 export function mergePolicies(policies: InsurancePolicy[]): InsurancePolicy {
