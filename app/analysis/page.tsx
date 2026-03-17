@@ -88,6 +88,7 @@ type ProcessingStatus = {
   fileName: string;
   done: boolean;
   error?: string;
+  errorType?: "unrecognized" | "invalid" | "transient";
 };
 
 export default function AnalysisPage() {
@@ -165,9 +166,10 @@ export default function AnalysisPage() {
           const statusError = response.status === 422
             ? "Ingen forsikringsdata funnet – trolig et vilkårsdokument"
             : data.error ?? "Ukjent feil";
+          const errorType = response.status === 422 ? "unrecognized" : response.status === 400 || response.status === 413 ? "invalid" : "transient";
           setStatuses((prev) =>
             prev.map((s) =>
-              s.fileName === file.name && !s.done ? { ...s, done: true, error: statusError } : s
+              s.fileName === file.name && !s.done ? { ...s, done: true, error: statusError, errorType } : s
             )
           );
           // 400/413 = ugyldig fil, 422 = ingen forsikringstyper funnet – retry hjelper ikke
@@ -434,7 +436,7 @@ export default function AnalysisPage() {
               >
                 {s.done ? (
                   s.error ? (
-                    unrecognizedFiles.includes(s.fileName)
+                    s.errorType === "unrecognized"
                       ? <span className="text-stone-400 dark:text-stone-500 text-sm" aria-label="Gjennomgått">–</span>
                       : <span className="text-red-500 dark:text-red-400 text-sm" aria-label="Feil">✕</span>
                   ) : (
@@ -445,7 +447,7 @@ export default function AnalysisPage() {
                 )}
                 <span className="text-sm text-gray-700 dark:text-gray-200 truncate">{s.fileName}</span>
                 {s.error && (
-                  <span className={`text-xs ml-auto ${unrecognizedFiles.includes(s.fileName) ? "text-stone-400 dark:text-stone-500" : "text-red-500 dark:text-red-400"}`}>{s.error}</span>
+                  <span className={`text-xs ml-auto ${s.errorType === "unrecognized" ? "text-stone-400 dark:text-stone-500" : "text-red-500 dark:text-red-400"}`}>{s.error}</span>
                 )}
               </div>
             ))}
