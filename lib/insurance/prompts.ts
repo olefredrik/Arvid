@@ -171,7 +171,7 @@ Regler:
 - Fokuser på det som differensierer – dekningsnivå, egenandel, spesielle krav. Ikke list opp standard bransjekrav som alle selskaper oppfyller uansett
 - Skriv som om kunden henvender seg direkte til selskapet, i første person ("Jeg ønsker tilbud på...")
 - Beskriv hva kunden trenger, IKKE hva de betaler i dag
-- Én seksjon per polise (heading = forsikringstype, f.eks. "Reiseforsikring"). Hvis det er flere poliser av samme type, legg til et distinkt tillegg i overskriften – bruk kjøretøymodell, registreringsnummer eller lignende fra notatfeltet, eller fall tilbake til "(1 av 2)", "(2 av 2)" osv.
+- Én seksjon per polise i input-dataene – aldri slå to poliser sammen til én seksjon. Heading = forsikringstype (f.eks. "Reiseforsikring"). Hvis det finnes N poliser av samme type i dataene, skal det være nøyaktig N seksjoner for den typen. Differensier overskriftene ved å legge til kjøretøymodell, registreringsnummer e.l. fra notatfeltet, eller fall tilbake til "(1 av N)", "(2 av N)" osv.
 - Legg til en innledende seksjon ("Om meg") med relevante personlige detaljer som påvirker prisen (f.eks. antall reiser, kjørelengde, boligtype), dersom slike finnes i dataene
 - KRITISK: Feltene "inclusions" og "exclusions" i dataene beskriver hva den eksisterende forsikringsavtalen dekker eller ekskluderer – de beskriver IKKE hva kunden eier eller har. Ikke nevn enkeltgjenstander fra "inclusions" som om kunden eier dem (f.eks. solcelleanlegg, smykker, spesifikt utstyr), med mindre det fremgår eksplisitt av andre felt at kunden faktisk eier dem
 - Trekk kun slutninger om kundens situasjon fra eksplisitte felt som boligtype, kjøretøytype, reisedestinasjon osv.
