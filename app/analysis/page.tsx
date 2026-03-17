@@ -434,7 +434,9 @@ export default function AnalysisPage() {
               >
                 {s.done ? (
                   s.error ? (
-                    <span className="text-red-500 dark:text-red-400 text-sm" aria-label="Feil">✕</span>
+                    unrecognizedFiles.includes(s.fileName)
+                      ? <span className="text-stone-400 dark:text-stone-500 text-sm" aria-label="Gjennomgått">–</span>
+                      : <span className="text-red-500 dark:text-red-400 text-sm" aria-label="Feil">✕</span>
                   ) : (
                     <span className="text-green-500 dark:text-green-400 text-sm" aria-label="Fullført">✓</span>
                   )
@@ -443,7 +445,7 @@ export default function AnalysisPage() {
                 )}
                 <span className="text-sm text-gray-700 dark:text-gray-200 truncate">{s.fileName}</span>
                 {s.error && (
-                  <span className="text-xs text-red-500 dark:text-red-400 ml-auto">{s.error}</span>
+                  <span className={`text-xs ml-auto ${unrecognizedFiles.includes(s.fileName) ? "text-stone-400 dark:text-stone-500" : "text-red-500 dark:text-red-400"}`}>{s.error}</span>
                 )}
               </div>
             ))}
