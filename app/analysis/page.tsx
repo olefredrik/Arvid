@@ -162,9 +162,12 @@ export default function AnalysisPage() {
         }
 
         if (!response.ok) {
+          const statusError = response.status === 422
+            ? "Ingen forsikringsdata funnet – trolig et vilkårsdokument"
+            : data.error ?? "Ukjent feil";
           setStatuses((prev) =>
             prev.map((s) =>
-              s.fileName === file.name && !s.done ? { ...s, done: true, error: data.error ?? "Ukjent feil" } : s
+              s.fileName === file.name && !s.done ? { ...s, done: true, error: statusError } : s
             )
           );
           // 400/413 = ugyldig fil, 422 = ingen forsikringstyper funnet – retry hjelper ikke
@@ -464,7 +467,7 @@ export default function AnalysisPage() {
               {unrecognizedErrors.map((s) => (
                 <p key={s.fileName}>{s.fileName}</p>
               ))}
-              <p className="mt-2">Generelle vilkår inneholder sjelden personlig policyinformasjon – dette er normalt og betyr ikke at noe mangler.</p>
+              <p className="mt-2">Generelle vilkår inneholder sjelden personlig policyinformasjon. Dette er normalt og betyr ikke at noe mangler.</p>
             </div>
           )}
 
@@ -679,7 +682,7 @@ export default function AnalysisPage() {
               {unrecognizedOfferErrors.map((s) => (
                 <p key={s.fileName}>{s.fileName}</p>
               ))}
-              <p className="mt-2">Generelle vilkår inneholder sjelden personlig policyinformasjon – dette er normalt og betyr ikke at noe mangler.</p>
+              <p className="mt-2">Generelle vilkår inneholder sjelden personlig policyinformasjon. Dette er normalt og betyr ikke at noe mangler.</p>
             </div>
           )}
 
