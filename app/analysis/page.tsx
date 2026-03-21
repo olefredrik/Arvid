@@ -402,9 +402,18 @@ export default function AnalysisPage() {
   return (
     <main className="min-h-screen bg-white dark:bg-stone-950">
       <div className="max-w-4xl mx-auto px-4 py-6 sm:p-8">
-      <Link href="/" className="text-sm text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 mb-8 inline-block">
-        ← Tilbake
-      </Link>
+      {step === "upload" && policies.length > 0 ? (
+        <button
+          onClick={() => setStep("overview")}
+          className="text-sm text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 mb-8 inline-block cursor-pointer"
+        >
+          ← Tilbake til oversikten
+        </button>
+      ) : (
+        <Link href="/" className="text-sm text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 mb-8 inline-block">
+          ← Tilbake til start
+        </Link>
+      )}
 
       {/* Steg 1: Opplasting */}
       {step === "upload" && (
