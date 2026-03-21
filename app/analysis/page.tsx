@@ -429,7 +429,15 @@ export default function AnalysisPage() {
                   </div>
                 ))}
               </div>
-              <p className="text-xs text-stone-400 dark:text-stone-500 mt-2">Nye dokumenter du laster opp legges til i oversikten.</p>
+              <div className="flex items-center justify-between mt-2">
+                <p className="text-xs text-stone-400 dark:text-stone-500">Nye dokumenter du laster opp legges til i oversikten.</p>
+                <button
+                  onClick={() => setStep("overview")}
+                  className="text-xs text-amber-700 dark:text-amber-500 hover:underline cursor-pointer"
+                >
+                  Tilbake til oversikten
+                </button>
+              </div>
             </div>
           )}
           <Upload onFiles={handleFiles} />
