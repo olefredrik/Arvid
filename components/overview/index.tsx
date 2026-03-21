@@ -1,7 +1,7 @@
 "use client";
 
 // Forsikringsoversikt – tabell på desktop, kort-layout på mobil
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Lightbulb, Trash2 } from "lucide-react";
 import type { InsurancePolicy, InsuranceType } from "@/lib/insurance/types";
 import { INSURANCE_TYPE_LABELS } from "@/lib/insurance/types";
@@ -30,29 +30,52 @@ function EditableAmount({
   onCommit: (newValue: number | null) => void;
 }) {
   const [draft, setDraft] = useState("");
+  const [preEditValue, setPreEditValue] = useState<number | null>(null);
+
+  // Lagre verdien slik den var da redigering startet, slik at brukeren kan angre
+  useEffect(() => {
+    if (isEditing) {
+      setPreEditValue(value);
+      setDraft(value != null ? String(value) : "");
+    }
+  }, [isEditing]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (isEditing) {
+    const parsedDraft = parseInt(draft.replace(/\s/g, ""), 10);
+    const commitValue = isNaN(parsedDraft) ? null : parsedDraft;
+
     return (
-      <input
-        type="text"
-        inputMode="numeric"
-        aria-label="Rediger beløp"
-        className="w-full border border-amber-500 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-amber-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
-        defaultValue={value ?? ""}
-        autoFocus
-        onChange={(e) => setDraft(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            const parsed = parseInt(draft.replace(/\s/g, ""), 10);
-            onCommit(isNaN(parsed) ? null : parsed);
-          }
-          if (e.key === "Escape") onCommit(value);
-        }}
-        onBlur={() => {
-          const parsed = parseInt(draft.replace(/\s/g, ""), 10);
-          onCommit(isNaN(parsed) ? null : parsed);
-        }}
-      />
+      <div className="flex items-center gap-2">
+        <input
+          type="text"
+          inputMode="numeric"
+          aria-label="Rediger beløp"
+          className="w-full border border-amber-500 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-amber-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+          value={draft}
+          placeholder={preEditValue != null ? preEditValue.toLocaleString("nb-NO") : ""}
+          autoFocus
+          onChange={(e) => setDraft(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") onCommit(commitValue);
+            if (e.key === "Escape") onCommit(preEditValue);
+          }}
+          onBlur={() => onCommit(commitValue)}
+        />
+        {preEditValue !== null && (
+          <button
+            type="button"
+            onMouseDown={(e) => {
+              // Forhindre at onBlur på input fyres og committer endringen
+              e.preventDefault();
+              onCommit(preEditValue);
+            }}
+            className="text-xs text-stone-400 dark:text-stone-500 hover:text-amber-700 dark:hover:text-amber-400 shrink-0 cursor-pointer whitespace-nowrap"
+            aria-label="Angre redigering"
+          >
+            Angre
+          </button>
+        )}
+      </div>
     );
   }
 
