@@ -402,9 +402,18 @@ export default function AnalysisPage() {
   return (
     <main className="min-h-screen bg-white dark:bg-stone-950">
       <div className="max-w-4xl mx-auto px-4 py-6 sm:p-8">
-      <Link href="/" className="text-sm text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 mb-8 inline-block">
-        ← Tilbake
-      </Link>
+      {step === "upload" && policies.length > 0 ? (
+        <button
+          onClick={() => setStep("overview")}
+          className="text-sm text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 mb-8 inline-block cursor-pointer"
+        >
+          ← Tilbake til oversikten
+        </button>
+      ) : (
+        <Link href="/" className="text-sm text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 mb-8 inline-block">
+          ← Tilbake til start
+        </Link>
+      )}
 
       {/* Steg 1: Opplasting */}
       {step === "upload" && (
@@ -429,15 +438,7 @@ export default function AnalysisPage() {
                   </div>
                 ))}
               </div>
-              <div className="flex items-center justify-between mt-2">
-                <p className="text-xs text-stone-400 dark:text-stone-500">Nye dokumenter du laster opp legges til i oversikten.</p>
-                <button
-                  onClick={() => setStep("overview")}
-                  className="text-xs text-amber-700 dark:text-amber-500 hover:underline cursor-pointer"
-                >
-                  Tilbake til oversikten
-                </button>
-              </div>
+              <p className="text-xs text-stone-400 dark:text-stone-500 mt-2">Nye dokumenter du laster opp legges til i oversikten.</p>
             </div>
           )}
           <Upload onFiles={handleFiles} />
