@@ -1,7 +1,7 @@
 "use client";
 
 // Forsikringsoversikt – tabell på desktop, kort-layout på mobil
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Lightbulb, Trash2 } from "lucide-react";
 import type { InsurancePolicy, InsuranceType } from "@/lib/insurance/types";
 import { INSURANCE_TYPE_LABELS } from "@/lib/insurance/types";
@@ -18,24 +18,23 @@ type EditingCell = { id: string; field: "annualPremium" | "deductible" } | null;
 
 function EditableAmount({
   value,
+  originalValue,
   isEditing,
   isLowConfidence,
   onStartEdit,
   onCommit,
 }: {
   value: number | null;
+  originalValue: number | null;
   isEditing: boolean;
   isLowConfidence: boolean;
   onStartEdit: () => void;
   onCommit: (newValue: number | null) => void;
 }) {
   const [draft, setDraft] = useState("");
-  const [preEditValue, setPreEditValue] = useState<number | null>(null);
 
-  // Lagre verdien slik den var da redigering startet, slik at brukeren kan angre
   useEffect(() => {
     if (isEditing) {
-      setPreEditValue(value);
       setDraft(value != null ? String(value) : "");
     }
   }, [isEditing]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -43,6 +42,7 @@ function EditableAmount({
   if (isEditing) {
     const parsedDraft = parseInt(draft.replace(/\s/g, ""), 10);
     const commitValue = isNaN(parsedDraft) ? null : parsedDraft;
+    const hasBeenEdited = value !== originalValue;
 
     return (
       <div className="flex items-center gap-2">
@@ -52,27 +52,27 @@ function EditableAmount({
           aria-label="Rediger beløp"
           className="w-full border border-amber-500 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-amber-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
           value={draft}
-          placeholder={preEditValue != null ? preEditValue.toLocaleString("nb-NO") : ""}
+          placeholder={value != null ? value.toLocaleString("nb-NO") : ""}
           autoFocus
           onChange={(e) => setDraft(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter") onCommit(commitValue);
-            if (e.key === "Escape") onCommit(preEditValue);
+            if (e.key === "Escape") onCommit(value);
           }}
           onBlur={() => onCommit(commitValue)}
         />
-        {preEditValue !== null && (
+        {hasBeenEdited && originalValue !== null && (
           <button
             type="button"
             onMouseDown={(e) => {
               // Forhindre at onBlur på input fyres og committer endringen
               e.preventDefault();
-              onCommit(preEditValue);
+              onCommit(originalValue);
             }}
             className="text-xs text-stone-400 dark:text-stone-500 hover:text-amber-700 dark:hover:text-amber-400 shrink-0 cursor-pointer whitespace-nowrap"
-            aria-label="Angre redigering"
+            aria-label="Tilbakestill til ekstrahert verdi"
           >
-            Angre
+            Tilbakestill
           </button>
         )}
       </div>
@@ -101,6 +101,15 @@ export default function Oversikt({ policies, onUpdate, onRemove }: Props) {
   const [editing, setEditing] = useState<EditingCell>(null);
   const [pendingRemove, setPendingRemove] = useState<InsurancePolicy | null>(null);
 
+  // Lagrer de opprinnelig ekstraherte verdiene én gang per polise-ID – oppdateres aldri ved brukerredigering
+  const originalValuesRef = useRef<Map<string, { annualPremium: number | null; deductible: number | null }>>(new Map());
+  policies.forEach((p) => {
+    const id = p._id ?? p.type;
+    if (!originalValuesRef.current.has(id)) {
+      originalValuesRef.current.set(id, { annualPremium: p.annualPremium, deductible: p.deductible });
+    }
+  });
+
   if (policies.length === 0) {
     return <p className="text-gray-500 dark:text-gray-400">Ingen forsikringer analysert ennå.</p>;
   }
@@ -124,9 +133,11 @@ export default function Oversikt({ policies, onUpdate, onRemove }: Props) {
     if (!onUpdate) {
       return value != null ? `${value.toLocaleString("nb-NO")} kr` : "–";
     }
+    const originalValue = originalValuesRef.current.get(id)?.[field] ?? null;
     return (
       <EditableAmount
         value={value}
+        originalValue={originalValue}
         isEditing={editing?.id === id && editing.field === field}
         isLowConfidence={isLowConfidence}
         onStartEdit={() => setEditing({ id, field })}
