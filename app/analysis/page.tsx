@@ -65,7 +65,7 @@ import Overview from "@/components/overview";
 import ConfirmDialog from "@/components/confirm-dialog";
 import Report, { type QuoteRequest } from "@/components/report";
 import Comparison from "@/components/comparison";
-import type { InsurancePolicy, InsuranceType, ComparisonResult } from "@/lib/insurance/types";
+import type { InsurancePolicy, ComparisonResult } from "@/lib/insurance/types";
 import { INSURANCE_TYPE_LABELS } from "@/lib/insurance/types";
 import { mergePoliciesByType, type AmbiguousMerge } from "@/lib/insurance/merge";
 import { useAnalytics } from "@/lib/hooks/useAnalytics";
@@ -417,6 +417,21 @@ export default function AnalysisPage() {
               ? "Arvid bruker disse som utgangspunkt når tilbudet skal vurderes."
               : "Forsikringsbevis er best, ikke bare generelle vilkår."}
           </p>
+          {/* Allerede analyserte dokumenter */}
+          {statuses.filter((s) => s.done && !s.error).length > 0 && (
+            <div className="mb-6">
+              <p className="text-xs text-stone-500 dark:text-stone-400 mb-2 font-medium uppercase tracking-wide">Allerede analysert</p>
+              <div className="space-y-2">
+                {statuses.filter((s) => s.done && !s.error).map((s) => (
+                  <div key={s.fileName} className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-stone-800 rounded-lg border border-stone-200 dark:border-stone-700">
+                    <span className="text-green-500 dark:text-green-400 text-sm" aria-hidden="true">✓</span>
+                    <span className="text-sm text-gray-700 dark:text-gray-200 truncate">{s.fileName}</span>
+                  </div>
+                ))}
+              </div>
+              <p className="text-xs text-stone-400 dark:text-stone-500 mt-2">Nye dokumenter du laster opp legges til i oversikten.</p>
+            </div>
+          )}
           <Upload onFiles={handleFiles} />
         </>
       )}
@@ -562,7 +577,7 @@ export default function AnalysisPage() {
               <Overview policies={policies} onUpdate={handlePolicyUpdate} onRemove={handlePolicyRemove} />
               <div className="mt-8 flex gap-3">
                 <button
-                  onClick={() => { setStatuses([]); setAllPoliciesRemoved(false); setStep("upload"); }}
+                  onClick={() => { setAllPoliciesRemoved(false); setStep("upload"); }}
                   className="px-4 py-2 text-sm text-stone-600 dark:text-stone-300 border border-stone-300 dark:border-stone-600 rounded-lg hover:bg-white dark:hover:bg-stone-800 transition-colors cursor-pointer"
                 >
                   Last opp flere dokumenter
