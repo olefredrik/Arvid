@@ -92,7 +92,7 @@ Arvid er tilgjengelig under to lisensbetingelser:
 For privat bruk, forskning og ikke-kommersiell bruk er Arvid lisensiert under [GNU Affero General Public License v3.0](LICENSE). Det betyr at du fritt kan lese, bruke og modifisere koden – men eventuelle endringer som distribueres eller kjøres som en nettjeneste må også gjøres tilgjengelig under AGPL v3.
 
 **Kommersiell lisens**
-Hvis du ønsker å bruke Arvid i en kommersiell sammenheng uten å oppfylle AGPL v3-kravene, ta kontakt for en separat avtale: hello@olefredrik.com
+Hvis du ønsker å bruke Arvid i en kommersiell sammenheng uten å oppfylle AGPL v3-kravene, ta kontakt for en separat avtale. Se [arvid.cloud/om](https://arvid.cloud/om) for kontaktinformasjon.
 
 Se [CLA.md](CLA.md) for informasjon om bidragsrettigheter.
 
@@ -100,4 +100,4 @@ Se [CLA.md](CLA.md) for informasjon om bidragsrettigheter.
 
 Organisasjoner som ønsker å tilby Arvid gratis til sine medlemmer eller brukere, er velkomne til å ta kontakt. Arvid er åpen kildekode under AGPL v3 – det finnes derfor ingen lisenskostnad, men dersom din organisasjon ønsker å utforske et samarbeid om drift, tilpasning eller finansiering av API-kostnader, hører jeg gjerne fra deg.
 
-Ta kontakt på hello@olefredrik.com.
+Ta kontakt via [arvid.cloud/om](https://arvid.cloud/om).
