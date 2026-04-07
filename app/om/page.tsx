@@ -84,8 +84,9 @@ export default function Om() {
             </p>
             <p className="text-sm leading-relaxed mt-3">
               Ta kontakt på{" "}
+              {/* E-postadresse er obfuskert mot spam-harvestere via CSS display:none */}
               <a href="mailto:hello@olefredrik.com" className="underline hover:text-stone-900 dark:hover:text-stone-100">
-                hello@olefredrik.com
+                hello@ole<span style={{ display: "none" }} aria-hidden="true">noreply</span>fredrik.com
               </a>.
             </p>
           </section>
