@@ -39,3 +39,6 @@ next-env.d.ts
 
 # Next.js outputFileTracing-artefakter
 /Documents/
+
+# Testdokumenter og resultater for modellevaluering – inneholder personopplysninger, skal aldri committes
+/eval-data/
