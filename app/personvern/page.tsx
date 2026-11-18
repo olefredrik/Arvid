@@ -21,7 +21,7 @@ export default function Personvern() {
         </Link>
 
         <h1 className="text-3xl font-bold text-stone-900 dark:text-stone-50 mb-2">Personvernerklæring</h1>
-        <p className="text-sm text-stone-400 dark:text-stone-500 mb-12">Sist oppdatert: mars 2026</p>
+        <p className="text-sm text-stone-400 dark:text-stone-500 mb-12">Sist oppdatert: november 2026</p>
 
         <div className="space-y-10 text-stone-700 dark:text-stone-300">
 
@@ -36,8 +36,10 @@ export default function Personvern() {
           <section>
             <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-50 mb-3">Forsikringsdokumenter</h2>
             <p className="text-sm leading-relaxed">
-              Dokumenter du laster opp sendes til Anthropic for analyse via Claude API og slettes umiddelbart etterpå.
-              Ingenting lagres i en database. Arvid har ingen tilgang til dokumentinnholdet etter at sesjonen er avsluttet.
+              Arvid lagrer ikke dokumentene dine. Dokumenter du laster opp sendes til Anthropic for analyse via Claude API.
+              Anthropic sletter dem automatisk innen 30 dager, med mindre innholdet flagges for brudd på Anthropics
+              bruksvilkår eller loven krever lengre oppbevaring. Ingenting lagres i en database, og Arvid har ingen tilgang
+              til dokumentinnholdet etter at sesjonen er avsluttet.
             </p>
             <p className="text-sm leading-relaxed mt-3">
               Anthropic bruker ikke dokumentene til å trene AI-modeller.
@@ -81,8 +83,9 @@ export default function Personvern() {
             <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-50 mb-3">Ingen lagring</h2>
             <p className="text-sm leading-relaxed">
               Arvid bruker ingen databaser, ingen brukerkontoer og ingen innlogging.
-              Dokumenter behandles midlertidig under analysen og slettes umiddelbart etterpå.
-              Etter at sesjonen er avsluttet finnes det ingen personopplysninger å slette, korrigere eller eksportere.
+              Arvid behandler dokumentene bare mens analysen pågår, og beholder ingenting etterpå.
+              Etter at sesjonen er avsluttet har Arvid derfor ingen personopplysninger å slette, korrigere eller eksportere.
+              Hos Anthropic slettes dokumentene innen 30 dager, som beskrevet over.
             </p>
           </section>
 
