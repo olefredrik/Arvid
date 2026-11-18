@@ -7,6 +7,7 @@ import type { InsurancePolicy } from "@/lib/insurance/types";
 import { generateStructured } from "@/lib/ai/client";
 import { aiErrorResponse } from "@/lib/ai/errors";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { parseJsonBody, quoteRequestBodySchema } from "@/lib/api/validation";
 
 // Genererer strukturert tilbudsforespørsel basert på ekstraherte forsikringsdata
 export async function POST(request: NextRequest) {
@@ -19,12 +20,11 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const body = await request.json() as {
-      policies: InsurancePolicy[];
-      additionalRequirements?: string;
-    };
+    const parsed = await parseJsonBody(request, quoteRequestBodySchema, "Tilbudsforespørsel");
+    if (!parsed.ok) return parsed.response;
+    const policies = parsed.data.policies as InsurancePolicy[];
 
-    if (!body.policies || body.policies.length === 0) {
+    if (policies.length === 0) {
       return NextResponse.json(
         { error: "Arvid har ingen forsikringer å jobbe med. Prøv å starte analysen på nytt." },
         { status: 400 }
@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
 
     const generated = await generateStructured({
       task: "quoteRequest",
-      prompt: buildQuoteRequestPrompt(body.policies, body.additionalRequirements),
+      prompt: buildQuoteRequestPrompt(policies),
       schema: quoteRequestSchema,
     });
 
