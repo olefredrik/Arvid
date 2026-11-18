@@ -1,3 +1,4 @@
+import { normalizeCompany } from "./insurance/company";
 import type { InsurancePolicy } from "./insurance/types";
 
 // Summerer årlig premie for en liste poliser.
@@ -7,7 +8,7 @@ export function sumPolicies(policies: InsurancePolicy[]): number {
   return policies.reduce((sum, p) => {
     if (p.annualPremium == null) return sum;
     if (p.isBundledPremium) {
-      const key = `${p.company}:${p.annualPremium}`;
+      const key = `${normalizeCompany(p.company)}:${p.annualPremium}`;
       if (seenBundles.has(key)) return sum;
       seenBundles.add(key);
     }
