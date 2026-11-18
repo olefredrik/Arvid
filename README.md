@@ -24,13 +24,13 @@ Arvid er nøytral, jobber alltid for brukeren, og har ingen kommersielle binding
 - [Next.js 15](https://nextjs.org/) (App Router)
 - [Tailwind CSS v4](https://tailwindcss.com/)
 - [Anthropic Claude API](https://www.anthropic.com/)
-- [pdfjs-dist](https://github.com/mozilla/pdf.js/) for PDF-parsing
+- [pdf-parse](https://www.npmjs.com/package/pdf-parse) for PDF-parsing
 
 ## Kom i gang
 
 ### Krav
 
-- Node.js 18 eller nyere
+- Node.js 20.6 eller nyere
 - En API-nøkkel fra [Anthropic Console](https://console.anthropic.com/)
 
 ### Installasjon

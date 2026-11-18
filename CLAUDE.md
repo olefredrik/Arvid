@@ -17,7 +17,7 @@ Forsikringsdokumenter inneholder personopplysninger. De prosesseres i sesjonen o
 Arvid analyserer og anbefaler. Brukeren bestemmer og handler. Arvid sender aldri noe på vegne av brukeren.
 
 **Pris er privat.**
-I steg 1–3 av flyten eksponeres aldri brukerens nåværende pris. Dette er en funksjon, ikke en begrensning.
+Brukerens nåværende pris vises bare for brukeren selv og brukes bare i sammenligningen i steg 4. Den sendes aldri med tilbudsforespørselen, og modellen som skriver forespørselen får den ikke se (se `stripPriceInformation`). Dette er en funksjon, ikke en begrensning.
 
 **Norsk kontekst er førsteklasses.**
 Alle tekster, analyser og anbefalinger er på norsk. Domenekunnskap om norsk forsikringsbransje skal bakes inn der det er mulig.
@@ -47,18 +47,19 @@ Arvid skal fungere for alle – uavhengig av funksjonsevne, hjelpemiddel eller b
 - Strukturert ekstrahering av nøkkelparametere per forsikringstype
 - Presenteres som oversiktlig tabell, ikke tekstvegg
 - Nøkkelparametere: dekningstype, dekningsnivå, egenandel, viktige inklusjoner/eksklusjoner
-- Pris vises ikke i denne oversikten
-- Brukeren kan korrigere eller supplere
+- Årspremie vises for brukeren selv, men inngår ikke i tilbudsforespørselen
+- Brukeren kan korrigere premie og egenandel
 
 ### Steg 3: Generer tilbudsforespørsel
 - Verktøyet genererer et strukturert dokument formulert som kravspesifikasjon
 - Dokumentet beskriver hva brukeren trenger, ikke hva de betaler
+- Prisinformasjon fjernes før modellen skriver forespørselen
 - Brukeren laster ned og sender til konkurrerende selskaper selv
 - Verktøyet er ute av løkken etter dette steget
 
-### Steg 4: Evaluering av tilbud (versjon 2)
+### Steg 4: Evaluering av tilbud
 - Brukeren laster opp mottatte tilbud
-- Verktøyet ber om nåværende totalpris (kun for sammenligning, lagres ikke)
+- Nåværende pris hentes fra forsikringsbeviset i steg 2 (brukeren kan korrigere den), og lagres ikke
 - Produserer sammenligningstabeller på pris og vilkår
 - Identifiserer konkrete avvik mellom gammelt og nytt tilbud
 - Gir samlet anbefaling med begrunnelse
@@ -106,7 +107,7 @@ Arvid skal fungere for alle – uavhengig av funksjonsevne, hjelpemiddel eller b
 | Hosting | Vercel | Naturlig match med Next.js |
 | AI | Anthropic Claude API | Sterk på norsk, kjent modell |
 | Database | Ingen i MVP | Sesjonsbasert state, ingen persistent lagring |
-| Filparsing | pdf-parse eller pdfjs-dist | Robust tekstekstrahering fra PDF |
+| Filparsing | pdf-parse | Robust tekstekstrahering fra PDF |
 | Styling | Tailwind CSS | Rask utvikling, konsistent design |
 | Språk | TypeScript | Type-sikkerhet viktig for strukturert dataekstrahering |
 
@@ -231,7 +232,7 @@ type Session = {
 
 ## Open-source
 
-Arvid er open-source. Lisens: MIT.
+Arvid er open-source under AGPL v3, med mulighet for separat kommersiell lisens (se README og CLA.md).
 Mål: Tillit gjennom transparens. Brukere skal kunne verifisere at dokumentene deres ikke lagres.
 Hostet versjon på arvid.cloud (eller tilsvarende) er gratis å bruke.
 
