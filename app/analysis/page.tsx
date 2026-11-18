@@ -363,6 +363,15 @@ export default function AnalysisPage() {
     );
   };
 
+  const handleOfferPolicyRemove = (id: string) => {
+    setOfferPolicies((prev) => {
+      const next = prev.filter((p) => p._id !== id);
+      // Uten tilbud igjen finnes det ingenting å sammenligne – tilbake til opplasting
+      if (next.length === 0) setStep("compare-upload");
+      return next;
+    });
+  };
+
   const handleRunComparison = async () => {
     setStep("comparing");
     setCompareError(null);
@@ -464,10 +473,10 @@ export default function AnalysisPage() {
                 {s.done ? (
                   s.error ? (
                     s.errorType === "unrecognized"
-                      ? <span className="text-stone-400 dark:text-stone-500 text-sm" aria-label="Gjennomgått">–</span>
-                      : <span className="text-red-500 dark:text-red-400 text-sm" aria-label="Feil">✕</span>
+                      ? <span className="text-stone-400 dark:text-stone-500 text-sm" role="img" aria-label="Gjennomgått">–</span>
+                      : <span className="text-red-500 dark:text-red-400 text-sm" role="img" aria-label="Feil">✕</span>
                   ) : (
-                    <span className="text-green-500 dark:text-green-400 text-sm" aria-label="Fullført">✓</span>
+                    <span className="text-green-500 dark:text-green-400 text-sm" role="img" aria-label="Fullført">✓</span>
                   )
                 ) : (
                   <span className="inline-block w-4 h-4 border-2 border-amber-700 dark:border-amber-600 border-t-transparent rounded-full animate-spin" role="status" aria-label="Behandler" />
@@ -784,7 +793,7 @@ export default function AnalysisPage() {
             </p>
           )}
 
-          <Overview policies={offerPolicies} onUpdate={handleOfferPolicyUpdate} showTotal={offerCompanyCount <= 1} />
+          <Overview policies={offerPolicies} onUpdate={handleOfferPolicyUpdate} onRemove={handleOfferPolicyRemove} showTotal={offerCompanyCount <= 1} />
 
           <div className="mt-8 flex justify-between items-center">
             <button
@@ -841,10 +850,10 @@ export default function AnalysisPage() {
                 {s.done ? (
                   s.error ? (
                     s.errorType === "unrecognized"
-                      ? <span className="text-stone-400 dark:text-stone-500 text-sm" aria-label="Gjennomgått">–</span>
-                      : <span className="text-red-500 dark:text-red-400 text-sm" aria-label="Feil">✕</span>
+                      ? <span className="text-stone-400 dark:text-stone-500 text-sm" role="img" aria-label="Gjennomgått">–</span>
+                      : <span className="text-red-500 dark:text-red-400 text-sm" role="img" aria-label="Feil">✕</span>
                   ) : (
-                    <span className="text-green-500 dark:text-green-400 text-sm" aria-label="Fullført">✓</span>
+                    <span className="text-green-500 dark:text-green-400 text-sm" role="img" aria-label="Fullført">✓</span>
                   )
                 ) : (
                   <span className="inline-block w-4 h-4 border-2 border-amber-700 dark:border-amber-600 border-t-transparent rounded-full animate-spin" role="status" aria-label="Behandler" />

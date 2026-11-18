@@ -88,16 +88,17 @@ export default function Upload({ onFiles }: Props) {
         <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
           Du kan laste opp flere filer samtidig
         </p>
-        <input
-          ref={inputRef}
-          type="file"
-          accept=".pdf"
-          multiple
-          className="hidden"
-          aria-label="Velg PDF-filer for opplasting"
-          onChange={(e) => addFiles(e.target.files)}
-        />
       </button>
+      {/* Skjult filvelger utenfor knappen – interaktive elementer kan ikke ligge inni en <button> */}
+      <input
+        ref={inputRef}
+        type="file"
+        accept=".pdf"
+        multiple
+        className="hidden"
+        aria-label="Velg PDF-filer for opplasting"
+        onChange={(e) => addFiles(e.target.files)}
+      />
 
       {/* Valideringsfeil */}
       {validationErrors.length > 0 && (
@@ -150,7 +151,7 @@ export default function Upload({ onFiles }: Props) {
               <button
                 onClick={(e) => { e.stopPropagation(); handleRemove(i); }}
                 className="text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 ml-3 shrink-0 transition-colors cursor-pointer"
-                aria-label="Fjern fil"
+                aria-label={`Fjern ${file.name}`}
               >
                 ✕
               </button>

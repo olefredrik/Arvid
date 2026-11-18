@@ -19,6 +19,7 @@ type Props = {
 type EditingCell = { id: string; field: "annualPremium" | "deductible" } | null;
 
 function EditableAmount({
+  label,
   value,
   originalValue,
   isEditing,
@@ -26,6 +27,7 @@ function EditableAmount({
   onStartEdit,
   onCommit,
 }: {
+  label: string; // f.eks. "årspremie for bilforsikring" – leses opp av skjermlesere
   value: number | null;
   originalValue: number | null;
   isEditing: boolean;
@@ -51,7 +53,7 @@ function EditableAmount({
         <input
           type="text"
           inputMode="numeric"
-          aria-label="Rediger beløp"
+          aria-label={`Ny ${label}`}
           className="w-full border border-amber-500 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-amber-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
           value={draft}
           placeholder={value != null ? value.toLocaleString("nb-NO") : ""}
@@ -81,18 +83,19 @@ function EditableAmount({
     );
   }
 
+  const valueText = value != null ? `${value.toLocaleString("nb-NO")} kr` : "ikke oppgitt";
   return (
     <button
       onClick={onStartEdit}
       title="Klikk for å redigere"
-      aria-label="Rediger beløp"
+      aria-label={`Rediger ${label}, ${valueText}${isLowConfidence && value != null ? ", usikker verdi" : ""}`}
       className="flex items-center gap-1.5 text-left group cursor-pointer"
     >
       <span className={isLowConfidence ? "text-amber-700 dark:text-amber-300" : ""}>
         {value != null ? `${value.toLocaleString("nb-NO")} kr` : "–"}
       </span>
       {isLowConfidence && value != null && (
-        <span aria-label="Prisen er usikker – klikk for å korrigere" title="Prisen er usikker – klikk for å korrigere" className="text-amber-500 dark:text-amber-400 cursor-help">⚠</span>
+        <span aria-hidden="true" title="Prisen er usikker – klikk for å korrigere" className="text-amber-500 dark:text-amber-400 cursor-help">⚠</span>
       )}
       <span className="opacity-30 group-hover:opacity-100 text-gray-400 dark:text-gray-500 text-xs ml-1" aria-hidden="true">✎</span>
     </button>
@@ -136,8 +139,10 @@ export default function Oversikt({ policies, onUpdate, onRemove, showTotal = tru
       return value != null ? `${value.toLocaleString("nb-NO")} kr` : "–";
     }
     const originalValue = originalValuesRef.current.get(id)?.[field] ?? null;
+    const fieldLabel = field === "annualPremium" ? "årspremie" : "egenandel";
     return (
       <EditableAmount
+        label={`${fieldLabel} for ${INSURANCE_TYPE_LABELS[policy.type].toLowerCase()}`}
         value={value}
         originalValue={originalValue}
         isEditing={editing?.id === id && editing.field === field}
@@ -175,7 +180,11 @@ export default function Oversikt({ policies, onUpdate, onRemove, showTotal = tru
               <th className="p-3 border border-gray-200 dark:border-gray-700 font-medium text-gray-900 dark:text-gray-100">Egenandel</th>
               <th className="p-3 border border-gray-200 dark:border-gray-700 font-medium text-gray-900 dark:text-gray-100">Maks dekning</th>
               <th className="p-3 border border-gray-200 dark:border-gray-700 font-medium text-gray-900 dark:text-gray-100">Årspremie</th>
-              {onRemove && <th className="p-3 border border-gray-200 dark:border-gray-700 w-8" aria-label="Fjern" />}
+              {onRemove && (
+                <th className="p-3 border border-gray-200 dark:border-gray-700 w-8">
+                  <span className="sr-only">Fjern</span>
+                </th>
+              )}
             </tr>
           </thead>
           <tbody>
