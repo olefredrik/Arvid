@@ -1,6 +1,7 @@
 // Alle Claude-prompts samlet på ett sted for enkel vedlikehold
 
-import type { InsuranceType } from "./types";
+import type { InsurancePolicy, InsuranceType } from "./types";
+import { stripPriceInformation } from "./quote-input";
 import { EXTRACTION_SCHEMAS } from "./schema";
 
 // Prompt for identifisering av forsikringstype(r) fra PDF-tekst
@@ -180,7 +181,8 @@ Svaret skal ha denne strukturen:
 `.trim();
 
 // Prompt for generering av tilbudsforespørsel
-export const buildQuoteRequestPrompt = (policies: object[]): string => `
+// Prisinformasjon fjernes før prompten bygges, slik at modellen aldri ser hva brukeren betaler i dag
+export const buildQuoteRequestPrompt = (policies: InsurancePolicy[]): string => `
 Du er en norsk forsikringsekspert som hjelper en forbruker med å innhente konkurrensetilbud.
 
 Basert på følgende forsikringsdata skal du skrive en kort, praktisk forespørsel som kunden kan sende til forsikringsselskaper.
@@ -201,7 +203,7 @@ Regler:
 - Ikke nevn nåværende forsikringsselskap med navn – forespørselen sendes til konkurrenter
 
 Eksisterende forsikringsdata:
-${JSON.stringify(policies, null, 2)}
+${JSON.stringify(policies.map(stripPriceInformation), null, 2)}
 
 Svaret skal ha denne strukturen:
 {
