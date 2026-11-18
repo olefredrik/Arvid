@@ -8,6 +8,7 @@ import { aiErrorResponse } from "@/lib/ai/errors";
 import type { InsurancePolicy, ComparisonResult, PolicyComparison } from "@/lib/insurance/types";
 import { planComparison } from "@/lib/insurance/compare";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { compareBodySchema, parseJsonBody } from "@/lib/api/validation";
 
 
 // Sammenligner nåværende forsikringer med mottatte tilbud
@@ -21,12 +22,10 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const body = await request.json() as {
-      currentPolicies: InsurancePolicy[];
-      offerPolicies: InsurancePolicy[];
-    };
-
-    const { currentPolicies, offerPolicies } = body;
+    const parsed = await parseJsonBody(request, compareBodySchema, "Sammenligning");
+    if (!parsed.ok) return parsed.response;
+    const currentPolicies = parsed.data.currentPolicies as InsurancePolicy[];
+    const offerPolicies = parsed.data.offerPolicies as InsurancePolicy[];
 
     if (!currentPolicies?.length || !offerPolicies?.length) {
       return NextResponse.json(

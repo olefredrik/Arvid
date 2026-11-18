@@ -180,10 +180,7 @@ Svaret skal ha denne strukturen:
 `.trim();
 
 // Prompt for generering av tilbudsforespørsel
-export const buildQuoteRequestPrompt = (
-  policies: object[],
-  additionalRequirements?: string
-): string => `
+export const buildQuoteRequestPrompt = (policies: object[]): string => `
 Du er en norsk forsikringsekspert som hjelper en forbruker med å innhente konkurrensetilbud.
 
 Basert på følgende forsikringsdata skal du skrive en kort, praktisk forespørsel som kunden kan sende til forsikringsselskaper.
@@ -205,8 +202,6 @@ Regler:
 
 Eksisterende forsikringsdata:
 ${JSON.stringify(policies, null, 2)}
-
-${additionalRequirements ? `Tilleggskrav fra kunden:\n${additionalRequirements}` : ""}
 
 Svaret skal ha denne strukturen:
 {
