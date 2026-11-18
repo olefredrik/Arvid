@@ -64,12 +64,12 @@ export const quoteRequestSchema = z.object({
   ),
 });
 
-// insuranceType begrenses til typene som faktisk sammenlignes, så hvert svar kan kobles til et par
-export const buildComparisonSchema = (matchedTypes: [InsuranceType, ...InsuranceType[]]) =>
+// pairId begrenses til parene som faktisk sammenlignes, så hvert svar kan kobles til riktig par
+export const buildComparisonSchema = (pairIds: [string, ...string[]]) =>
   z.object({
     comparisons: z.array(
       z.object({
-        insuranceType: z.enum(matchedTypes),
+        pairId: z.enum(pairIds),
         assessment: z.string(),
         coverageDifferences: z.array(z.string()),
         verdict: z.enum(["Bytt", "Behold", "Vurder"]),

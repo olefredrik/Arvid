@@ -70,6 +70,7 @@ import { INSURANCE_TYPE_LABELS } from "@/lib/insurance/types";
 import { mergePoliciesByType, type AmbiguousMerge } from "@/lib/insurance/merge";
 import { useAnalytics } from "@/lib/hooks/useAnalytics";
 import { classifyExtractionError, type ExtractionErrorType } from "@/lib/extraction-errors";
+import { normalizeCompany } from "@/lib/insurance/company";
 
 // Parser API-respons trygt. Feilmeldinger fra API-et brukes når de finnes;
 // ellers (f.eks. HTML-body fra Vercel ved tidsavbrudd) vises en generell melding.
@@ -396,6 +397,8 @@ export default function AnalysisPage() {
   const errors = allErrors.filter((s) => !unrecognizedFiles.includes(s.fileName));
   const unrecognizedErrors = allErrors.filter((s) => unrecognizedFiles.includes(s.fileName));
   const allOfferErrors = offerStatuses.filter((s) => s.error);
+  // Tilbud fra flere selskaper kan ikke summeres til én totalpris
+  const offerCompanyCount = new Set(offerPolicies.map((p) => normalizeCompany(p.company))).size;
   const offerErrors = allOfferErrors.filter((s) => !unrecognizedOfferFiles.includes(s.fileName));
   const unrecognizedOfferErrors = allOfferErrors.filter((s) => unrecognizedOfferFiles.includes(s.fileName));
 
@@ -775,7 +778,13 @@ export default function AnalysisPage() {
             </div>
           )}
 
-          <Overview policies={offerPolicies} onUpdate={handleOfferPolicyUpdate} />
+          {offerCompanyCount > 1 && (
+            <p className="mb-4 text-sm text-gray-600 dark:text-gray-300">
+              Du har tilbud fra {offerCompanyCount} selskaper. Arvid sammenligner hvert av dem med det du har i dag.
+            </p>
+          )}
+
+          <Overview policies={offerPolicies} onUpdate={handleOfferPolicyUpdate} showTotal={offerCompanyCount <= 1} />
 
           <div className="mt-8 flex justify-between items-center">
             <button

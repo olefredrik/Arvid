@@ -136,15 +136,18 @@ ${documentText}
 
 // Prompt for sammenligning av nåværende forsikringer med mottatte tilbud
 export const buildComparisonPrompt = (
-  matchedPairs: { current: object; offer: object; premiumDiff: number | null }[],
+  pairs: { id: string; current: object; offer: object; premiumDiff: number | null }[],
   unmatchedCurrent: object[],
   unmatchedOffers: object[]
 ): string => `
 Du er en nøytral norsk forsikringsekspert som sammenligner eksisterende forsikringer med mottatte tilbud.
 
-Hvert par inneholder nåværende polise ("current") og nytt tilbud ("offer"), pluss eventuell prisforskjell per år i kroner ("premiumDiff" – negativt tall betyr at tilbudet er billigere).
+Hvert par har en id ("pairId"), nåværende polise ("current") og nytt tilbud ("offer"), pluss eventuell prisforskjell per år i kroner ("premiumDiff" – negativt tall betyr at tilbudet er billigere).
+
+Brukeren kan ha fått tilbud fra flere selskaper på samme forsikring. Da er hvert tilbud et eget par med samme nåværende polise. Vurder hvert par for seg, og sammenlign selskapene mot hverandre i den samlede anbefalingen.
 
 Instruksjoner:
+- Lag nøyaktig én vurdering per par, med parets pairId
 - Sammenlign hvert par og beskriv konkrete avvik i dekningsnivå, egenandel, inklusjoner og eksklusjoner
 - Vær nøytral – ikke fremhev noen av partene
 - Ta hensyn til pris i den samlede anbefalingen, men presenter ikke prisen på nytt i "assessment"
@@ -154,19 +157,19 @@ Instruksjoner:
 - Ta hensyn til ufullstendige dekninger i den samlede anbefalingen: forsikringstyper brukeren har i dag men som mangler i tilbudet er en ulempe, mens tilbudet inneholder typer brukeren ikke har i dag er en fordel
 
 Forsikringspar:
-${JSON.stringify(matchedPairs, null, 2)}
+${JSON.stringify(pairs.map(({ id, ...rest }) => ({ pairId: id, ...rest })), null, 2)}
 ${unmatchedCurrent.length > 0 ? `
-Forsikringstyper brukeren har i dag, men som IKKE finnes i tilbudet:
+Forsikringstyper brukeren har i dag, men som IKKE finnes i noen av tilbudene:
 ${JSON.stringify(unmatchedCurrent, null, 2)}
 ` : ""}${unmatchedOffers.length > 0 ? `
-Forsikringstyper som KUN finnes i tilbudet (brukeren har ikke dette i dag):
+Forsikringstyper som KUN finnes i tilbudene (brukeren har ikke dette i dag):
 ${JSON.stringify(unmatchedOffers, null, 2)}
 ` : ""}
 Svaret skal ha denne strukturen:
 {
   "comparisons": [
     {
-      "insuranceType": "<type fra dataene, f.eks. house>",
+      "pairId": "<pairId fra dataene, f.eks. p1>",
       "assessment": "<2-3 setninger om hva som skiller tilbudene>",
       "coverageDifferences": ["<konkret avvik 1>", "<konkret avvik 2>"],
       "verdict": "Bytt" | "Behold" | "Vurder"
