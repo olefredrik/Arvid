@@ -12,6 +12,8 @@ type Props = {
   policies: InsurancePolicy[];
   onUpdate?: (id: string, field: "annualPremium" | "deductible", value: number | null) => void;
   onRemove?: (id: string) => void;
+  // Skjul totalsum, f.eks. når tilbud fra flere selskaper vises samtidig og summen ikke gir mening
+  showTotal?: boolean;
 };
 
 type EditingCell = { id: string; field: "annualPremium" | "deductible" } | null;
@@ -97,7 +99,7 @@ function EditableAmount({
   );
 }
 
-export default function Oversikt({ policies, onUpdate, onRemove }: Props) {
+export default function Oversikt({ policies, onUpdate, onRemove, showTotal = true }: Props) {
   const [editing, setEditing] = useState<EditingCell>(null);
   const [pendingRemove, setPendingRemove] = useState<InsurancePolicy | null>(null);
 
@@ -116,7 +118,7 @@ export default function Oversikt({ policies, onUpdate, onRemove }: Props) {
 
   // Bundlede priser telles kun én gang per unik selskap+pris-kombinasjon
   const totalPremium = sumPolicies(policies);
-  const hasPremiumData = policies.some((p) => p.annualPremium != null);
+  const hasPremiumData = showTotal && policies.some((p) => p.annualPremium != null);
 
   const commit = (id: string, field: "annualPremium" | "deductible", value: number | null) => {
     setEditing(null);

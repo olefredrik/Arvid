@@ -142,6 +142,15 @@ describe("mergePoliciesByType", () => {
     expect(ambiguous).toHaveLength(0);
   });
 
+  it("regner ulike skrivemåter av samme selskap som samme selskap", () => {
+    const policies = [
+      makePolicy({ type: "car", company: "Frende", policyNumber: "123" }),
+      makePolicy({ type: "car", company: "Frende Skadeforsikring AS", policyNumber: "123" }),
+    ];
+    const { policies: result } = mergePoliciesByType(policies);
+    expect(result).toHaveLength(1);
+  });
+
   it("håndterer tom liste", () => {
     const { policies: result } = mergePoliciesByType([]);
     expect(result).toEqual([]);

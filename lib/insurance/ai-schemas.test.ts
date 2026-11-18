@@ -52,20 +52,20 @@ describe("øvrige skjemaer", () => {
     expect(typeIdentificationSchema.safeParse({ ...valid, documentKind: "brosjyre" }).success).toBe(false);
   });
 
-  it("sammenligning godtar bare typene som sammenlignes", () => {
-    const schema = buildComparisonSchema(["car", "house"]);
-    const result = (insuranceType: string) =>
+  it("sammenligning godtar bare parene som sammenlignes", () => {
+    const schema = buildComparisonSchema(["p1", "p2"]);
+    const result = (pairId: string) =>
       schema.safeParse({
-        comparisons: [{ insuranceType, assessment: "", coverageDifferences: [], verdict: "Behold" }],
+        comparisons: [{ pairId, assessment: "", coverageDifferences: [], verdict: "Behold" }],
         recommendation: "",
       }).success;
-    expect(result("car")).toBe(true);
-    expect(result("travel")).toBe(false);
+    expect(result("p2")).toBe(true);
+    expect(result("p3")).toBe(false);
   });
 
   it("alle skjemaer kan gjøres om til output-format", () => {
     expect(() => zodOutputFormat(typeIdentificationSchema)).not.toThrow();
     expect(() => zodOutputFormat(quoteRequestSchema)).not.toThrow();
-    expect(() => zodOutputFormat(buildComparisonSchema(["car"]))).not.toThrow();
+    expect(() => zodOutputFormat(buildComparisonSchema(["p1"]))).not.toThrow();
   });
 });

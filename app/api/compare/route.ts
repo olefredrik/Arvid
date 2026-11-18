@@ -6,8 +6,7 @@ import { buildComparisonSchema } from "@/lib/insurance/ai-schemas";
 import { generateStructured } from "@/lib/ai/client";
 import { aiErrorResponse } from "@/lib/ai/errors";
 import type { InsurancePolicy, ComparisonResult, PolicyComparison } from "@/lib/insurance/types";
-import { mergePolicies } from "@/lib/insurance/merge";
-import { sumPolicies } from "@/lib/utils";
+import { planComparison } from "@/lib/insurance/compare";
 import { checkRateLimit } from "@/lib/rate-limit";
 
 
@@ -36,87 +35,38 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Grupper tilbudsdokumenter per forsikringstype og slå dem sammen
-    const offersByType = new Map<string, InsurancePolicy[]>();
-    for (const offer of offerPolicies) {
-      const group = offersByType.get(offer.type) ?? [];
-      group.push(offer);
-      offersByType.set(offer.type, group);
-    }
-    const mergedOffers = new Map<string, { policy: InsurancePolicy; documentCount: number }>();
-    for (const [type, group] of offersByType) {
-      mergedOffers.set(type, { policy: mergePolicies(group), documentCount: group.length });
-    }
+    // Koble tilbud mot nåværende forsikringer – ett par per tilbudsselskap og forsikring
+    const { pairs, unmatchedCurrent, unmatchedOffers, priceSummaries } = planComparison(currentPolicies, offerPolicies);
 
-    // Match sammenslåtte tilbud mot nåværende poliser
-    type MatchedPair = {
-      current: InsurancePolicy;
-      offer: InsurancePolicy;
-      offerDocumentCount: number;
-      premiumDiff: number | null;
-    };
-    const matchedPairs: MatchedPair[] = [];
-    const unmatchedCurrent: InsurancePolicy[] = [];
-    const matchedTypes = new Set<string>();
-
-    for (const current of currentPolicies) {
-      const merged = mergedOffers.get(current.type);
-      if (merged) {
-        const premiumDiff =
-          current.annualPremium != null && merged.policy.annualPremium != null
-            ? merged.policy.annualPremium - current.annualPremium
-            : null;
-        matchedPairs.push({
-          current,
-          offer: merged.policy,
-          offerDocumentCount: merged.documentCount,
-          premiumDiff,
-        });
-        matchedTypes.add(current.type);
-      } else {
-        unmatchedCurrent.push(current);
-      }
-    }
-
-    if (matchedPairs.length === 0) {
+    if (pairs.length === 0) {
       return NextResponse.json(
         { error: "Ingen av typene i tilbudet samsvarte med forsikringene dine. Sjekk at du har lastet opp riktig dokument." },
         { status: 400 }
       );
     }
 
-    // Tilbud som ikke matchet noen nåværende polise
-    const unmatchedOffers: InsurancePolicy[] = [];
-    for (const [type, merged] of mergedOffers) {
-      if (!matchedTypes.has(type)) {
-        unmatchedOffers.push(merged.policy);
-      }
-    }
-
-    const currentTotal = sumPolicies(currentPolicies);
-    const offerTotal = sumPolicies(matchedPairs.map((p) => p.offer));
-
     // AI-analyse av kvalitative forskjeller
-    const pairTypes = matchedPairs.map((p) => p.current.type) as [InsurancePolicy["type"], ...InsurancePolicy["type"][]];
+    const pairIds = pairs.map((p) => p.id) as [string, ...string[]];
     const aiResult = await generateStructured({
       task: "comparison",
-      prompt: buildComparisonPrompt(matchedPairs, unmatchedCurrent, unmatchedOffers),
-      schema: buildComparisonSchema(pairTypes),
+      prompt: buildComparisonPrompt(pairs, unmatchedCurrent, unmatchedOffers),
+      schema: buildComparisonSchema(pairIds),
     });
 
-    // Bygg fullstendig sammenligningsresultat – hopp over svar som ikke kan kobles til et par
-    const comparisons: PolicyComparison[] = aiResult.comparisons.flatMap((c) => {
-      const pair = matchedPairs.find((p) => p.current.type === c.insuranceType);
-      if (!pair) return [];
+    // Bygg fullstendig sammenligningsresultat i samme rekkefølge som parene
+    const comparisons: PolicyComparison[] = pairs.flatMap((pair) => {
+      const ai = aiResult.comparisons.find((c) => c.pairId === pair.id);
+      if (!ai) return [];
       return [{
-        type: c.insuranceType,
+        id: pair.id,
+        type: pair.current.type,
         current: pair.current,
         offer: pair.offer,
         offerDocumentCount: pair.offerDocumentCount,
         premiumDiff: pair.premiumDiff,
-        assessment: c.assessment,
-        coverageDifferences: c.coverageDifferences,
-        verdict: c.verdict,
+        assessment: ai.assessment,
+        coverageDifferences: ai.coverageDifferences,
+        verdict: ai.verdict,
       }];
     });
 
@@ -124,8 +74,7 @@ export async function POST(request: NextRequest) {
       comparisons,
       unmatchedCurrent,
       unmatchedOffers,
-      currentTotal: currentTotal > 0 ? currentTotal : null,
-      offerTotal: offerTotal > 0 ? offerTotal : null,
+      priceSummaries,
       recommendation: aiResult.recommendation,
       generatedAt: new Date().toISOString(),
     };

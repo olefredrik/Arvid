@@ -66,6 +66,7 @@ export type Session = {
 
 // Sammenligning mellom én nåværende polise og ett mottatt tilbud
 export type PolicyComparison = {
+  id: string;                   // par-id, unik per sammenligning
   type: InsuranceType;
   current: InsurancePolicy;
   offer: InsurancePolicy;
@@ -76,13 +77,23 @@ export type PolicyComparison = {
   verdict: "Bytt" | "Behold" | "Vurder";
 };
 
+// Prissammendrag for ett tilbudsselskap. Summene omfatter bare forsikringer som finnes på begge sider.
+export type PriceSummary = {
+  company: string;
+  includedTypes: InsuranceType[];   // med i summene
+  excludedTypes: InsuranceType[];   // nåværende forsikringer som ikke er med (mangler i tilbudet eller mangler pris)
+  currentTotal: number | null;
+  offerTotal: number | null;
+  hasBundledPremium: boolean;       // minst én pris er en pakkepris som dekker mer enn det som sammenlignes
+  hasTrafficFeeMismatch: boolean;   // minst ett par der bare den ene prisen inkluderer trafikkforsikringsavgift
+};
+
 // Samlet sammenligningsresultat
 export type ComparisonResult = {
   comparisons: PolicyComparison[];
-  unmatchedCurrent: InsurancePolicy[];  // typer i nåværende, ikke i tilbud
-  unmatchedOffers: InsurancePolicy[];   // typer i tilbud, ikke i nåværende
-  currentTotal: number | null;
-  offerTotal: number | null;
+  unmatchedCurrent: InsurancePolicy[];  // nåværende forsikringer som ingen tilbud dekker
+  unmatchedOffers: InsurancePolicy[];   // tilbud på typer brukeren ikke har i dag
+  priceSummaries: PriceSummary[];       // ett per tilbudsselskap
   recommendation: string;
   generatedAt: string;
 };

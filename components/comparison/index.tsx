@@ -2,7 +2,7 @@
 
 // Sammenligning av nåværende forsikringer med mottatte tilbud
 import { useState } from "react";
-import type { ComparisonResult } from "@/lib/insurance/types";
+import type { ComparisonResult, InsuranceType, PriceSummary } from "@/lib/insurance/types";
 import { INSURANCE_TYPE_LABELS } from "@/lib/insurance/types";
 
 type Props = {
@@ -25,9 +25,52 @@ function VerdictBadge({ verdict }: { verdict: "Bytt" | "Behold" | "Vurder" }) {
   );
 }
 
+const typeLabels = (types: InsuranceType[]) => types.map((t) => INSURANCE_TYPE_LABELS[t]).join(", ");
+
+// Prissammendrag for ett tilbudsselskap – summene omfatter bare forsikringer som finnes på begge sider
+function PriceSummaryCard({ summary }: { summary: PriceSummary }) {
+  if (summary.currentTotal == null || summary.offerTotal == null) return null;
+  const diff = summary.offerTotal - summary.currentTotal;
+  const saves = diff < 0;
+
+  return (
+    <div className={`p-5 rounded-lg border ${saves ? "bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800" : "bg-amber-50 dark:bg-amber-950 border-amber-200 dark:border-amber-800"}`}>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <p className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Prissammenligning per år: {summary.company}</p>
+          <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm text-gray-600 dark:text-gray-300">
+            <span>Nåværende: <strong>{summary.currentTotal.toLocaleString("nb-NO")} kr</strong></span>
+            <span>Tilbud: <strong>{summary.offerTotal.toLocaleString("nb-NO")} kr</strong></span>
+          </div>
+          <p className="mt-2 text-xs text-gray-600 dark:text-gray-300">
+            Gjelder {typeLabels(summary.includedTypes).toLowerCase()}.
+            {summary.excludedTypes.length > 0 && ` Ikke med i summen: ${typeLabels(summary.excludedTypes).toLowerCase()}.`}
+          </p>
+          {summary.hasTrafficFeeMismatch && (
+            <p className="mt-1 text-xs text-gray-600 dark:text-gray-300">
+              Bare den ene siden inkluderer trafikkforsikringsavgift til staten, så forskjellen er ikke helt sammenlignbar.
+            </p>
+          )}
+          {summary.hasBundledPremium && (
+            <p className="mt-1 text-xs text-gray-600 dark:text-gray-300">
+              Minst én av prisene er en pakkepris som dekker flere forsikringer, så forskjellen kan være misvisende.
+            </p>
+          )}
+        </div>
+        <div className="text-right shrink-0">
+          <p className={`text-2xl font-bold ${saves ? "text-green-700 dark:text-green-300" : "text-amber-700 dark:text-amber-300"}`}>
+            {diff === 0 ? "0 kr" : `${saves ? "−" : "+"}${Math.abs(diff).toLocaleString("nb-NO")} kr`}
+          </p>
+          <p className="text-xs text-gray-500 dark:text-gray-400">
+            {diff === 0 ? "samme pris" : saves ? "besparelse per år" : "dyrere per år"}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Comparison({ comparison, onBack, onRestart }: Props) {
-  const hasPriceDiff = comparison.currentTotal != null && comparison.offerTotal != null;
-  const totalDiff = hasPriceDiff ? comparison.offerTotal! - comparison.currentTotal! : null;
   const DIFF_LIMIT = 5;
   const [expanded, setExpanded] = useState<Set<number>>(new Set());
   const [expandedDiffs, setExpandedDiffs] = useState<Set<number>>(new Set());
@@ -53,29 +96,13 @@ export default function Comparison({ comparison, onBack, onRestart }: Props) {
   return (
     <div className="space-y-8">
 
-      {/* Prissammendrag */}
-      {hasPriceDiff && (
-        <div className={`p-5 rounded-lg border ${totalDiff! < 0 ? "bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800" : "bg-amber-50 dark:bg-amber-950 border-amber-200 dark:border-amber-800"}`}>
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <p className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Prissammenligning per år</p>
-              <div className="flex gap-6 text-sm text-gray-600 dark:text-gray-300">
-                <span>Nåværende: <strong>{comparison.currentTotal!.toLocaleString("nb-NO")} kr</strong></span>
-                <span>Tilbud: <strong>{comparison.offerTotal!.toLocaleString("nb-NO")} kr</strong></span>
-              </div>
-            </div>
-            <div className="text-right shrink-0">
-              <p className={`text-2xl font-bold ${totalDiff! < 0 ? "text-green-700 dark:text-green-300" : "text-amber-700 dark:text-amber-300"}`}>
-                {totalDiff! < 0 ? "−" : "+"}{Math.abs(totalDiff!).toLocaleString("nb-NO")} kr
-              </p>
-              <p className="text-xs text-gray-500 dark:text-gray-400">{totalDiff! < 0 ? "besparelse" : "dyrere"} per år</p>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Prissammendrag per tilbudsselskap */}
+      {comparison.priceSummaries.map((summary) => (
+        <PriceSummaryCard key={summary.company} summary={summary} />
+      ))}
 
-      {/* AI-anbefaling */}
-      <div className={`p-4 rounded-lg border text-sm ${hasPriceDiff && totalDiff! < 0 ? "bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800 text-green-800 dark:text-green-200" : "bg-amber-50 dark:bg-amber-950 border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-200"}`}>
+      {/* AI-anbefaling – nøytral farge, siden vurderingen ikke bare handler om pris */}
+      <div className="p-4 rounded-lg border text-sm bg-stone-50 dark:bg-stone-900 border-stone-200 dark:border-stone-700 text-stone-800 dark:text-stone-200">
         <p className="font-medium mb-1">Arvids vurdering</p>
         <p className="leading-relaxed">{comparison.recommendation}</p>
       </div>
@@ -83,12 +110,13 @@ export default function Comparison({ comparison, onBack, onRestart }: Props) {
       {/* Per-type sammenligning */}
       <div className="space-y-4">
         {comparison.comparisons.map((c, i) => (
-          <div key={i} className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+          <div key={c.id} className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
             <div className="flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
               <div>
                 <p className="font-medium text-gray-900 dark:text-gray-50 text-sm">
                   {INSURANCE_TYPE_LABELS[c.type] ?? c.type}
                 </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Tilbud fra {c.offer.company}</p>
                 {c.offerDocumentCount > 1 && (
                   <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">basert på {c.offerDocumentCount} dokumenter</p>
                 )}
@@ -195,15 +223,15 @@ export default function Comparison({ comparison, onBack, onRestart }: Props) {
       {/* Forsikringstyper uten match */}
       {comparison.unmatchedCurrent.length > 0 && (
         <div className="p-4 bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 rounded-lg text-sm text-amber-800 dark:text-amber-200">
-          <p className="font-medium mb-1">Ikke dekket i tilbudet</p>
-          <p>Tilbudet inneholder ikke disse forsikringstypene du har i dag: {comparison.unmatchedCurrent.map(p => INSURANCE_TYPE_LABELS[p.type]).join(", ")}.</p>
+          <p className="font-medium mb-1">Ikke dekket av tilbudene</p>
+          <p>Ingen av tilbudene dekker disse forsikringene du har i dag: {typeLabels(comparison.unmatchedCurrent.map((p) => p.type))}.</p>
         </div>
       )}
 
       {comparison.unmatchedOffers.length > 0 && (
         <div className="p-4 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-600 dark:text-gray-300">
-          <p className="font-medium mb-1">Ekstra i tilbudet</p>
-          <p>Tilbudet inneholder forsikringstyper du ikke har i dag: {comparison.unmatchedOffers.map(p => INSURANCE_TYPE_LABELS[p.type]).join(", ")}.</p>
+          <p className="font-medium mb-1">Ekstra i tilbudene</p>
+          <p>Tilbudene inneholder forsikringstyper du ikke har i dag: {typeLabels(comparison.unmatchedOffers.map((p) => p.type))}.</p>
         </div>
       )}
 

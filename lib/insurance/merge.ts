@@ -2,6 +2,7 @@
 // Nøkkel: type + selskap + polisenummer. To biler fra samme selskap med ulike
 // polisenumre forblir separate rader. Faller tilbake til type + selskap hvis
 // polisenummer mangler, og til type alene hvis selskap også mangler.
+import { normalizeCompany } from "./company";
 import type { InsurancePolicy } from "./types";
 
 // Tvetydig sammenslåing: 2+ poliser med samme type+selskap men uten polisenummer.
@@ -18,7 +19,7 @@ export type MergeResult = {
 
 function mergeKey(policy: InsurancePolicy): string {
   const parts: string[] = [policy.type];
-  if (policy.company) parts.push(policy.company);
+  if (policy.company) parts.push(normalizeCompany(policy.company));
   if (policy.policyNumber) parts.push(policy.policyNumber);
   return parts.join("|");
 }
