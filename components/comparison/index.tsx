@@ -108,6 +108,9 @@ export default function Comparison({ comparison, onBack, onRestart }: Props) {
                 <p className="text-sm font-medium text-gray-700 dark:text-gray-200 mt-1">
                   {c.current.annualPremium != null ? `${c.current.annualPremium.toLocaleString("nb-NO")} kr/år` : "–"}
                 </p>
+                {c.current.premiumIncludesTrafficFee && (
+                  <p className="text-xs text-gray-600 dark:text-gray-300">inkl. trafikkforsikringsavgift</p>
+                )}
               </div>
               <div className="px-4 py-3 border-t sm:border-t-0 border-gray-100 dark:border-gray-700">
                 <p className="text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-2">Tilbud</p>
@@ -126,8 +129,18 @@ export default function Comparison({ comparison, onBack, onRestart }: Props) {
                     )}
                   </p>
                 )}
+                {c.offer.premiumIncludesTrafficFee && (
+                  <p className="text-xs text-gray-600 dark:text-gray-300">inkl. trafikkforsikringsavgift</p>
+                )}
               </div>
             </div>
+
+            {/* Prisene kan ikke sammenlignes direkte når bare den ene inkluderer trafikkforsikringsavgift */}
+            {(c.current.premiumIncludesTrafficFee ?? false) !== (c.offer.premiumIncludesTrafficFee ?? false) && (
+              <p className="px-4 py-2 border-t border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950 text-xs text-amber-800 dark:text-amber-200">
+                Merk: Bare {c.current.premiumIncludesTrafficFee ? "nåværende pris" : "tilbudet"} inkluderer trafikkforsikringsavgift til staten, så prisforskjellen er ikke helt sammenlignbar.
+              </p>
+            )}
 
             {/* Vurdering og avvik – kan ekspanderes */}
             {(c.assessment || c.coverageDifferences.length > 0) && (

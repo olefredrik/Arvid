@@ -1,14 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export const maxDuration = 60; // sekunder – Claude-kall kan ta 20–30 sek for store dokumenter
-import Anthropic from "@anthropic-ai/sdk";
 import { buildComparisonPrompt } from "@/lib/insurance/prompts";
+import { buildComparisonSchema } from "@/lib/insurance/ai-schemas";
+import { generateStructured } from "@/lib/ai/client";
+import { aiErrorResponse } from "@/lib/ai/errors";
 import type { InsurancePolicy, ComparisonResult, PolicyComparison } from "@/lib/insurance/types";
 import { mergePolicies } from "@/lib/insurance/merge";
-import { extractJson, sumPolicies } from "@/lib/utils";
+import { sumPolicies } from "@/lib/utils";
 import { checkRateLimit } from "@/lib/rate-limit";
 
-const client = new Anthropic();
 
 // Sammenligner nåværende forsikringer med mottatte tilbud
 export async function POST(request: NextRequest) {
@@ -96,56 +97,27 @@ export async function POST(request: NextRequest) {
     const offerTotal = sumPolicies(matchedPairs.map((p) => p.offer));
 
     // AI-analyse av kvalitative forskjeller
-    const response = await client.messages.create({
-      model: "claude-sonnet-4-6",
-      max_tokens: 4096,
-      messages: [
-        {
-          role: "user",
-          content: buildComparisonPrompt(matchedPairs, unmatchedCurrent, unmatchedOffers),
-        },
-      ],
+    const pairTypes = matchedPairs.map((p) => p.current.type) as [InsurancePolicy["type"], ...InsurancePolicy["type"][]];
+    const aiResult = await generateStructured({
+      task: "comparison",
+      prompt: buildComparisonPrompt(matchedPairs, unmatchedCurrent, unmatchedOffers),
+      schema: buildComparisonSchema(pairTypes),
     });
 
-    if (response.stop_reason === "max_tokens") {
-      return NextResponse.json(
-        { error: "Arvid fikk litt for mye å jobbe med på en gang. Prøv med færre forsikringer, eller ta kontakt." },
-        { status: 422 }
-      );
-    }
-
-    const text = response.content.find((b) => b.type === "text")?.text ?? "";
-    let aiResult: {
-      comparisons: {
-        insuranceType: string;
-        assessment: string;
-        coverageDifferences: string[];
-        verdict: "Bytt" | "Behold" | "Vurder";
-      }[];
-      recommendation: string;
-    };
-    try {
-      aiResult = JSON.parse(extractJson(text)) as typeof aiResult;
-    } catch {
-      return NextResponse.json(
-        { error: "Noe gikk galt under sammenligningen. Prøv igjen." },
-        { status: 502 }
-      );
-    }
-
-    // Bygg fullstendig sammenligningsresultat
-    const comparisons: PolicyComparison[] = aiResult.comparisons.map((c) => {
+    // Bygg fullstendig sammenligningsresultat – hopp over svar som ikke kan kobles til et par
+    const comparisons: PolicyComparison[] = aiResult.comparisons.flatMap((c) => {
       const pair = matchedPairs.find((p) => p.current.type === c.insuranceType);
-      return {
-        type: c.insuranceType as InsurancePolicy["type"],
-        current: pair!.current,
-        offer: pair!.offer,
-        offerDocumentCount: pair?.offerDocumentCount ?? 1,
-        premiumDiff: pair?.premiumDiff ?? null,
+      if (!pair) return [];
+      return [{
+        type: c.insuranceType,
+        current: pair.current,
+        offer: pair.offer,
+        offerDocumentCount: pair.offerDocumentCount,
+        premiumDiff: pair.premiumDiff,
         assessment: c.assessment,
         coverageDifferences: c.coverageDifferences,
         verdict: c.verdict,
-      };
+      }];
     });
 
     const result: ComparisonResult = {
@@ -160,36 +132,13 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ comparison: result });
   } catch (error) {
-    if (error instanceof Anthropic.APIError) {
-      console.error("Claude API-feil:", error.status, error.message);
-      if (error.status === 429) {
-        return NextResponse.json(
-          { error: "Arvid håndterer en litt for stor bunke akkurat nå. Vent et øyeblikk og prøv igjen." },
-          { status: 503 }
-        );
-      }
-      if (error.status === 529) {
-        return NextResponse.json(
-          { error: "Arvid er midlertidig utilgjengelig. Prøv igjen om litt." },
-          { status: 503 }
-        );
-      }
-      if (error.status === 402) {
-        return NextResponse.json(
-          { error: "Arvid er midlertidig utilgjengelig. Prøv igjen senere." },
-          { status: 503 }
-        );
-      }
-      return NextResponse.json(
-        { error: "Noe gikk galt under sammenligningen. Prøv igjen." },
-        { status: 502 }
-      );
-    }
-
-    console.error("Sammenligningsfeil:", error);
-    return NextResponse.json(
-      { error: "Noe gikk galt under sammenligningen. Prøv igjen." },
-      { status: 500 }
+    return aiErrorResponse(
+      error,
+      {
+        maxTokens: "Arvid fikk litt for mye å jobbe med på en gang. Prøv med færre forsikringer, eller ta kontakt.",
+        generic: "Noe gikk galt under sammenligningen. Prøv igjen.",
+      },
+      "Sammenligningsfeil"
     );
   }
 }

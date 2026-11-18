@@ -33,13 +33,22 @@ Mulige typer:
 
 Viktige avklaringer:
 - Ta kun med forsikringstyper som er eksplisitt nevnt i dokumentet. Hvis du er usikker på om en type er tilstede, utelat den – ikke inkluder den med lav konfidens.
-- "Hjem"-forsikring dekker typisk både hus og innbo – identifiser begge hvis det fremgår av dokumentet.
+- "Hjem"-forsikring dekker typisk både hus og innbo – identifiser begge bare hvis begge dekningene fremgår av dokumentet.
+- En innboforsikring inneholder ofte opplysninger om bygningen innboet står i (bygningstype, byggeår, areal). Det betyr ikke at bygningen er forsikret. Ta bare med house eller cabin hvis dokumentet viser en egen bygningsforsikring, med egen dekning eller egen pris.
 - "Bilforsikring" og "ansvarsforsikring" er begge car, ikke separate typer.
 - Forsikringsvilkår (generelle vilkår) alene er ikke nok – det må fremgå at det er en aktiv polise for denne kunden.
+
+Dokumenttype (documentKind):
+- "certificate": forsikringsbevis, avtaledokument eller forsikringsoversikt for en bestemt kunde. Inneholder kundespesifikke opplysninger som forsikringstaker, polisenummer, premie eller forsikret objekt.
+- "general_terms": generelle vilkår som gjelder alle kunder, ofte med tittel som "Vilkår for ...". Mangler kundespesifikke opplysninger som polisenummer og premie, selv om teksten henvender seg til "deg" og "forsikringen din".
+- "offer": pristilbud på forsikring til en bestemt kunde.
+- "other": alt annet, f.eks. faktura eller betalingsoversikt.
+- Hvis dokumentet inneholder både forsikringsbevis og vilkår, er det "certificate".
 - Bruk confidence "low" kun for typer du er sikker på er tilstede, men der dokumentet mangler kundespesifikke opplysninger (som premie og egenandel).
 
-Returner KUN et rent JSON-objekt – ingen forklaring, ingen markdown, ingen kodeblokker:
+Svaret skal ha denne strukturen:
 {
+  "documentKind": "certificate" | "general_terms" | "offer" | "other",
   "types": ["<forsikringstype1>", "<forsikringstype2>"],
   "confidence": "high" | "medium" | "low",
   "reason": "<kort forklaring på norsk>"
@@ -61,6 +70,10 @@ export const buildExtractionPrompt = (
     .map((f) => `- ${f.key} (${f.label}): ${f.description}`)
     .join("\n");
 
+  const buildingNote = insuranceType === "house" || insuranceType === "cabin"
+    ? `\nMaksimumsdekning for ${insuranceType === "house" ? "hus" : "hytte"}: sett maxCoverage til forsikringssummen for bygningen (samme beløp som buildingValue). Hvis bygningen er forsikret til fullverdi uten oppgitt sum, bruk null.\n`
+    : "";
+
   const multiTypeNote = otherTypesInDocument.length > 0
     ? `\nMerk: Dette dokumentet inneholder også følgende forsikringstyper: ${otherTypesInDocument.join(", ")}. Ekstraher KUN informasjon om ${insuranceType}. Hvis dokumentet viser én samlet premie for alle typene: sett annualPremium til den samlede prisen og sett isBundledPremium til true. Ikke forsøk å fordele prisen mellom typene.\n`
     : "";
@@ -69,7 +82,7 @@ export const buildExtractionPrompt = (
 Du er en norsk forsikringsekspert. Ekstraher strukturert informasjon fra følgende forsikringsdokument.
 
 Forsikringstype: ${insuranceType}
-${multiTypeNote}
+${multiTypeNote}${buildingNote}
 Om dokumenttyper:
 - Forsikringsbevis (også kalt "bevis om forsikring" eller "avtaledokument") inneholder de spesifikke verdiene for denne kunden: premie, egenandel, polisenummer og dekningsnivå. Prioriter alltid verdier herfra.
 - Forsikringsvilkår er generelle vilkår som gjelder alle kunder – bruk disse kun for inklusjoner og eksklusjoner, ikke for kundespesifikke verdier.
@@ -101,9 +114,12 @@ Premie (annualPremium):
 - "Bruttopremie" og "nettopremie" kan forekomme – bruk bruttopremie (det kunden faktisk betaler)
 - "Forfallsbeløp" på faktura er typisk terminpremie, ikke årspremie
 - Gjensidige bruker "Pris etter rabatter" for det kunden faktisk betaler – bruk denne verdien som annualPremium
+- Kjøretøy: Mange dokumenter viser både pris uten og pris inkludert trafikkforsikringsavgift til staten. Bruk prisen inkludert avgiften, og sett premiumIncludesTrafficFee til true. Sett den til false hvis prisen ikke inkluderer avgiften eller det ikke fremgår
+
+Egenandel (deductible):
+- Hvis egenandelen er en prosentsats med et minstebeløp (f.eks. "25 % av skaden, minimum 1000 kroner"), bruk minstebeløpet og forklar regelen i notes
 
 Instruksjoner:
-- Returner KUN et rent JSON-objekt – ingen forklaring, ingen markdown, ingen kodeblokker
 - Bruk nøyaktig de feltene som er listet opp
 - Bruk null for felter du ikke finner informasjon om
 - Inkluder et "extractionConfidence"-felt: "high" hvis du er sikker, "medium" hvis noe er uklart, "low" hvis dokumentet mangler viktig informasjon
@@ -134,6 +150,7 @@ Instruksjoner:
 - Ta hensyn til pris i den samlede anbefalingen, men presenter ikke prisen på nytt i "assessment"
 - verdict: "Bytt" hvis tilbudet er klart bedre totalt sett, "Behold" hvis nåværende er bedre eller likeverdig, "Vurder" hvis situasjonen er tvetydig
 - Ikke oppfinn avvik som ikke fremgår av dataene – si heller "ingen vesentlige avvik funnet" hvis så er tilfelle
+- For kjøretøy: hvis premiumIncludesTrafficFee er ulik for nåværende og tilbud, si tydelig i assessment at prisene ikke er direkte sammenlignbare fordi bare den ene inkluderer trafikkforsikringsavgift til staten
 - Ta hensyn til ufullstendige dekninger i den samlede anbefalingen: forsikringstyper brukeren har i dag men som mangler i tilbudet er en ulempe, mens tilbudet inneholder typer brukeren ikke har i dag er en fordel
 
 Forsikringspar:
@@ -145,7 +162,7 @@ ${JSON.stringify(unmatchedCurrent, null, 2)}
 Forsikringstyper som KUN finnes i tilbudet (brukeren har ikke dette i dag):
 ${JSON.stringify(unmatchedOffers, null, 2)}
 ` : ""}
-Returner KUN et rent JSON-objekt – ingen forklaring, ingen markdown, ingen kodeblokker:
+Svaret skal ha denne strukturen:
 {
   "comparisons": [
     {
@@ -188,10 +205,9 @@ ${JSON.stringify(policies, null, 2)}
 
 ${additionalRequirements ? `Tilleggskrav fra kunden:\n${additionalRequirements}` : ""}
 
-Returner KUN et rent JSON-objekt – ingen forklaring, ingen markdown, ingen kodeblokker:
+Svaret skal ha denne strukturen:
 {
   "title": "Forespørsel om forsikringstilbud",
-  "generatedAt": "<ISO-dato>",
   "sections": [
     {
       "heading": "<overskrift>",

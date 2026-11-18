@@ -1,14 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export const maxDuration = 60; // sekunder – Claude-kall kan ta 20–30 sek for store dokumenter
-import Anthropic from "@anthropic-ai/sdk";
-import { extractTextFromPdf, normalizeText, prioritizeSections, TYPE_ID_TEXT_LENGTH } from "@/lib/pdf/parser";
-import { buildTypeIdentificationPrompt, buildExtractionPrompt } from "@/lib/insurance/prompts";
-import type { InsuranceType, InsurancePolicy } from "@/lib/insurance/types";
-import { extractJson } from "@/lib/utils";
+import { extractTextFromPdf } from "@/lib/pdf/parser";
+import { extractPolicies } from "@/lib/insurance/extract";
+import { aiErrorResponse } from "@/lib/ai/errors";
 import { checkRateLimit } from "@/lib/rate-limit";
-
-const client = new Anthropic();
 
 // Ekstraherer strukturert forsikringsdata fra en PDF-fil
 // Ett dokument kan inneholde flere forsikringstyper (f.eks. hus + innbo)
@@ -52,156 +48,38 @@ export async function POST(request: NextRequest) {
       );
     }
     const rawText = await extractTextFromPdf(buffer);
-    const documentText = prioritizeSections(rawText);              // ekstraksjon: høyverdi-seksjoner først
-    const shortText = normalizeText(rawText, TYPE_ID_TEXT_LENGTH); // typeidentifikasjon: første N tegn
+    const outcome = await extractPolicies(rawText);
 
-    if (!documentText) {
+    if (outcome.status === "no_text") {
       return NextResponse.json(
-        { error: "Kunne ikke lese tekst fra dokumentet. Er det en skannet PDF?" },
+        { error: "Kunne ikke lese tekst fra dokumentet. Er det en skannet PDF?", code: "no_text" },
         { status: 422 }
       );
     }
 
-    // Steg 1: Identifiser alle forsikringstyper i dokumentet
-    const typeResponse = await client.messages.create({
-      model: "claude-haiku-4-5",
-      max_tokens: 512,
-      messages: [{ role: "user", content: buildTypeIdentificationPrompt(shortText) }],
-    });
-
-    if (typeResponse.stop_reason === "max_tokens") {
+    if (outcome.status === "general_terms") {
       return NextResponse.json(
-        { error: "Dokumentet er for langt for Arvid å lese i sin helhet. Prøv å laste opp bare forsikringsbeviset, ikke hele vilkårsheftet." },
+        { error: "Dette ser ut som generelle vilkår, som ikke sier noe om din avtale. Last opp forsikringsbeviset i stedet.", code: "general_terms" },
         { status: 422 }
       );
     }
 
-    const typeText =
-      typeResponse.content.find((b) => b.type === "text")?.text ?? "";
-
-    let typeResult: { types: InsuranceType[]; confidence: InsurancePolicy["extractionConfidence"]; reason: string };
-    try {
-      typeResult = JSON.parse(extractJson(typeText)) as typeof typeResult;
-    } catch {
+    if (outcome.status === "no_types") {
       return NextResponse.json(
-        { error: "Arvid fant ingen gjenkjennelige forsikringstyper i dokumentet. Er det et forsikringsbevis eller en forsikringsavtale?" },
+        { error: "Arvid fant ingen opplysninger om din forsikringsavtale i dokumentet. Er det generelle vilkår? Last opp forsikringsbeviset i stedet.", code: "no_types" },
         { status: 422 }
       );
     }
 
-    const detectedTypes = typeResult.types?.length ? typeResult.types : [];
-
-    if (detectedTypes.length === 0) {
-      return NextResponse.json(
-        { error: "Arvid fant ingen gjenkjennelige forsikringstyper i dokumentet. Er det et forsikringsbevis eller en forsikringsavtale?" },
-        { status: 422 }
-      );
-    }
-
-    // Steg 2: Ekstraher strukturert data for hver type som ble identifisert
-    // Kjøres parallelt for å spare tid
-    const extractionResults = await Promise.all(
-      detectedTypes.map(async (insuranceType) => {
-        const otherTypes = detectedTypes.filter((t) => t !== insuranceType);
-        const extractResponse = await client.messages.create({
-          model: "claude-haiku-4-5",
-          max_tokens: 4096,
-          messages: [
-            {
-              role: "user",
-              content: buildExtractionPrompt(documentText, insuranceType, otherTypes),
-            },
-          ],
-        });
-
-        if (extractResponse.stop_reason === "max_tokens") {
-          throw new Error("max_tokens");
-        }
-
-        const extractText =
-          extractResponse.content.find((b) => b.type === "text")?.text ?? "";
-
-        let extracted: Record<string, unknown>;
-        try {
-          extracted = JSON.parse(extractJson(extractText));
-        } catch {
-          // Returner en tom polise med lav konfidens – spøkelsesfilteret fjerner den
-          extracted = {};
-        }
-
-        const corePolicy: InsurancePolicy = {
-          type: insuranceType,
-          company: (extracted.company as string) ?? "Ukjent selskap",
-          policyNumber: (extracted.policyNumber as string | null) ?? null,
-          coverageLevel: (extracted.coverageLevel as string) ?? "Ukjent",
-          deductible: (extracted.deductible as number | null) ?? null,
-          maxCoverage: (extracted.maxCoverage as number | null) ?? null,
-          annualPremium: (extracted.annualPremium as number | null) ?? null,
-          isBundledPremium: (extracted.isBundledPremium as boolean) ?? false,
-          inclusions: (extracted.inclusions as string[]) ?? [],
-          exclusions: (extracted.exclusions as string[]) ?? [],
-          notes: (extracted.notes as string[]) ?? [],
-          extractionConfidence: (extracted.extractionConfidence as InsurancePolicy["extractionConfidence"]) ?? typeResult.confidence ?? "low",
-        };
-
-        // Behold typesspesifikke felter (f.eks. registrationNumber, vehicleModel, vehicleYear)
-        // som ikke er del av basistypen, slik at de sendes med til tilbudsforespørselen
-        const policy = Object.assign({}, extracted, corePolicy) as InsurancePolicy;
-
-        return policy;
-      })
-    );
-
-    // Filtrer ut spøkelsespoliser: lav konfidens og ingen nøkkeldata betyr at typen sannsynligvis ikke finnes i dokumentet
-    const validPolicies = extractionResults.filter(
-      (p) => !(p.extractionConfidence === "low" && p.annualPremium === null && p.deductible === null && (p.coverageLevel === "Ukjent" || p.coverageLevel === ""))
-    );
-
-    if (validPolicies.length === 0) {
-      return NextResponse.json(
-        { error: "Arvid fant ingen gjenkjennelige forsikringstyper i dokumentet. Er det et forsikringsbevis eller en forsikringsavtale?" },
-        { status: 422 }
-      );
-    }
-
-    return NextResponse.json({ policies: validPolicies, fileName: file.name });
+    return NextResponse.json({ policies: outcome.policies, fileName: file.name });
   } catch (error) {
-    if (error instanceof Error && error.message === "max_tokens") {
-      return NextResponse.json(
-        { error: "Dokumentet er for langt for Arvid å lese i sin helhet. Prøv å laste opp bare forsikringsbeviset, ikke hele vilkårsheftet." },
-        { status: 422 }
-      );
-    }
-    if (error instanceof Anthropic.APIError) {
-      console.error("Claude API-feil:", error.status, error.message);
-      if (error.status === 429) {
-        return NextResponse.json(
-          { error: "Arvid håndterer en litt for stor bunke akkurat nå. Vent et øyeblikk og prøv igjen." },
-          { status: 503 }
-        );
-      }
-      if (error.status === 529) {
-        return NextResponse.json(
-          { error: "Arvid er midlertidig utilgjengelig. Prøv igjen om litt." },
-          { status: 503 }
-        );
-      }
-      if (error.status === 402) {
-        return NextResponse.json(
-          { error: "Arvid er midlertidig utilgjengelig. Prøv igjen senere." },
-          { status: 503 }
-        );
-      }
-      return NextResponse.json(
-        { error: "Noe gikk galt under analysen. Prøv igjen." },
-        { status: 502 }
-      );
-    }
-
-    console.error("Ekstraksjonsfeil:", error);
-    return NextResponse.json(
-      { error: "Noe gikk galt under analysen. Prøv igjen." },
-      { status: 500 }
+    return aiErrorResponse(
+      error,
+      {
+        maxTokens: "Dokumentet er for langt for Arvid å lese i sin helhet. Prøv å laste opp bare forsikringsbeviset, ikke hele vilkårsheftet.",
+        generic: "Noe gikk galt under analysen. Prøv igjen.",
+      },
+      "Ekstraksjonsfeil"
     );
   }
 }

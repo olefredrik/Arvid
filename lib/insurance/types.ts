@@ -42,6 +42,7 @@ export type InsurancePolicy = {
   maxCoverage: number | null;
   annualPremium: number | null;
   isBundledPremium: boolean; // true = annualPremium dekker flere forsikringstyper i samme dokument
+  premiumIncludesTrafficFee?: boolean; // Kun kjøretøy: true = annualPremium inkluderer trafikkforsikringsavgift til staten
   inclusions: string[];
   exclusions: string[];
   notes: string[];
@@ -132,3 +133,6 @@ export const INSURANCE_TYPE_LABELS: Record<InsuranceType, string> = {
   animal: "Dyreforsikring",
   travel: "Reiseforsikring",
 };
+
+// Alle forsikringstyper som liste, brukes i svarskjemaene til Claude
+export const INSURANCE_TYPES = Object.keys(INSURANCE_TYPE_LABELS) as [InsuranceType, ...InsuranceType[]];

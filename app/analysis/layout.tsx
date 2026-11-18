@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Analyser forsikringene dine – Arvid",
-  description: "Last opp forsikringsdokumentene dine og få en strukturert oversikt over dekning, egenandel og nøkkelinformasjon.",
+  description: "Last opp forsikringsbevisene dine og få en strukturert oversikt over dekning, egenandel og nøkkelinformasjon.",
   alternates: {
     canonical: "/analysis",
   },

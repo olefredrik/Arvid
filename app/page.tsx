@@ -14,7 +14,7 @@ export default function Home() {
           Din nøytrale forsikringsassistent.
         </p>
         <p className="text-base text-stone-500 dark:text-stone-400 max-w-xl mx-auto mb-10">
-          Last opp forsikringsavtalene dine som PDF. Arvid leser dem, lager en oversikt,
+          Last opp forsikringsbevisene dine som PDF. Arvid leser dem, lager en oversikt,
           og genererer en ferdig tilbudsforespørsel du kan sende til andre selskaper.
         </p>
         <Link
@@ -60,9 +60,9 @@ export default function Home() {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="bg-white dark:bg-stone-800 rounded-xl p-6 shadow-sm border border-stone-100 dark:border-stone-700">
             <div className="text-2xl font-bold text-amber-600 dark:text-amber-500 mb-3">1</div>
-            <h3 className="font-semibold text-stone-800 dark:text-stone-100 mb-2">Last opp avtalene dine</h3>
+            <h3 className="font-semibold text-stone-800 dark:text-stone-100 mb-2">Last opp forsikringsbevisene dine</h3>
             <p className="text-sm text-stone-500 dark:text-stone-400">
-              Én eller flere PDF-filer holder. Arvid identifiserer forsikringstype automatisk.
+              Du finner dem på Min side hos forsikringsselskapet. Generelle vilkår trenger du ikke. Arvid finner selv ut hvilken type forsikring det er.
             </p>
           </div>
           <div className="bg-white dark:bg-stone-800 rounded-xl p-6 shadow-sm border border-stone-100 dark:border-stone-700">

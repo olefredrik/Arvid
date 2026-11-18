@@ -2,8 +2,9 @@
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const pdfParse = require("pdf-parse/lib/pdf-parse.js") as (buffer: Buffer) => Promise<{ text: string }>;
 
-// Maks tegn for ekstraksjon (~15K tokens) og type-identifikasjon (~2K tokens)
-// claude-sonnet-4-6 har 200K kontekstvindu – økt grense gir vesentlig bedre dekning av lange forsikringsdokumenter
+// Maks tegn for ekstraksjon (~20K tokens) og type-identifikasjon (~3K tokens).
+// Ekstraksjonsmodellen (se lib/ai/models.ts) har 1M kontekstvindu. Haiku 5.5 har lavest pris opp til 100K tokens,
+// så grensen kan økes kraftig før kostnaden endrer seg – men mål kvaliteten med scripts/eval først.
 export const EXTRACTION_TEXT_LENGTH = 60_000;
 export const TYPE_ID_TEXT_LENGTH = 8_000;
 

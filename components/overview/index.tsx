@@ -199,6 +199,9 @@ export default function Oversikt({ policies, onUpdate, onRemove }: Props) {
                     {policy.isBundledPremium && (
                       <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">pakketilbud</p>
                     )}
+                    {policy.premiumIncludesTrafficFee && (
+                      <p className="text-xs text-gray-600 dark:text-gray-300 mt-0.5">inkl. trafikkforsikringsavgift</p>
+                    )}
                   </div>
                 </td>
                 {onRemove && (
@@ -281,6 +284,9 @@ export default function Oversikt({ policies, onUpdate, onRemove }: Props) {
                   </span>
                   {policy.isBundledPremium && (
                     <p className="text-xs text-gray-400 dark:text-gray-500 font-normal">pakketilbud</p>
+                  )}
+                  {policy.premiumIncludesTrafficFee && (
+                    <p className="text-xs text-gray-600 dark:text-gray-300 font-normal">inkl. trafikkforsikringsavgift</p>
                   )}
                 </div>
               </div>
