@@ -23,14 +23,14 @@ const dmSans = DM_Sans({
 
 export const metadata: Metadata = {
   title: "Arvid – Forstå forsikringene dine og bytt på egne premisser",
-  description: "Forsikringsvilkår er kjedelige å lese. Last opp avtalene dine som PDF, få en strukturert oversikt, og generer en ferdig tilbudsforespørsel til andre selskaper. Gratis.",
+  description: "Forsikringspapirer er kjedelige å lese. Last opp forsikringsbevisene dine som PDF, få en strukturert oversikt, og generer en ferdig tilbudsforespørsel til andre selskaper. Gratis.",
   metadataBase: new URL("https://arvid.cloud"),
   alternates: {
     canonical: "/",
   },
   openGraph: {
     title: "Arvid – Forstå forsikringene dine og bytt på egne premisser",
-    description: "Forsikringsvilkår er kjedelige å lese. Last opp avtalene dine som PDF, få en strukturert oversikt, og generer en ferdig tilbudsforespørsel til andre selskaper. Gratis.",
+    description: "Forsikringspapirer er kjedelige å lese. Last opp forsikringsbevisene dine som PDF, få en strukturert oversikt, og generer en ferdig tilbudsforespørsel til andre selskaper. Gratis.",
     url: "https://arvid.cloud",
     siteName: "Arvid",
     images: [
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Arvid – Forstå forsikringene dine og bytt på egne premisser",
-    description: "Forsikringsvilkår er kjedelige å lese. Last opp avtalene dine som PDF, få en strukturert oversikt, og generer en ferdig tilbudsforespørsel til andre selskaper. Gratis.",
+    description: "Forsikringspapirer er kjedelige å lese. Last opp forsikringsbevisene dine som PDF, få en strukturert oversikt, og generer en ferdig tilbudsforespørsel til andre selskaper. Gratis.",
     images: ["/arvid-og-image.jpg"],
   },
 };

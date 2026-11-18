@@ -70,6 +70,8 @@ export function mergePolicies(policies: InsurancePolicy[]): InsurancePolicy {
     maxCoverage: (first("maxCoverage") as number | null) ?? null,
     annualPremium: (first("annualPremium") as number | null) ?? null,
     isBundledPremium: policies.some((p) => p.isBundledPremium),
+    // Følger premien som ble valgt over, slik at merknaden om avgift stemmer med beløpet
+    premiumIncludesTrafficFee: policies.find((p) => p.annualPremium != null)?.premiumIncludesTrafficFee,
     inclusions: [...new Set(policies.flatMap((p) => p.inclusions))],
     exclusions: [...new Set(policies.flatMap((p) => p.exclusions))],
     notes: [...new Set(policies.flatMap((p) => p.notes))],

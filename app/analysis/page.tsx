@@ -69,15 +69,17 @@ import type { InsurancePolicy, ComparisonResult } from "@/lib/insurance/types";
 import { INSURANCE_TYPE_LABELS } from "@/lib/insurance/types";
 import { mergePoliciesByType, type AmbiguousMerge } from "@/lib/insurance/merge";
 import { useAnalytics } from "@/lib/hooks/useAnalytics";
+import { classifyExtractionError, type ExtractionErrorType } from "@/lib/extraction-errors";
 
-// Parser API-respons trygt – håndterer 504-timeout og HTML-body fra Vercel
+// Parser API-respons trygt. Feilmeldinger fra API-et brukes når de finnes;
+// ellers (f.eks. HTML-body fra Vercel ved tidsavbrudd) vises en generell melding.
 async function safeJson(response: Response): Promise<{ error?: string; [key: string]: unknown }> {
-  if (response.status === 504) {
-    return { error: "Arvid er populær i dag og håndterer litt for mange forespørsler på én gang. Hent deg en kopp kaffe, så er han klar for deg igjen om et par minutter." };
-  }
   try {
     return await response.json();
   } catch {
+    if (response.status === 504) {
+      return { error: "Arvid er populær i dag og håndterer litt for mange forespørsler på én gang. Hent deg en kopp kaffe, så er han klar for deg igjen om et par minutter." };
+    }
     return { error: "Noe gikk galt. Prøv igjen." };
   }
 }
@@ -88,7 +90,7 @@ type ProcessingStatus = {
   fileName: string;
   done: boolean;
   error?: string;
-  errorType?: "unrecognized" | "invalid" | "transient";
+  errorType?: ExtractionErrorType;
 };
 
 export default function AnalysisPage() {
@@ -163,29 +165,26 @@ export default function AnalysisPage() {
         }
 
         if (!response.ok) {
-          const statusError = response.status === 422
-            ? "Ingen forsikringsdata funnet – trolig et vilkårsdokument"
-            : data.error ?? "Ukjent feil";
-          const errorType = response.status === 422 ? "unrecognized" : response.status === 400 || response.status === 413 ? "invalid" : "transient";
+          const { label, errorType } = classifyExtractionError(response.status, data);
           setStatuses((prev) =>
             prev.map((s) =>
-              s.fileName === file.name && !s.done ? { ...s, done: true, error: statusError, errorType } : s
+              s.fileName === file.name && !s.done ? { ...s, done: true, error: label, errorType } : s
             )
           );
-          // 400/413 = ugyldig fil, 422 = ingen forsikringstyper funnet – retry hjelper ikke
-          if (response.status === 400 || response.status === 413) {
+          // Bare forbigående feil kan løses ved å prøve samme fil på nytt
+          if (errorType === "invalid") {
             newInvalidFiles.push(file.name);
-          } else if (response.status === 422) {
+          } else if (errorType === "unrecognized") {
             newUnrecognizedFiles.push(file.name);
           } else {
             newFailedFiles.push(file);
           }
-          capture("pdf_extraction_failed", { file_name: file.name });
+          capture("pdf_extraction_failed", { error_type: errorType, status: response.status });
           continue;
         }
 
         results.push(...(data.policies as InsurancePolicy[]));
-        capture("pdf_extracted", { file_name: file.name, policy_count: (data.policies as InsurancePolicy[]).length });
+        capture("pdf_extracted", { policy_count: (data.policies as InsurancePolicy[]).length });
       } catch {
         setStatuses((prev) =>
           prev.map((s) =>
@@ -193,7 +192,7 @@ export default function AnalysisPage() {
           )
         );
         newFailedFiles.push(file);
-        capture("pdf_extraction_failed", { file_name: file.name, reason: "network_error" });
+        capture("pdf_extraction_failed", { reason: "network_error" });
         continue;
       }
 
@@ -310,24 +309,25 @@ export default function AnalysisPage() {
         }
 
         if (!response.ok) {
+          const { label, errorType } = classifyExtractionError(response.status, data);
           setOfferStatuses((prev) =>
             prev.map((s, idx) =>
-              idx === i ? { ...s, done: true, error: data.error ?? "Ukjent feil" } : s
+              idx === i ? { ...s, done: true, error: label, errorType } : s
             )
           );
-          if (response.status === 400 || response.status === 413) {
+          if (errorType === "invalid") {
             newInvalidOfferFiles.push(file.name);
-          } else if (response.status === 422) {
+          } else if (errorType === "unrecognized") {
             newUnrecognizedOfferFiles.push(file.name);
           } else {
             newFailedOfferFiles.push(file);
           }
-          capture("pdf_extraction_failed", { file_name: file.name, context: "offer" });
+          capture("pdf_extraction_failed", { context: "offer", error_type: errorType, status: response.status });
           continue;
         }
 
         results.push(...(data.policies as InsurancePolicy[]));
-        capture("pdf_extracted", { file_name: file.name, context: "offer", policy_count: (data.policies as InsurancePolicy[]).length });
+        capture("pdf_extracted", { context: "offer", policy_count: (data.policies as InsurancePolicy[]).length });
       } catch {
         setOfferStatuses((prev) =>
           prev.map((s, idx) =>
@@ -335,7 +335,7 @@ export default function AnalysisPage() {
           )
         );
         newFailedOfferFiles.push(file);
-        capture("pdf_extraction_failed", { file_name: file.name, context: "offer", reason: "network_error" });
+        capture("pdf_extraction_failed", { context: "offer", reason: "network_error" });
         continue;
       }
 
@@ -419,12 +419,12 @@ export default function AnalysisPage() {
       {step === "upload" && (
         <>
           <h2 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">
-            {compareMode ? "Last opp dine nåværende forsikringer" : "Last opp forsikringsdokumenter"}
+            {compareMode ? "Last opp dine nåværende forsikringer" : "Last opp forsikringsbevisene dine"}
           </h2>
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
             {compareMode
-              ? "Arvid bruker disse som utgangspunkt når tilbudet skal vurderes."
-              : "Forsikringsbevis er best, ikke bare generelle vilkår."}
+              ? "Last opp forsikringsbevisene for det du har i dag. Arvid bruker dem som utgangspunkt når tilbudet skal vurderes."
+              : "Forsikringsbeviset kalles også avtaledokument, og du finner det på Min side hos forsikringsselskapet. Generelle vilkår trenger Arvid ikke."}
           </p>
           {/* Allerede analyserte dokumenter */}
           {statuses.filter((s) => s.done && !s.error).length > 0 && (
@@ -495,7 +495,7 @@ export default function AnalysisPage() {
               {unrecognizedErrors.map((s) => (
                 <p key={s.fileName}>{s.fileName}</p>
               ))}
-              <p className="mt-2">Generelle vilkår inneholder sjelden personlig policyinformasjon. Dette er normalt og betyr ikke at noe mangler.</p>
+              <p className="mt-2">Dette er ofte generelle vilkår, som ikke sier noe om din avtale. Arvid trenger bare forsikringsbeviset, så har du lastet opp det, mangler ingenting.</p>
             </div>
           )}
 
@@ -682,7 +682,7 @@ export default function AnalysisPage() {
         <>
           <h2 className="text-2xl font-bold mb-1 text-gray-900 dark:text-gray-50">Last opp mottatte tilbud</h2>
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
-            Arvid trenger tilbudsdokumentet for å sammenligne pris og vilkår mot det du har i dag.
+            Arvid trenger tilbudsdokumentet med pris og dekning for å sammenligne det med det du har i dag. Generelle vilkår trengs ikke.
           </p>
           {compareError && (
             <div role="alert" className="mb-6 p-4 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-700 dark:text-red-300">
@@ -710,7 +710,7 @@ export default function AnalysisPage() {
               {unrecognizedOfferErrors.map((s) => (
                 <p key={s.fileName}>{s.fileName}</p>
               ))}
-              <p className="mt-2">Generelle vilkår inneholder sjelden personlig policyinformasjon. Dette er normalt og betyr ikke at noe mangler.</p>
+              <p className="mt-2">Dette er ofte generelle vilkår, som ikke sier noe om din avtale. Arvid trenger bare forsikringsbeviset, så har du lastet opp det, mangler ingenting.</p>
             </div>
           )}
 
@@ -831,7 +831,9 @@ export default function AnalysisPage() {
               >
                 {s.done ? (
                   s.error ? (
-                    <span className="text-red-500 dark:text-red-400 text-sm" aria-label="Feil">✕</span>
+                    s.errorType === "unrecognized"
+                      ? <span className="text-stone-400 dark:text-stone-500 text-sm" aria-label="Gjennomgått">–</span>
+                      : <span className="text-red-500 dark:text-red-400 text-sm" aria-label="Feil">✕</span>
                   ) : (
                     <span className="text-green-500 dark:text-green-400 text-sm" aria-label="Fullført">✓</span>
                   )
@@ -840,7 +842,7 @@ export default function AnalysisPage() {
                 )}
                 <span className="text-sm text-gray-700 dark:text-gray-200 truncate">{s.fileName}</span>
                 {s.error && (
-                  <span className="text-xs text-red-500 dark:text-red-400 ml-auto">{s.error}</span>
+                  <span className={`text-xs ml-auto ${s.errorType === "unrecognized" ? "text-stone-400 dark:text-stone-500" : "text-red-500 dark:text-red-400"}`}>{s.error}</span>
                 )}
               </div>
             ))}
