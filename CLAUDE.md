@@ -124,12 +124,20 @@ Arvid skal fungere for alle – uavhengig av funksjonsevne, hjelpemiddel eller b
     /generate-quote-request/route.ts # Genererer tilbudsforespørsel
     /compare/route.ts                # Sammenligner tilbud (steg 4)
 /lib
+  /ai
+    /models.ts                       # Modellvalg per steg (modell, effort, max_tokens, reservemodell)
+    /client.ts                       # Felles Claude-kall med structured outputs og håndtering av avslag
+    /errors.ts                       # Felles feilhåndtering for API-rutene
   /insurance
     /types.ts                        # TypeScript-typer for forsikringsdata
     /schema.ts                       # Ekstraksjonssskjema per forsikringstype
     /prompts.ts                      # Alle Claude-prompts samlet
+    /ai-schemas.ts                   # Svarskjemaer (zod) for structured outputs
+    /extract.ts                      # Ekstraksjonsflyten, delt mellom API og eval
   /pdf
     /parser.ts                       # PDF-tekstekstrahering
+/scripts
+  /eval/                             # Modellevaluering på lokale testdokumenter (se README)
 /components
   /upload/                           # Filupplastingskomponent
   /overview/                         # Forsikringsoversikt-tabeller
